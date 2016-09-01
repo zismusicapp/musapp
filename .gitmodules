@@ -4,3 +4,6 @@
 [submodule "deps/superpowered"]
 	path = deps/superpowered
 	url = https://github.com/zismusicapp/Low-Latency-Android-Audio-iOS-Audio-Engine.git
+[submodule "deps/grafika"]
+	path = deps/grafika
+	url = https://github.com/zismusicapp/grafika.git

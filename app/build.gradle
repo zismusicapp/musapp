@@ -84,12 +84,12 @@ android {
   }
 
   signingConfigs {
-    develop {
-      storeFile file('../buildsystem/some.jks')
-      storePassword 'X0WQ0pVJ-jtn'
-      keyAlias 'TODOkeyalias'
-      keyPassword 'X0WQ0pVJ-jtn'
-    }
+//    develop {
+//      storeFile file('../buildsystem/some.jks')
+//      storePassword 'X0WQ0pVJ-jtn'
+//      keyAlias 'TODOkeyalias'
+//      keyPassword 'X0WQ0pVJ-jtn'
+//    }
 
     /*production {
         storeFile file(props['keystore'])
@@ -103,14 +103,14 @@ android {
     debug {
       minifyEnabled false
       debuggable true
-      signingConfig signingConfigs.develop
+      //signingConfig signingConfigs.develop
     }
 
     release {
       minifyEnabled true
       debuggable false
       shrinkResources true
-      signingConfig signingConfigs.develop
+      //signingConfig signingConfigs.develop
       //signingConfig signingConfigs.production
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
@@ -182,6 +182,8 @@ dependencies {
   compile appDependencies.design
 
   compile project(':model')
+
+  compile project(':ijkplayer-java')
 
   compile appDependencies.rxJavaProGuardRules
 
