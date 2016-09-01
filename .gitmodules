@@ -1,0 +1,6 @@
+[submodule "deps/ijkplayer"]
+	path = deps/ijkplayer
+	url = https://github.com/zismusicapp/ijkplayer.git
+[submodule "deps/superpowered"]
+	path = deps/superpowered
+	url = https://github.com/zismusicapp/Low-Latency-Android-Audio-iOS-Audio-Engine.git
