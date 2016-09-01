@@ -1,0 +1,246 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.frogermcs.androiddevmetrics'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'de.mobilej.unmock'
+apply plugin: 'com.ofg.uptodate'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply from: '../AndroidCodeQualityConfig/quality.gradle'
+apply plugin: 'com.bugtags.library.plugin'
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'android-git-sha'
+apply plugin: 'net.ltgt.errorprone'
+apply plugin: 'com.github.triplet.play'
+
+/*def keyConfigPath
+if (isFamily(FAMILY_WINDOWS)) {
+    keyConfigPath = System.getenv('USERPROFILE') + File.separator + ".ssh" + File.separator +
+            "TemplateKeyStore.properties"
+} else {
+    keyConfigPath = System.getenv('HOME') + File.separator + ".ssh" + File.separator +
+            "TemplateKeyStore.properties"
+}
+
+Properties props = new Properties()
+if (new File(keyConfigPath).exists()) {
+    props.load(new FileInputStream(file(keyConfigPath)))
+}*/
+
+def isTravis = "true".equals(System.getenv("TRAVIS"))
+def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
+
+android {
+  compileSdkVersion rootProject.ext.androidCompileSdkVersion
+  buildToolsVersion rootProject.ext.androidBuildToolsVersion
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  dataBinding {
+    enabled = true
+  }
+
+  play {
+    jsonFile = file('../buildsystem/Google Play Android Developer-5ded447e2e72.json')
+    track = 'alpha' // or 'rollout' or 'beta' or 'alpha' or 'production'
+    userFraction = 0.1 // only necessary for 'rollout', in this case default is 0.1 (10% of the target)
+  }
+
+  defaultConfig {
+    applicationId "com.zis.com.gh"
+    minSdkVersion rootProject.ext.androidMinSdkVersion
+    targetSdkVersion rootProject.ext.androidTargetSdkVersion
+    versionCode rootProject.ext.versionCode
+    versionName rootProject.ext.versionName
+
+    multiDexEnabled true
+    testInstrumentationRunner "com.zis.musapp.gh.CustomTestRunner"
+
+    buildConfigField "String", "API_BASE_URL", "\"https://api.github.com/\""
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  packagingOptions {
+    exclude 'META-INF/services/javax.annotation.processing.Processor'
+    exclude 'META-INF/LICENSE.txt'
+    exclude 'META-INF/NOTICE.txt'
+  }
+
+  dexOptions {
+    // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
+    preDexLibraries = preDexEnabled && !isTravis
+    maxProcessCount 8
+    javaMaxHeapSize = isTravis ? "2g" : "6g"
+  }
+
+  aaptOptions {
+    additionalParameters "--no-version-vectors"
+  }
+
+  signingConfigs {
+    develop {
+      storeFile file('../buildsystem/some.jks')
+      storePassword 'X0WQ0pVJ-jtn'
+      keyAlias 'TODOkeyalias'
+      keyPassword 'X0WQ0pVJ-jtn'
+    }
+
+    /*production {
+        storeFile file(props['keystore'])
+        storePassword props['keystore.password']
+        keyAlias props['key.alias']
+        keyPassword props['key.password']
+    }*/
+  }
+
+  buildTypes {
+    debug {
+      minifyEnabled false
+      debuggable true
+      signingConfig signingConfigs.develop
+    }
+
+    release {
+      minifyEnabled true
+      debuggable false
+      shrinkResources true
+      signingConfig signingConfigs.develop
+      //signingConfig signingConfigs.production
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  productFlavors {
+    dev {
+      // inherit from default config
+
+
+      // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+      // to pre-dex each module and produce an APK that can be tested on
+      // Android Lollipop without time consuming dex merging processes.
+      minSdkVersion 21
+    }
+
+    prod {
+      // inherit from default config
+    }
+  }
+
+  sourceSets {
+    test.java.srcDirs += 'build/generated/source/apt/develop/debug'
+  }
+
+  testOptions.unitTests.all {
+    testLogging {
+      events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+      outputs.upToDateWhen { false }
+      showStandardStreams = true
+    }
+  }
+
+  if (isTravis) {
+    lintOptions {
+      abortOnError false
+    }
+  }
+}
+
+unMock {
+  downloadFrom 'https://oss.sonatype.org/content/groups/public/org/robolectric/android-all/6.0.0_r1-robolectric-0/android-all-6.0.0_r1-robolectric-0.jar'
+  downloadTo "${System.getenv('HOME')}/.gradle/caches/"
+
+  keep "android.text.TextUtils"
+}
+
+if (!isTravis) {
+  bugtags {
+    appKey "82cdb5f7f8925829ccc4a6e7d5d12216"
+    //        appSecret BUG_TAGS_API_SECRET
+  }
+}
+
+gitSha {
+  buildTypeMatcher = 'release'
+  flavorMatcher = '.*'
+  abortIfGitDirty = false
+}
+
+dependencies {
+  def appDependencies = rootProject.ext.appDependencies
+  def aptDependencies = rootProject.ext.aptDependencies
+  def testDependencies = rootProject.ext.testDependencies
+
+  compile appDependencies.recyclerViewV7
+  compile appDependencies.cardViewV7
+  compile appDependencies.percentageLayout
+  compile appDependencies.design
+
+  compile project(':model')
+
+  compile appDependencies.rxJavaProGuardRules
+
+  compile(appDependencies.once) {
+    exclude module: 'support-annotations'
+  }
+
+  compile(appDependencies.fresco) {
+    exclude module: 'support-v4'
+  }
+  compile(appDependencies.iconifyMD) {
+    exclude module: 'support-v4'
+  }
+  compile(appDependencies.statusBarUtil) {
+    exclude module: 'appcompat-v7'
+  }
+
+  compile(appDependencies.bugTags) {
+    exclude module: 'support-v4'
+  }
+
+  compile appDependencies.gitSha
+  compile appDependencies.stetho
+  compile appDependencies.strictmodeNotifier
+  compile appDependencies.anrWatchDog
+  compile appDependencies.blockCanary
+  compile appDependencies.leakCanary
+
+  compile appDependencies.RxLocation
+  compile appDependencies.googlePlayLocations
+  compile appDependencies.googlePlayPlaces
+  compile appDependencies.googlePlayMaps
+
+  compile appDependencies.firebase
+
+  apt aptDependencies.daggerApt
+  apt aptDependencies.autoBundleApt
+  apt aptDependencies.butterKnifeApt
+  apt aptDependencies.onActivityResultApt
+  retrolambdaConfig aptDependencies.retrolambda
+  errorprone aptDependencies.errorprone
+
+  androidTestCompile project(':testbase')
+  androidTestCompile(testDependencies.androidJUnitRunner) {
+    exclude module: 'support-annotations'
+  }
+  androidTestCompile(testDependencies.mockito) {
+    exclude module: 'hamcrest-core'
+  }
+  androidTestCompile testDependencies.dexmaker
+  androidTestCompile(testDependencies.dexmakerMockito) {
+    exclude module: 'hamcrest-core'
+    exclude module: 'mockito-core'
+  }
+  androidTestCompile(testDependencies.androidJUnit4Rules) {
+    exclude module: 'support-annotations'
+    exclude module: 'hamcrest-core'
+  }
+  androidTestApt(aptDependencies.daggerApt) {
+    exclude module: 'dagger'
+  }
+}

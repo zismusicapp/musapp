@@ -1,0 +1,9 @@
+*.iml
+*.properties
+build
+.idea
+.gradle
+.DS_Store
+*.apk
+.okbuck/
+

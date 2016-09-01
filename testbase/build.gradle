@@ -1,0 +1,64 @@
+apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
+
+android {
+  compileSdkVersion rootProject.ext.androidCompileSdkVersion
+  buildToolsVersion rootProject.ext.androidBuildToolsVersion
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  defaultConfig {
+    minSdkVersion rootProject.ext.androidMinSdkVersion
+    targetSdkVersion rootProject.ext.androidTargetSdkVersion
+    versionCode rootProject.ext.versionCode
+    versionName rootProject.ext.versionName
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+
+  lintOptions {
+    disable 'InvalidPackage'
+  }
+}
+
+dependencies {
+  def baseDependencies = rootProject.ext.baseDependencies
+  def testDependencies = rootProject.ext.testDependencies
+
+  compile baseDependencies.threetenabp
+  compile(testDependencies.junit) {
+    exclude module: 'hamcrest-core'
+  }
+  compile testDependencies.hamcrestLibrary
+  compile testDependencies.mockWebServer
+  compile(testDependencies.restMockAndroid) {
+    exclude module: 'junit'
+    exclude module: 'rules'
+    exclude module: 'runner'
+    exclude module: 'mockwebserver'
+  }
+  compile(testDependencies.espresso) {
+    exclude module: 'hamcrest-library'
+    exclude module: 'rules'
+    exclude module: 'runner'
+    exclude module: 'javax.annotation-api'
+  }
+  compile(testDependencies.espessoContrib) {
+    exclude module: 'design'
+    exclude module: 'espresso-core'
+    exclude module: 'support-v4'
+    exclude module: 'recyclerview-v7'
+    exclude module: 'hamcrest-core'
+  }
+  compile(testDependencies.espressoIntents) {
+    exclude module: 'espresso-core'
+  }
+}

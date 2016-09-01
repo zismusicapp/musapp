@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+  <include
+      layout="@layout/ui_toolbar"
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+  />
+
+  <android.support.v4.widget.NestedScrollView
+      android:id="@+id/scrollView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:fillViewport="true"
+      android:layout_below="@id/toolbar"
+      android:layout_marginBottom="60dp"
+  >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <RelativeLayout
+          android:id="@+id/map_layout"
+          android:layout_width="match_parent"
+          android:layout_height="300dp">
+
+        <fragment
+            android:id="@+id/observeMapFragment"
+            android:tag="map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:name="com.zis.musapp.gh.features.kiddashboard.ObserveMapFragment"/>
+
+        <ImageView
+            android:id="@+id/transparent_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_widthPercent="100%"
+            app:layout_heightPercent="50%"
+            android:src="@android:color/transparent" />
+
+      </RelativeLayout>
+
+      <fragment
+          android:id="@+id/locationStatusFragment"
+          android:tag="location"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:name="com.zis.musapp.gh.features.kiddashboard.LocationStatusFragment"
+          android:layout_marginBottom="12dp"/>
+
+
+      <fragment
+          android:id="@+id/dataStatisticFragment"
+          android:tag="data"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:name="com.zis.musapp.gh.features.kiddashboard.DataStatisticFragment"
+          android:layout_marginBottom="12dp"/>
+
+      <fragment
+          android:id="@+id/requestApprovalsFragment"
+          android:tag="requests"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:name="com.zis.musapp.gh.features.kiddashboard.RequestsApprovalsFragment"
+          android:layout_marginBottom="12dp"
+      />
+
+
+    </LinearLayout>
+
+  </android.support.v4.widget.NestedScrollView>
+
+  <fragment
+      android:id="@+id/panicFragment"
+      android:tag="panic"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:name="com.zis.musapp.gh.features.kiddashboard.PanicButtonFragment"
+      android:layout_alignParentBottom="true"/>
+
+
+</RelativeLayout>

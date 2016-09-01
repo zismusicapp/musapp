@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="24dp"
+    android:paddingBottom="24dp"
+>
+
+  <TextView android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/panic_button"
+      android:paddingLeft="31dp"
+      android:paddingRight="31dp"
+      android:paddingBottom="6dp"
+      android:paddingTop="6dp"
+      android:textColor="@color/red_panic"
+      android:background="@drawable/panic_border_style"
+      android:layout_centerInParent="true"/>
+</RelativeLayout>
