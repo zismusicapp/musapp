@@ -1,3 +1,5 @@
 include ':base', ':testbase', ":model", ':app'
 include(':ijkplayer-java')
 project(':ijkplayer-java').projectDir = new File('/Users/mikhail/temp/musapp/android/deps/ijkplayer/android/ijkplayer/ijkplayer-java')
+include(':grafika')
+project(':grafika').projectDir = new File('/Users/mikhail/temp/musapp/android/deps/grafika')

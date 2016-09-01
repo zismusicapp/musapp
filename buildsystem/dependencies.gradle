@@ -147,7 +147,7 @@ ext {
                       restMockAndroid        : "com.github.andrzejchm.RESTMock:android:0.1.1",]
 
   // jacoco config
-  ignoredByJacoco = ['testbase', 'ijkplayer-java']
+  ignoredByJacoco = ['testbase', 'ijkplayer-java', 'grafika']
 
   moduleClassDirs = ['base' : 'build/intermediates/classes/debug',
                      'model': 'build/intermediates/classes/debug',
