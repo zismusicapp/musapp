@@ -38,7 +38,6 @@ import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.BootstrapApp;
 import com.zis.musapp.gh.BuildConfig;
 import com.zis.musapp.gh.analytics.CrashReportingTree;
-import com.zis.musapp.gh.features.kiddashboard.KidDashboardActivity;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
 import com.tsengvn.typekit.Typekit;
 import jonathanfinerty.once.Once;
@@ -108,7 +107,7 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
 
       return Observable.just(true);
     }).subscribeOn(Schedulers.io()).subscribe(success -> {
-      startActivity(new Intent(SplashActivity.this, KidDashboardActivity.class));
+      startActivity(new Intent(SplashActivity.this, MyVideoActivity.class));
       finish();
     }, RxUtil.ON_ERROR_LOGGER);
   }

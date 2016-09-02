@@ -61,6 +61,8 @@
     <activity android:name="com.zis.musapp.gh.features.kiddashboard.KidDashboardActivity"
         android:screenOrientation="portrait"/>
 
+    <activity android:name=".features.splash.MyVideoActivity"/>
+
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="@string/google_maps_key"/>

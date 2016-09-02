@@ -45,7 +45,8 @@ android {
   play {
     jsonFile = file('../buildsystem/Google Play Android Developer-5ded447e2e72.json')
     track = 'alpha' // or 'rollout' or 'beta' or 'alpha' or 'production'
-    userFraction = 0.1 // only necessary for 'rollout', in this case default is 0.1 (10% of the target)
+    userFraction = 0.1
+    // only necessary for 'rollout', in this case default is 0.1 (10% of the target)
   }
 
   defaultConfig {
@@ -84,12 +85,12 @@ android {
   }
 
   signingConfigs {
-//    develop {
-//      storeFile file('../buildsystem/some.jks')
-//      storePassword 'X0WQ0pVJ-jtn'
-//      keyAlias 'TODOkeyalias'
-//      keyPassword 'X0WQ0pVJ-jtn'
-//    }
+    //    develop {
+    //      storeFile file('../buildsystem/some.jks')
+    //      storePassword 'X0WQ0pVJ-jtn'
+    //      keyAlias 'TODOkeyalias'
+    //      keyPassword 'X0WQ0pVJ-jtn'
+    //    }
 
     /*production {
         storeFile file(props['keystore'])
@@ -115,21 +116,29 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  //
+  //  productFlavors {
+  //    dev {
+  //      // inherit from default config
+  //
+  //
+  //      // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+  //      // to pre-dex each module and produce an APK that can be tested on
+  //      // Android Lollipop without time consuming dex merging processes.
+  //      minSdkVersion 21
+  //    }
+  //
+  //    prod {
+  //      // inherit from default config
+  //    }
 
   productFlavors {
-    dev {
-      // inherit from default config
-
-
-      // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
-      // to pre-dex each module and produce an APK that can be tested on
-      // Android Lollipop without time consuming dex merging processes.
-      minSdkVersion 21
-    }
-
-    prod {
-      // inherit from default config
-    }
+    all32 { minSdkVersion 15 }
+    all64 { minSdkVersion 21 }
+    // armv5 {}
+    // armv7a {}
+    // arm64 { minSdkVersion 21 }
+    // x86 {}
   }
 
   sourceSets {
@@ -181,9 +190,25 @@ dependencies {
   compile appDependencies.percentageLayout
   compile appDependencies.design
 
+  all32Compile project(':ijkplayer-armv5')
+  all32Compile project(':ijkplayer-armv7a')
+  all32Compile project(':ijkplayer-x86')
+
+  all64Compile project(':ijkplayer-armv5')
+  all64Compile project(':ijkplayer-armv7a')
+  all64Compile project(':ijkplayer-arm64')
+  all64Compile project(':ijkplayer-x86')
+  all64Compile project(':ijkplayer-x86_64')
+
+//  armv5Compile project(':player-armv5')
+//  armv7aCompile project(':player-armv7a')
+//  arm64Compile project(':player-arm64')
+//  x86Compile project(':player-x86')
+//  x86_64Compile project(':player-x86_64')
+
   compile project(':model')
 
-  compile project(':ijkplayer-java')
+  compile project(path: ':ijkplayer-example')
   compile project(':grafika')
 
   compile appDependencies.rxJavaProGuardRules
