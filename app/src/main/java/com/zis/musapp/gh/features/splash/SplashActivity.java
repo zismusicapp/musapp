@@ -24,6 +24,7 @@
 
 package com.zis.musapp.gh.features.splash;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.bugtags.library.Bugtags;
@@ -44,6 +45,7 @@ import jonathanfinerty.once.Once;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
+import tv.danmaku.ijk.media.example.activities.VideoActivity;
 
 /**
  * Created by Zis{github.com/Zis} on 15/9/19.
@@ -107,11 +109,21 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
 
       return Observable.just(true);
     }).subscribeOn(Schedulers.io()).subscribe(success -> {
-      startActivity(new Intent(SplashActivity.this, MyVideoActivity.class));
+
+      Intent intent = newIntent(this,
+          "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
+          "bipbop basic 400x300 @ 232 kbps");
+      startActivity(intent);
       finish();
     }, RxUtil.ON_ERROR_LOGGER);
   }
 
+  public static Intent newIntent(Context context, String videoPath, String videoTitle) {
+    Intent intent = new Intent(context, MyVideoActivity.class);
+    intent.putExtra("videoPath", videoPath);
+    intent.putExtra("videoTitle", videoTitle);
+    return intent;
+  }
   @Override
   public SplashComponent getComponent() {
     return mSplashComponent;
