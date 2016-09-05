@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.pagination.data.Item;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class PagingRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         public MainViewHolder(View itemView) {
             super(itemView);
-            //textView = (TextView) itemView.findViewById(R.id.text);
+            textView = (TextView) itemView.findViewById(R.id.text);
         }
     }
 
@@ -72,9 +73,8 @@ public class PagingRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == MAIN_VIEW) {
-            //View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
-            //return new MainViewHolder(v);
-            return new MainViewHolder(parent);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
+            return new MainViewHolder(v);
         }
         return null;
     }

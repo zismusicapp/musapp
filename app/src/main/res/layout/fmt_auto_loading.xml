@@ -6,7 +6,7 @@
     tools:showIn="@layout/activity_main"
     tools:context=".MainActivityFragment">
 
-    <com.matsyuk.pagination_sample.utils.auto_loading.AutoLoadingRecyclerView
+    <com.zis.musapp.gh.pagination.utils.autoLoading.AutoLoadingRecyclerView
         android:id="@+id/RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

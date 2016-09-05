@@ -61,6 +61,7 @@
     <activity android:name="com.zis.musapp.gh.features.kiddashboard.KidDashboardActivity"
         android:screenOrientation="portrait"/>
 
+    <activity android:name=".pagination.ui.MainActivity"/>
     <activity android:name=".features.splash.MyVideoActivity"/>
 
     <meta-data
