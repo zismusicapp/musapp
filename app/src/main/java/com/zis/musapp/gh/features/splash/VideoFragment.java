@@ -156,7 +156,7 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
     return inflater.inflate(R.layout.activity_player, container, false);
   }
 
-  public void stop() {
+  public void stopAll() {
     if (mBackPressed || !mVideoView.isBackgroundPlayEnabled()) {
       mVideoView.stopPlayback();
       mVideoView.release(true);
@@ -167,9 +167,19 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
     IjkMediaPlayer.native_profileEnd();
   }
 
+  public void resume() {
+    if (!mVideoView.isPlaying()) {
+      //mVideoView.resume();
+      mVideoView.start();
+    }
+  }
+
+  public void stop() {
+    mVideoView.pause();
+  }
   @Override public void onDetach() {
 
-    stop();
+    stopAll();
 
     super.onDetach();
   }
@@ -210,5 +220,7 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
    // fragment.setArguments(args);
     return fragment;
   }
+
+
 }
 
