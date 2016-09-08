@@ -72,7 +72,7 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
     mSettings = new Settings(getActivity());
     //getArguments().getString("videoPath");
     mVideoPath =
-        "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8";
+        "http://91.109.23.24/cms/media/uploads/media/trailers/kungfupanda/adaptive_kungfu_panda.m3u8";
 
     // handle arguments
     //mVideoPath = getIntent().getStringExtra("videoPath");
