@@ -45,6 +45,7 @@ public class MyVideoActivity extends AppCompatActivity {
 
         int currentPage = verticalViewPager.getCurrentItem();
 
+        //when scroll up
         Fragment curFragment = adapter.getFragMap().get(currentPage);
         if (curFragment !=null){
           if (curFragment instanceof VideoFragment) {
@@ -54,6 +55,7 @@ public class MyVideoActivity extends AppCompatActivity {
 
         }
 
+        //when scroll down
         Fragment prevFragment = adapter.getFragMap().get(previousPage);
         if (prevFragment != null) {
           if (prevFragment instanceof VideoFragment) {
