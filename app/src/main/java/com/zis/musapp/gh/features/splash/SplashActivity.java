@@ -120,7 +120,7 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
   }
 
   public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-    Intent intent = new Intent(context, CameraCaptureActivity.class);
+    Intent intent = new Intent(context, MyVideoActivity.class);
     intent.putExtra("videoPath", videoPath);
     intent.putExtra("videoTitle", videoTitle);
     return intent;

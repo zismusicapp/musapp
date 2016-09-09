@@ -168,10 +168,7 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
   }
 
   public void resume() {
-    if (!mVideoView.isPlaying()) {
-      //mVideoView.resume();
-      mVideoView.start();
-    }
+    mVideoView.start();
   }
 
   public void stop() {
@@ -217,10 +214,8 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
     VideoFragment fragment = new VideoFragment();
     Bundle args = new Bundle();
     // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-   // fragment.setArguments(args);
+    // fragment.setArguments(args);
     return fragment;
   }
-
-
 }
 
