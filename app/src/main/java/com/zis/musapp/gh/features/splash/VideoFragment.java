@@ -145,7 +145,6 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
       Log.e(TAG, "Null Data Source\n");
       //finish();
     }
-    mVideoView.start();
 
     Log.d(TAG, "Video inflating finished");
   }
