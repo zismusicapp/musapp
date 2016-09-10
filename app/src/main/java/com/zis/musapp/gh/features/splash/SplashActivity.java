@@ -38,6 +38,7 @@ import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.BootstrapApp;
 import com.zis.musapp.gh.BuildConfig;
+import com.zis.musapp.gh.CameraCaptureActivity;
 import com.zis.musapp.gh.analytics.CrashReportingTree;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
 import com.tsengvn.typekit.Typekit;

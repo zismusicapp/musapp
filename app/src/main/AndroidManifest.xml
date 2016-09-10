@@ -31,6 +31,7 @@
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.CAMERA"/>
 
   <application
       android:name="com.zis.musapp.gh.BootstrapApp"
@@ -63,6 +64,7 @@
 
     <activity android:name=".features.splash.MyVideoActivity"/>
 
+    <activity android:name=".CameraCaptureActivity"/>
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="@string/google_maps_key"/>
