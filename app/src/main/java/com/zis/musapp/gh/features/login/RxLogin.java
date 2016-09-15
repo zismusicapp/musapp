@@ -1,12 +1,14 @@
 package com.zis.musapp.gh.features.login;
 
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
+import com.digits.sdk.android.Digits;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.zis.musapp.gh.features.login.subsribers.DigitsSubsriber;
 import com.zis.musapp.gh.features.login.subsribers.FacebookSubscriber;
 
 import android.app.Activity;
@@ -14,11 +16,11 @@ import android.content.Intent;
 
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 
 public class RxLogin {
     com.facebook.login.LoginManager mFbManager;
-    GoogleApiClient mGoogleApiClient;
     com.facebook.CallbackManager mCallbackManager;
     FacebookCallback<LoginResult> mFacebookCallback;
 
@@ -83,6 +85,11 @@ public class RxLogin {
         return false;
     }
 
+    Observable<DigitsSubsriber.DigitLoginResult> loginDigits(Activity activity, String phoneNumber) {
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("TWITTER_KEY", "TWITTER_SECRET");
+        Fabric.with(activity, new TwitterCore(authConfig), new Digits.Builder().build());
 
+        return Observable.create(new DigitsSubsriber(phoneNumber));
+    }
 
 }
