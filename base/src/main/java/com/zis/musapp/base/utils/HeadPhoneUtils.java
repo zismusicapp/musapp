@@ -28,7 +28,7 @@ public class HeadPhoneUtils {
         mContext = context.getApplicationContext();
     }
 
-    Observable<Pair<HEADPHONE_TYPE, Boolean>> getHeadObservalbe(Context context) {
+    public Observable<Pair<HEADPHONE_TYPE, Boolean>> getHeadObservalbe(Context context) {
         IntentFilter intentFilter = new IntentFilter();
         for (String actions : HEADPHONE_ACTIONS) {
             intentFilter.addAction(actions);

@@ -59,6 +59,7 @@ ext {
            typeKit                  : "com.tsengvn:typekit:1.0.1",
 
            downloadManager          : "com.mani:ThinDownloadManager:1.2.5",
+           mockedWebServerImpl      : "com.mosn:asyncmockwebserver:1.0.0",
            gson                     : "com.google.code.gson:gson:2.7",
            okHttp                   : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
            retrofit                 : "com.squareup.retrofit2:retrofit:${retrofitVersion}",

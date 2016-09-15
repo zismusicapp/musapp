@@ -106,6 +106,9 @@ dependencies {
     exclude module: 'rxlifecycle'
     exclude module: 'appcompat-v7'
   }
+  compile (baseDependencies.mockedWebServerImpl) {
+    exclude module: 'junit'
+  }
   compile baseDependencies.downloadManager
   compile baseDependencies.eventBus
   compile baseDependencies.dagger

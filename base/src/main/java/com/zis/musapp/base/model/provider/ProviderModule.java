@@ -29,16 +29,34 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.moczul.ok2curl.CurlInterceptor;
 import com.moczul.ok2curl.logger.Loggable;
+import com.mosn.asyncmockwebserver.AsyncMockWebServer;
+import com.mosn.asyncmockwebserver.Mock;
+import com.mosn.asyncmockwebserver.MockDispatcher;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.zis.musapp.base.model.jsr310.ZonedDateTimeJsonConverter;
 import dagger.Module;
 import dagger.Provides;
+
+import javax.inject.Named;
+import javax.inject.Qualifier;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.greenrobot.eventbus.EventBus;
 import org.threeten.bp.ZonedDateTime;
+
+import android.app.Application;
+import android.content.res.AssetManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -84,6 +102,47 @@ public class ProviderModule {
             RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
         .build();
   }
+
+  @Singleton
+  @Named("mocked")
+  @Provides Retrofit provideMockedRetrofit(Application application, final RetrofitConfig config, final OkHttpClient okHttpClient,
+                                           final Gson gson) {
+
+    AssetManager assetManager = application.getAssets();
+
+    try {
+      String mockString = inputStreamToString(assetManager.open("mock.json"));
+      AsyncMockWebServer.addMock(Mock.create(
+              "/search",
+              new MockResponse().setResponseCode(200).setBody(mockString),
+              request -> request.getPath().contains("/search")
+      ));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return new Retrofit.Builder().baseUrl(AsyncMockWebServer.getEndPoint())
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(
+                    RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+            .build();
+  }
+
+  private String inputStreamToString(InputStream inputStream) throws IOException {
+    final int bufferSize = 1024;
+    final char[] buffer = new char[bufferSize];
+    final StringBuilder out = new StringBuilder();
+    Reader in = new InputStreamReader(inputStream, "UTF-8");
+    for (; ; ) {
+      int rsz = in.read(buffer, 0, buffer.length);
+      if (rsz < 0)
+        break;
+      out.append(buffer, 0, rsz);
+    }
+    return out.toString();
+  }
+
 
   @Singleton
   @Provides OkHttpClient provideHttpClient(final HttpClientConfig config) {

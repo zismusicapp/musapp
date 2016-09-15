@@ -73,7 +73,8 @@ public class PaginationFragment extends Fragment {
         }
 
         // RecyclerView pagination
-        PaginationTool<List<Item>> paginationTool = PaginationTool.buildPagingObservable(recyclerView, offset -> EmulateResponseManager
+        PaginationTool<List<Item>> paginationTool = PaginationTool.buildPagingObservable(recyclerView, offset ->
+                EmulateResponseManager
             .getInstance().getEmulateResponse(offset, LIMIT))
                 .setLimit(LIMIT)
                 .build();

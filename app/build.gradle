@@ -117,21 +117,21 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-  //
-  //  productFlavors {
-  //    dev {
-  //      // inherit from default config
-  //
-  //
-  //      // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
-  //      // to pre-dex each module and produce an APK that can be tested on
-  //      // Android Lollipop without time consuming dex merging processes.
-  //      minSdkVersion 21
-  //    }
-  //
-  //    prod {
-  //      // inherit from default config
-  //    }
+
+//    productFlavors {
+//      dev {
+//        // inherit from default config
+//
+//        // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+//        // to pre-dex each module and produce an APK that can be tested on
+//        // Android Lollipop without time consuming dex merging processes.
+//        minSdkVersion 21
+//      }
+//
+//      prod {
+//        // inherit from default config
+//      }
+//    }
 
   productFlavors {
     all32 { minSdkVersion rootProject.ext.androidMinSdkVersion }
