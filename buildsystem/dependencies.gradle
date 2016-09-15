@@ -58,6 +58,7 @@ ext {
 
            typeKit                  : "com.tsengvn:typekit:1.0.1",
 
+           downloadManager          : "com.mani:ThinDownloadManager:1.2.5",
            gson                     : "com.google.code.gson:gson:2.7",
            okHttp                   : "com.squareup.okhttp3:okhttp:${okHttpVersion}",
            retrofit                 : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
@@ -76,7 +77,8 @@ ext {
            stethoOkhttp             : "com.facebook.stetho:stetho-okhttp3:${stethoVersion}",]
 
   modelDependencies = [multiDex     : "com.android.support:multidex:${multiDexVersion}",
-                       rxPreferences: "com.f2prateek.rx.preferences:rx-preferences:1.0.1",]
+                       rxPreferences: "com.f2prateek.rx.preferences:rx-preferences:1.0.1",
+                       ]
 
   appDependencies =
           [recyclerViewV7     : "com.android.support:recyclerview-v7:${androidSupportSdkVersion}",

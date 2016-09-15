@@ -1,6 +1,7 @@
-#!/bin/sh
-cd deps
-cd ijkplayer
+#!/usr/bin
+
+cd deps/ijkplayer
+
 ./init-android.sh
 
 cd android/contrib
