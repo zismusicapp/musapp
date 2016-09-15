@@ -190,6 +190,15 @@ dependencies {
   compile appDependencies.percentageLayout
   compile appDependencies.design
 
+  // facebook sdk
+  compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
+    transitive = true
+  }
+
+  compile('com.twitter.sdk.android:twitter-core:2.0.0@aar') {
+    transitive = true;
+  }
+
   all32Compile project(':ijkplayer-armv5')
   all32Compile project(':ijkplayer-armv7a')
   all32Compile project(':ijkplayer-x86')
