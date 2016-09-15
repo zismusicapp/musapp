@@ -8,6 +8,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
+import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.login.subsribers.DigitsSubsriber;
 import com.zis.musapp.gh.features.login.subsribers.FacebookSubscriber;
 
@@ -85,8 +86,9 @@ public class RxLogin {
         return false;
     }
 
-    Observable<DigitsSubsriber.DigitLoginResult> loginDigits(Activity activity, String phoneNumber) {
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("TWITTER_KEY", "TWITTER_SECRET");
+    public Observable<DigitsSubsriber.DigitLoginResult> loginDigits(Activity activity, String phoneNumber) {
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(activity.getString(R.string.twitter_key),
+                activity.getString(R.string.twitter_secret));
         Fabric.with(activity, new TwitterCore(authConfig), new Digits.Builder().build());
 
         return Observable.create(new DigitsSubsriber(phoneNumber));
