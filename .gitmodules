@@ -7,6 +7,3 @@
 [submodule "deps/grafika"]
 	path = deps/grafika
 	url = https://github.com/zismusicapp/grafika.git
-[submodule "deps/djinni"]
-	path = deps/djinni
-	url = https://github.com/zismusicapp/djinni.git
