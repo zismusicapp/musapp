@@ -1,5 +1,7 @@
 package com.zis.musapp.gh.features.splash;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +20,14 @@ import java.util.Map;
  * Created by mikhail on 01/09/16.
  */
 public class MyVideoActivity extends AppCompatActivity {
+
+
+  public static Intent newIntent(Context context, String videoPath, String videoTitle) {
+    Intent intent = new Intent(context, MyVideoActivity.class);
+    intent.putExtra("videoPath", videoPath);
+    intent.putExtra("videoTitle", videoTitle);
+    return intent;
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

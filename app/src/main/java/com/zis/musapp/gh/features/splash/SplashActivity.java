@@ -33,6 +33,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.github.promeg.androidgitsha.lib.GitShaUtils;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
+import com.tsengvn.typekit.Typekit;
 import com.zis.musapp.base.di.HasComponent;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
@@ -40,7 +41,6 @@ import com.zis.musapp.gh.BootstrapApp;
 import com.zis.musapp.gh.BuildConfig;
 import com.zis.musapp.gh.analytics.CrashReportingTree;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
-import com.tsengvn.typekit.Typekit;
 import jonathanfinerty.once.Once;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -105,7 +105,6 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
           .addCustom1(Typekit.createFromAsset(this, "lato/Lato-Light.ttf"))
           .addCustom2(Typekit.createFromAsset(this, "lato/Lato-ThinItalic.ttf"));
 
-
       return Observable.just(true);
     }).subscribeOn(Schedulers.io()).subscribe(success -> {
 
@@ -114,17 +113,17 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       //    "bipbop basic 400x300 @ 232 kbps");
       //startActivity(intent);
 
-      startActivity(new Intent(this,WelcomeActivity.class));
+      if (!Once.beenDone(WelcomeActivity.TAG)) {
+        startActivity(new Intent(this, WelcomeActivity.class));
+      } else {
+        MyVideoActivity.newIntent(this,"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
+            "bipbop basic 400x300 @ 232 kbps");
+      }
       finish();
     }, RxUtil.ON_ERROR_LOGGER);
   }
 
-  public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-    Intent intent = new Intent(context, MyVideoActivity.class);
-    intent.putExtra("videoPath", videoPath);
-    intent.putExtra("videoTitle", videoTitle);
-    return intent;
-  }
+
   @Override
   public SplashComponent getComponent() {
     return mSplashComponent;
