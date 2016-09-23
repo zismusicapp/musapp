@@ -27,7 +27,6 @@ public class DigitsSubsriber implements Observable.OnSubscribe<DigitsSubsriber.D
         private final String mPhoneNumber;
 
         public DigitLoginResult(DigitsSession session, String phoneNumber) {
-
             mSession = session;
             mPhoneNumber = phoneNumber;
         }
@@ -48,13 +47,17 @@ public class DigitsSubsriber implements Observable.OnSubscribe<DigitsSubsriber.D
         authCallback = new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
-                subscriber.onNext(new DigitLoginResult(session, phoneNumber));
-                subscriber.onCompleted();
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(new DigitLoginResult(session, phoneNumber));
+                    subscriber.onCompleted();
+                }
             }
 
             @Override
             public void failure(DigitsException exception) {
-                subscriber.onError(exception);
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onError(exception);
+                }
             }
         };
 

@@ -6,11 +6,15 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
+import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.login.subsribers.DigitsSubsriber;
 import com.zis.musapp.gh.features.login.subsribers.FacebookSubscriber;
+import com.zis.musapp.gh.features.login.subsribers.TwitterSubscriber;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,10 +24,11 @@ import java.util.List;
 import io.fabric.sdk.android.Fabric;
 import rx.Observable;
 
-public class RxLogin {
+public class RxLoginManager {
     com.facebook.login.LoginManager mFbManager;
-    com.facebook.CallbackManager mCallbackManager;
+    com.facebook.CallbackManager mFbCallbackManager;
     FacebookCallback<LoginResult> mFacebookCallback;
+    private TwitterAuthClient mTwitterClient;
 
 
     /**
@@ -54,7 +59,7 @@ public class RxLogin {
                 .doOnUnsubscribe(() -> {
                     mFbManager = null;
                     mFacebookCallback = null;
-                    mCallbackManager = null;
+                    mFbCallbackManager = null;
                 });
     }
 
@@ -65,9 +70,9 @@ public class RxLogin {
      * @param callback the callback for getting the result from facebook
      */
     public void registerCallback(final FacebookCallback<LoginResult> callback) {
-        mCallbackManager = CallbackManager.Factory.create();
+        mFbCallbackManager = CallbackManager.Factory.create();
         mFacebookCallback = callback;
-        mFbManager.registerCallback(mCallbackManager, mFacebookCallback);
+        mFbManager.registerCallback(mFbCallbackManager, mFacebookCallback);
     }
 
 
@@ -79,9 +84,14 @@ public class RxLogin {
      * @param data        the result data that's received by the Activity or Fragment
      */
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (mCallbackManager != null) {
-            return mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        if (mFbCallbackManager != null) {
+            return mFbCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
+
+        if (mTwitterClient != null) {
+            mTwitterClient.onActivityResult(requestCode, resultCode, data);
+        }
+
 
         return false;
     }
@@ -93,5 +103,11 @@ public class RxLogin {
 
         return Observable.create(new DigitsSubsriber(phoneNumber));
     }
+
+    public Observable<Result<TwitterSession>> loginTwitter(Activity activity) {
+        mTwitterClient = new TwitterAuthClient();
+        return Observable.create(new TwitterSubscriber(mTwitterClient, activity));
+    }
+
 
 }

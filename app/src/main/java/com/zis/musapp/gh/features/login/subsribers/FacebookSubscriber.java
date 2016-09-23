@@ -5,7 +5,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.zis.musapp.gh.features.login.LoginException;
-import com.zis.musapp.gh.features.login.RxLogin;
+import com.zis.musapp.gh.features.login.RxLoginManager;
 
 import android.support.annotation.VisibleForTesting;
 
@@ -14,13 +14,13 @@ import rx.Subscriber;
 
 public class FacebookSubscriber implements Observable.OnSubscribe<LoginResult> {
 
-    private final RxLogin mRxLogin;
+    private final RxLoginManager mRxLogin;
 
     @VisibleForTesting
     FacebookCallback<LoginResult> mCallback;
 
-    public FacebookSubscriber(RxLogin rxLogin) {
-        this.mRxLogin = rxLogin;
+    public FacebookSubscriber(RxLoginManager rxLoginManager) {
+        this.mRxLogin = rxLoginManager;
     }
 
     @Override
