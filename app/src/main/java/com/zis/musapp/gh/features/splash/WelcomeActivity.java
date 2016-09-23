@@ -2,6 +2,7 @@ package com.zis.musapp.gh.features.splash;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -32,11 +33,12 @@ public class WelcomeActivity extends Activity {
     mKenBurns.setImageResource(R.drawable.splash_screen_background);
     animationLogo();
     animation();
-    RxView.clicks(welcomeText).doOnNext(aVoid -> {
+    RxView.clicks(welcomeText).subscribe(aVoid -> {
       Once.markDone(WelcomeActivity.TAG);
-      MyVideoActivity.newIntent(this,
+      Intent intent = MyVideoActivity.newIntent(this,
           "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
           "bipbop basic 400x300 @ 232 kbps");
+      startActivity(intent);
     });
   }
 

@@ -116,8 +116,10 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       if (!Once.beenDone(WelcomeActivity.TAG)) {
         startActivity(new Intent(this, WelcomeActivity.class));
       } else {
-        MyVideoActivity.newIntent(this,"http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
+        Intent intent = MyVideoActivity.newIntent(this,
+            "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
             "bipbop basic 400x300 @ 232 kbps");
+        startActivity(intent);
       }
       finish();
     }, RxUtil.ON_ERROR_LOGGER);
