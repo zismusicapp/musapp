@@ -194,6 +194,7 @@ dependencies {
   // facebook sdk
   compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
     transitive = true
+    exclude module: 'bolts-android'
   }
 
   compile('com.digits.sdk.android:digits:2.0.0@aar') {

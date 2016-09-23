@@ -1,5 +1,4 @@
 ext {
-
   // Fetch the version according to git latest tag and "how far are we from last tag"
   //http://blog.android-develop.com/2014/09/automatic-versioning-and-increment.html
   def longVersionName = "git -C ${rootDir} describe --tags --long".execute().text.trim()
@@ -8,8 +7,10 @@ ext {
 
 
   // Android
-  androidBuildToolsVersion = '23.0.3'
-  androidMinSdkVersion = 21
+  androidBuildToolsVersion = '24.0.2'
+  androidMinSdkVersion = 17
+  // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin,
+  // so Dev Debug min sdk described in app.gradle, release min sdk == androidMinSdkVersion
   androidTargetSdkVersion = 24
   androidCompileSdkVersion = 24
   androidSupportSdkVersion = '24.1.1'
