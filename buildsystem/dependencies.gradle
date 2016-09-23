@@ -1,14 +1,26 @@
 ext {
+
+  // Fetch the version according to git latest tag and "how far are we from last tag"
+  //http://blog.android-develop.com/2014/09/automatic-versioning-and-increment.html
+  def longVersionName = "git -C ${rootDir} describe --tags --long".execute().text.trim()
+  def (fullVersionTag, versionBuild, gitSha) = longVersionName.tokenize('-')
+  def (versionMajor, versionMinor, versionPatch) = fullVersionTag.tokenize('.')
+
+
   // Android
-  androidBuildToolsVersion = '24.0.2'
-  androidMinSdkVersion = 17
-  // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin,
-  // so Dev Debug min sdk described in app.gradle, release min sdk == androidMinSdkVersion
+  androidBuildToolsVersion = '23.0.3'
+  androidMinSdkVersion = 21
   androidTargetSdkVersion = 24
   androidCompileSdkVersion = 24
   androidSupportSdkVersion = '24.1.1'
-  versionCode = 1
-  versionName = '1.0.0'
+  versionCode = versionMajor.toInteger() * 100000 +
+          versionMinor.toInteger() * 10000 +
+          versionPatch.toInteger() * 1000 +
+          versionBuild.toInteger()
+  versionName = "$versionMajor.$versionMinor.$versionPatch($versionBuild)-$gitSha"
+
+  printf("\n--------" + "VERSION DATA--------" + "\n" + "- CODE: " + versionCode + "\n" +
+          "- NAME: " + versionName + "\n----------------------------\n")
 
   // Libraries
   multiDexVersion = '1.0.1'
@@ -56,6 +68,8 @@ ext {
            dagger                   : "com.google.dagger:dagger:${daggerVersion}",
            butterKnife              : "com.jakewharton:butterknife:${butterKnifeVersion}",
 
+           rxpermissions            : "com.tbruyelle.rxpermissions:rxpermissions:0.7.0@aar",
+
            typeKit                  : "com.tsengvn:typekit:1.0.1",
 
            downloadManager          : "com.mani:ThinDownloadManager:1.2.5",
@@ -79,7 +93,7 @@ ext {
 
   modelDependencies = [multiDex     : "com.android.support:multidex:${multiDexVersion}",
                        rxPreferences: "com.f2prateek.rx.preferences:rx-preferences:1.0.1",
-                       ]
+  ]
 
   appDependencies =
           [recyclerViewV7     : "com.android.support:recyclerview-v7:${androidSupportSdkVersion}",
