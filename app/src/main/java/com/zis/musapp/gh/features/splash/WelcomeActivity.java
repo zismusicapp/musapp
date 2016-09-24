@@ -8,9 +8,10 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.zis.musapp.base.view.kbv.KenBurnsView;
 import com.zis.musapp.gh.R;
 import jonathanfinerty.once.Once;
 

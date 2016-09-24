@@ -201,6 +201,8 @@ dependencies {
     transitive = true;
   }
 
+  compile 'com.flaviofaria:kenburnsview:1.0.7'
+
   all32Compile project(':ijkplayer-armv5')
   all32Compile project(':ijkplayer-armv7a')
   all32Compile project(':ijkplayer-x86')
