@@ -5,6 +5,7 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.zis.musapp.gh.features.login.LoginException;
 
 import android.app.Activity;
 
@@ -35,9 +36,9 @@ public class TwitterSubscriber implements Observable.OnSubscribe<Result<TwitterS
             }
 
             @Override
-            public void failure(TwitterException e) {
+            public void failure(TwitterException error) {
                 if (!subscriber.isUnsubscribed()) {
-                    subscriber.onError(e);
+                    subscriber.onError(new LoginException(LoginException.DIGITS_ERROR, error));
                 }
             }
         });

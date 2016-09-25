@@ -203,6 +203,7 @@ dependencies {
 
   compile 'com.flaviofaria:kenburnsview:1.0.7'
   compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
+  compile 'com.getkeepsafe.taptargetview:taptargetview:1.2.0'
 
   all32Compile project(':ijkplayer-armv5')
   all32Compile project(':ijkplayer-armv7a')

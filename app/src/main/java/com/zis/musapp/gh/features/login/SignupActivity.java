@@ -1,12 +1,9 @@
 package com.zis.musapp.gh.features.login;
 
-import com.digits.sdk.android.DigitsException;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.RxLifecycle;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
@@ -63,7 +60,7 @@ public class SignupActivity extends BootstrapActivity {
 
         Observable<Result<TwitterSession>> twitterResult = RxView.clicks(mTwitter)
                 .flatMap(aVoid ->
-                mRxLoginManager.loginTwitter(SignupActivity.this));
+                        mRxLoginManager.loginTwitter(SignupActivity.this));
 
         Observable<Boolean> loginSuccessObservable =
                 Observable.merge(
@@ -82,15 +79,7 @@ public class SignupActivity extends BootstrapActivity {
                     }
                 }, throwable -> {
 
-                    if (throwable instanceof TwitterException){
-
-                    }
-
-                    if (throwable instanceof FacebookException){
-
-                    }
-
-                    if (throwable instanceof DigitsException){
+                    if (throwable instanceof LoginException) {
 
                     }
                     //TODO handle

@@ -16,7 +16,7 @@ public class LoginException extends RuntimeException {
      */
     public static final int UNKNOWN_STATUS = -1;
 
-    @IntDef({UNKNOWN_ERROR, LOGIN_CANCELED, FACEBOOK_ERROR, GOOGLE_ERROR})
+    @IntDef({UNKNOWN_ERROR, LOGIN_CANCELED, FACEBOOK_ERROR, GOOGLE_ERROR, TWITTER_ERROR,DIGITS_ERROR})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LoginErrorCode {}
 
@@ -27,6 +27,10 @@ public class LoginException extends RuntimeException {
     public static final int FACEBOOK_ERROR = 2;
 
     public static final int GOOGLE_ERROR = 3;
+
+    public static final int TWITTER_ERROR = 4;
+
+    public static final int DIGITS_ERROR = 5;
 
     private static final long serialVersionUID = 7769013204120744732L;
 
