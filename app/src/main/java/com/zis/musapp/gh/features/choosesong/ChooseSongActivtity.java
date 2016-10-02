@@ -1,9 +1,12 @@
 package com.zis.musapp.gh.features.choosesong;
 
+import com.dd.CircularProgressButton;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.features.splash.MyVideoActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -201,6 +204,14 @@ public class ChooseSongActivtity extends Activity {
             public ViewHolder(final View itemView) {
                 super(itemView);
                 txt = (TextView) itemView.findViewById(R.id.txt_vp_item_list);
+                CircularProgressButton circularProgressButton = (CircularProgressButton) itemView.findViewById(R.id.circularButton1);
+
+                circularProgressButton.setOnClickListener(view -> {
+                    Intent intent = MyVideoActivity.newIntent(ChooseSongActivtity.this,
+                            "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
+                            "bipbop basic 400x300 @ 232 kbps");
+                    startActivity(intent);
+                });
             }
         }
     }
