@@ -1,5 +1,11 @@
 package com.zis.musapp.gh.features.splash;
 
+import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.jakewharton.rxbinding.view.RxView;
+import com.joanzapata.iconify.widget.IconTextView;
+import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.features.tour.TourActivity;
+
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
@@ -9,50 +15,49 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.flaviofaria.kenburnsview.KenBurnsView;
-import com.jakewharton.rxbinding.view.RxView;
-import com.joanzapata.iconify.widget.IconTextView;
-import com.zis.musapp.gh.R;
 import jonathanfinerty.once.Once;
 
 public class WelcomeActivity extends Activity {
 
-  public final static String TAG = "WelcomeActivity";
-  private KenBurnsView mKenBurns;
-  private TextView mLogo;
-  private TextView welcomeText;
+    public final static String TAG = "WelcomeActivity";
+    private KenBurnsView mKenBurns;
+    private TextView mLogo;
+    private TextView welcomeText;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-    setContentView(R.layout.activity_splash_screen);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_splash_screen);
 
-    mKenBurns = (KenBurnsView) findViewById(R.id.ken_burns_images);
-    mLogo = (IconTextView) findViewById(R.id.logo);
-    welcomeText = (TextView) findViewById(R.id.welcome_text);
-    mKenBurns.setImageResource(R.drawable.splash_screen_background);
-    animationLogo();
-    animation();
-    RxView.clicks(welcomeText).subscribe(aVoid -> {
-      Once.markDone(WelcomeActivity.TAG);
-      Intent intent = MyVideoActivity.newIntent(this,
-          "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
-          "bipbop basic 400x300 @ 232 kbps");
-      startActivity(intent);
-    });
-  }
+        mKenBurns = (KenBurnsView) findViewById(R.id.ken_burns_images);
+        mLogo = (IconTextView) findViewById(R.id.logo);
+        welcomeText = (TextView) findViewById(R.id.welcome_text);
+        mKenBurns.setImageResource(R.drawable.splash_screen_background);
+        animationLogo();
+        animation();
 
-  private void animationLogo() {
-    mLogo.setAlpha(1.0F);
-    Animation anim = AnimationUtils.loadAnimation(this, R.anim.translate_top_to_center);
-    mLogo.startAnimation(anim);
-  }
+        RxView.clicks(welcomeText).subscribe(aVoid -> {
 
-  private void animation() {
-    ObjectAnimator alphaAnimation = ObjectAnimator.ofFloat(welcomeText, "alpha", 0.0F, 1.0F);
-    alphaAnimation.setStartDelay(1700);
-    alphaAnimation.setDuration(500);
-    alphaAnimation.start();
-  }
+            Once.markDone(WelcomeActivity.TAG);
+            startActivity(new Intent(this, TourActivity.class));
+//            Intent intent = MyVideoActivity.newIntent(this,
+//                    "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
+//                    "bipbop basic 400x300 @ 232 kbps");
+//            startActivity(intent);
+        });
+    }
+
+    private void animationLogo() {
+        mLogo.setAlpha(1.0F);
+        Animation anim = AnimationUtils.loadAnimation(this, R.anim.translate_top_to_center);
+        mLogo.startAnimation(anim);
+    }
+
+    private void animation() {
+        ObjectAnimator alphaAnimation = ObjectAnimator.ofFloat(welcomeText, "alpha", 0.0F, 1.0F);
+        alphaAnimation.setStartDelay(1700);
+        alphaAnimation.setDuration(500);
+        alphaAnimation.start();
+    }
 }

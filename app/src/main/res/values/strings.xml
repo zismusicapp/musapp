@@ -23,24 +23,48 @@
   -->
 
 <resources>
-  <string name="app_name">MUS</string>
+    <string name="app_name">MUS</string>
 
-  <string name="github_user_followers_formatter" formatted="false">%d Followers</string>
-  <string name="github_user_following_formatter" formatted="false">%d Following</string>
-  <string name="splash">Splashing window</string>
-  <string name="search">Search</string>
-  <string name="search_it">Search it</string>
-  <string name="search_result">Search Result</string>
+    <string name="github_user_followers_formatter" formatted="false">%d Followers</string>
+    <string name="github_user_following_formatter" formatted="false">%d Following</string>
+    <string name="splash">Splashing window</string>
+    <string name="search">Search</string>
+    <string name="search_it">Search it</string>
+    <string name="search_result">Search Result</string>
 
-  <!-- formatter -->
-  <string name="github_username_formatter" formatted="false">%s\n%s</string>
+    <!-- formatter -->
+    <string name="github_username_formatter" formatted="false">%s\n%s</string>
 
-  <!-- TODO: Remove or change this placeholder text -->
-  <string name="hello_blank_fragment">Hello blank fragment</string>
-  
-  <string name="google_maps_key">AIzaSyA9vspt07A3nqkzhmYrbKt5sHbZPpPIWRE</string>
-  <string name="panic_button">PANIC</string>
-  <string name="twitter_key">TWITTER_KEY</string>
-  <string name="twitter_secret">TWITTER_SECRET</string>
-  <string name="welcome">Welcome</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="google_maps_key">AIzaSyA9vspt07A3nqkzhmYrbKt5sHbZPpPIWRE</string>
+    <string name="panic_button">PANIC</string>
+    <string name="twitter_key">TWITTER_KEY</string>
+    <string name="twitter_secret">TWITTER_SECRET</string>
+    <string name="welcome">Welcome</string>
+    <string name="Complete">Complete</string>
+    <string name="Error">Error</string>
+    <string name="Upload">Upload</string>
+
+    <!-- Tour -->
+    <string name="tour_sign_up">Sign UP</string>
+    <string name="tour_sign_in">Sign IN</string>
+    <string name="tour_sign_using_tel">Using tel</string>
+    <string name="tour_sign_using_email">Usign email</string>
+    <string name="tour_sign_using_oauth">Using google</string>
+    <string name="tour_back_to_top">Back</string>
+
+    <string name="tour_welcome_title">Musapp</string>
+    <string name="tour_welcome_subtitle">Best music app</string>
+
+    <string name="tour_groups_title">Groups title</string>
+    <string name="tour_groups_text">Groups text</string>
+
+    <string name="tour_everywhere_title">Super title</string>
+    <string name="tour_everywhere_text">Super text</string>
+
+    <string name="tour_secure_title">Secure title</string>
+    <string name="tour_secure_text">Secure text</string>
+
 </resources>

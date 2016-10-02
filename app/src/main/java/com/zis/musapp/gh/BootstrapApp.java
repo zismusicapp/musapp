@@ -28,6 +28,8 @@ import android.app.Application;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDexApplication;
+
 import com.facebook.stetho.Stetho;
 import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.github.anrwatchdog.ANRWatchDog;
@@ -46,7 +48,7 @@ import com.zis.musapp.gh.di.IApplication;
  *
  * Custom application class, providing APP wild utility, singleton, state control functions.
  */
-public class BootstrapApp extends Application implements IApplication {
+public class BootstrapApp extends MultiDexApplication implements IApplication {
 
   private static BootstrapApp sInstance;
 
