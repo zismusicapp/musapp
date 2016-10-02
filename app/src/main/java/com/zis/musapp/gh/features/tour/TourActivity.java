@@ -4,7 +4,9 @@ import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.Fonts;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.Screen;
+import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,10 +49,10 @@ public class TourActivity extends BootstrapActivity {
         findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent authIntent = new Intent(TourActivity.this, AuthActivity.class);
+                Intent authIntent = new Intent(TourActivity.this, ChooseSongActivtity.class);
 //                authIntent.putExtra(AuthActivity.SIGN_TYPE_KEY, AuthActivity.SIGN_TYPE_UP);
-//                startActivity(authIntent);
-//                finish();
+                startActivity(authIntent);
+                finish();
 
             }
         });
