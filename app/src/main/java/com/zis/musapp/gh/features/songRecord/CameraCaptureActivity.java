@@ -1,4 +1,4 @@
-package com.zis.musapp.gh;
+package com.zis.musapp.gh.features.songRecord;
 
 
 import android.app.Activity;
@@ -10,8 +10,12 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -23,6 +27,7 @@ import com.android.grafika.CameraUtils;
 import com.android.grafika.TextureMovieEncoder;
 import com.android.grafika.gles.FullFrameRect;
 import com.android.grafika.gles.Texture2dProgram;
+import com.zis.musapp.gh.R;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -126,6 +131,7 @@ public class CameraCaptureActivity extends Activity
 
   // this is static so it survives activity restarts
   private static TextureMovieEncoder sVideoEncoder = new TextureMovieEncoder();
+  private boolean isPreviewRunning;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -167,11 +173,20 @@ public class CameraCaptureActivity extends Activity
     Log.d(TAG, "onResume -- acquiring camera");
     super.onResume();
     updateControls();
-    openCamera(1280, 720);      // updates mCameraPreviewWidth/Height
+
+    DisplayMetrics displaymetrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+    int height = displaymetrics.heightPixels;
+    int width = displaymetrics.widthPixels;
+
+    //(1280, 720)
+    openCamera(width, height);      // updates mCameraPreviewWidth/Height
+
+    setOrientation(mCameraPreviewWidth,mCameraPreviewHeight);
 
     // Set the preview aspect ratio.
     AspectFrameLayout layout = (AspectFrameLayout) findViewById(R.id.cameraPreview_afl);
-    layout.setAspectRatio((double) mCameraPreviewWidth / mCameraPreviewHeight);
+    layout.setAspectRatio((double)  mCameraPreviewHeight / mCameraPreviewWidth );
 
     mGLView.onResume();
     mGLView.queueEvent(new Runnable() {
@@ -211,11 +226,9 @@ public class CameraCaptureActivity extends Activity
     final int filterNum = spinner.getSelectedItemPosition();
 
     Log.d(TAG, "onItemSelected: " + filterNum);
-    mGLView.queueEvent(new Runnable() {
-      @Override public void run() {
-        // notify the renderer that we want to change the encoder's state
-        mRenderer.changeFilterMode(filterNum);
-      }
+    mGLView.queueEvent(() -> {
+      // notify the renderer that we want to change the encoder's state
+      mRenderer.changeFilterMode(filterNum);
     });
   }
 
@@ -338,6 +351,37 @@ public class CameraCaptureActivity extends Activity
     mCamera.startPreview();
   }
 
+
+
+  public void setOrientation(int width, int height)
+  {
+    Camera.Parameters parameters = mCamera.getParameters();
+    Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+
+    if(display.getRotation() == Surface.ROTATION_0)
+    {
+      parameters.setPreviewSize(height, width);
+      mCamera.setDisplayOrientation(90);
+    }
+
+    if(display.getRotation() == Surface.ROTATION_90)
+    {
+      parameters.setPreviewSize(width, height);
+    }
+
+    if(display.getRotation() == Surface.ROTATION_180)
+    {
+      parameters.setPreviewSize(height, width);
+    }
+
+    if(display.getRotation() == Surface.ROTATION_270)
+    {
+      parameters.setPreviewSize(width, height);
+      mCamera.setDisplayOrientation(180);
+    }
+
+    mCamera.setParameters(parameters);
+  }
   @Override
   public void onFrameAvailable(SurfaceTexture st) {
     // The SurfaceTexture uses this to signal the availability of a new frame.  The

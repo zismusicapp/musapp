@@ -16,7 +16,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.zis.musapp.gh.features.songRecord.CameraCaptureActivity;
 
 public class TourActivity extends BootstrapActivity {
 
@@ -50,7 +50,6 @@ public class TourActivity extends BootstrapActivity {
             @Override
             public void onClick(View v) {
                 Intent authIntent = new Intent(TourActivity.this, ChooseSongActivtity.class);
-//                authIntent.putExtra(AuthActivity.SIGN_TYPE_KEY, AuthActivity.SIGN_TYPE_UP);
                 startActivity(authIntent);
                 finish();
 
@@ -60,10 +59,9 @@ public class TourActivity extends BootstrapActivity {
         findViewById(R.id.signIn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent authIntent = new Intent(TourActivity.this, AuthActivity.class);
-//                authIntent.putExtra(AuthActivity.SIGN_TYPE_KEY, AuthActivity.SIGN_TYPE_IN);
-//                startActivity(authIntent);
-//                finish();
+                Intent authIntent = new Intent(TourActivity.this, CameraCaptureActivity.class);
+                startActivity(authIntent);
+                finish();
 
             }
         });
