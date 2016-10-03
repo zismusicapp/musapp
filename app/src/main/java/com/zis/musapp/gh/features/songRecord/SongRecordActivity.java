@@ -10,8 +10,4 @@ public class SongRecordActivity extends BootstrapActivity {
   @Override protected void initializeInjector() {
 
   }
-
-
-
-
 }
