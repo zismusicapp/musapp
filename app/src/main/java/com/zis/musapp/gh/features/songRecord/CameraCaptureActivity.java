@@ -27,6 +27,9 @@ import com.android.grafika.CameraUtils;
 import com.android.grafika.TextureMovieEncoder;
 import com.android.grafika.gles.FullFrameRect;
 import com.android.grafika.gles.Texture2dProgram;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.zis.musapp.gh.R;
 import java.io.File;
 import java.io.IOException;
@@ -136,7 +139,17 @@ public class CameraCaptureActivity extends Activity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_camera_capture);
+    setContentView(R.layout.my_activity_camera_capture);
+
+    View viewById = findViewById(R.id.leftFab);
+    ShowcaseView showcaseView = new ShowcaseView.Builder(this)
+        .setTarget(new ViewTarget(viewById))
+        .setContentTitle("ShowcaseView")
+        .setContentText("This is highlighting the Home button")
+        .hideOnTouchOutside()
+        .build();
+
+    showcaseView.show();
 
     File outputFile = new File(getFilesDir(), "camera-test.mp4");
     TextView fileText = (TextView) findViewById(R.id.cameraOutputFile_text);
