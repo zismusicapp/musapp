@@ -2,6 +2,7 @@ package com.zis.musapp.gh.features.songRecord;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.EGL14;
@@ -28,9 +29,9 @@ import com.android.grafika.TextureMovieEncoder;
 import com.android.grafika.gles.FullFrameRect;
 import com.android.grafika.gles.Texture2dProgram;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.features.editVideo.TrimmerActivity;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -141,6 +142,10 @@ public class CameraCaptureActivity extends Activity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.my_activity_camera_capture);
 
+
+
+    String testFileName = "camera-test.mp4";
+    File outputFile = new File(getFilesDir(), testFileName);
     View viewById = findViewById(R.id.leftFab);
     ShowcaseView showcaseView = new ShowcaseView.Builder(this)
         .setTarget(new ViewTarget(viewById))
@@ -149,9 +154,14 @@ public class CameraCaptureActivity extends Activity
         .hideOnTouchOutside()
         .build();
 
+    viewById.setOnClickListener(v -> {
+      Intent intent = new Intent(CameraCaptureActivity.this, TrimmerActivity.class);
+      intent.putExtra(TrimmerActivity.EXTRA_VIDEO_PATH,outputFile.getAbsolutePath());
+      startActivity(intent);
+    });
+
     showcaseView.show();
 
-    File outputFile = new File(getFilesDir(), "camera-test.mp4");
     TextView fileText = (TextView) findViewById(R.id.cameraOutputFile_text);
     fileText.setText(outputFile.toString());
 

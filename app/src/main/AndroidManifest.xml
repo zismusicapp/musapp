@@ -65,6 +65,9 @@
 
         <activity android:name=".features.songRecord.CameraCaptureActivity"
                   android:screenOrientation="portrait"/>
+
+        <activity android:name=".features.editVideo.TrimmerActivity"/>
+
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="@string/google_maps_key"/>
