@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.features.previewActivity.PreviewActivity;
+import java.io.File;
 import life.knowledge4.videotrimmer.K4LVideoTrimmer;
 import life.knowledge4.videotrimmer.interfaces.OnK4LVideoListener;
 import life.knowledge4.videotrimmer.interfaces.OnTrimVideoListener;
@@ -23,12 +26,16 @@ public class TrimmerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trimmer);
 
+        findViewById(R.id.btn_finish).setOnClickListener(v -> {
+          startActivity(new Intent(this,PreviewActivity.class));
+        });
         Intent extraIntent = getIntent();
         String path = "";
 
         if (extraIntent != null) {
             path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
         }
+        File file = new File(path);
 
         //setting progressbar
         mProgressDialog = new ProgressDialog(this);
@@ -40,8 +47,8 @@ public class TrimmerActivity extends AppCompatActivity
             mVideoTrimmer.setMaxDuration(10);
             mVideoTrimmer.setOnTrimVideoListener(this);
             mVideoTrimmer.setOnK4LVideoListener(this);
-            //mVideoTrimmer.setDestinationPath("/storage/emulated/0/DCIM/CameraCustom/");
-            mVideoTrimmer.setVideoURI(Uri.parse(path));
+            mVideoTrimmer.setDestinationPath(new File(file.getParent(), "toSend.mp4").getAbsolutePath());
+            mVideoTrimmer.setVideoURI(Uri.parse(file.getAbsolutePath()));
             mVideoTrimmer.setVideoInformationVisibility(true);
         }
     }
