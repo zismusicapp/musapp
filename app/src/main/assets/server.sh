@@ -1,6 +1,8 @@
 #!/bin/bash
 #set -x
 
+##ffmpeg should be reinstalled with aac: brew reinstall ffmpeg --with-faac
+
 VIDEO_FILES=( ); # array to store all available *.ts files at the moment
 VIDEO_FILES_MAX=10; # how many elements can be stored in $VIDEO_FILES array
 LIST_LEN=0; #*.ts list length
@@ -10,13 +12,13 @@ VIDEO_WINDOW_LEN=3; # how many files we are storing in the window
 
 LAST_CONVERTED=0; # ID of last converted video slice
 
-RAW_SLICES_PATH="/tmp/DV/"; # where to look for raw video slices
-MP4_SLICES_PATH="/tmp/MP4/"; # where to place converted chunks
-MP4_SLICES_WEBPATH="http://istream.jurnaltv.md/live/"; # web path from the user`s POV
+RAW_SLICES_PATH="/tmpVid/src/"; # where to look for raw video slices
+MP4_SLICES_PATH="/tmpVid/out/"; # where to place converted chunks
+MP4_SLICES_WEBPATH="http://4a461ea0.ngrok.io/"; # web path from the user`s POV
 SLICE_DURATION=10; # seconds, 10-15 seconds recomended by Apple
-M3U_FILE_NAME="/tmp/MP4/live.m3u"; # full path to the m3u index file
+M3U_FILE_NAME="/tmpVid/out/live.m3u"; # full path to the m3u index file
 
-FFMPEG_CMD="/usr/local/bin/ffmpeg -y -i ";
+FFMPEG_CMD="/usr/local/bin/ffmpeg -re -i ";
 
 update_m3u() {
 # updating number of elements
@@ -77,8 +79,8 @@ RUN="0";
 trap 'on_sigterm' TERM
 
 # cleanup source and converted folders
-rm -f ${RAW_SLICES_PATH}*.dv;
-rm -f ${MP4_SLICES_PATH}*.dv;
+rm -f ${RAW_SLICES_PATH}*.mp4;
+rm -f ${MP4_SLICES_PATH}*.mp4;
 
 # forever do
 # convert video
@@ -105,8 +107,25 @@ then
 echo "Converting ${raw_slice}">>/tmp/istream.txt
 #sleep 6; # simulating transcoding delay
 mp4_slice="live-${LAST_CONVERTED}.ts";
-$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec libfaac -ac 1 -ar 48000 -ab 96k -vcodec libx264 -vpre baseline -vpre fast -vpre ipod640 -b 800k -g 5 -async 25 -keyint_min 5 -s 512x256 -aspect 16:9 -bt 100k -maxrate 800k -bufsize 800k -deinterlace -f mpegts ${MP4_SLICES_PATH}${mp4_slice}
+#$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec libfaac -ac 1 -ar 48000 -ab 96k -vcodec libx264 -preset baseline -preset fast -preset 720p -b 800k -g 5 -async 25 -keyint_min 5 -s 512x256 -aspect 16:9 -bt 100k -maxrate 800k -bufsize 800k -deinterlace -f mpegts ${MP4_SLICES_PATH}${mp4_slice}
+#
+mkdir ${MP4_SLICES_PATH}500k
+#$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 500K ${MP4_SLICES_PATH}500k/${mp4_slice}
+
+mkdir ${MP4_SLICES_PATH}500k
+$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 500K -f segment -segment_list ${MP4_SLICES_PATH}500k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}500k/stream%05d.ts
+
+mkdir ${MP4_SLICES_PATH}128k
+$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 128K  -f segment -segment_list ${MP4_SLICES_PATH}128k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}128k/stream%05d.ts
+
+mkdir ${MP4_SLICES_PATH}2000k
+$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 2000k  -f segment -segment_list ${MP4_SLICES_PATH}2000k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}2000k/stream%05d.ts
+
+
+#ffmpeg -i movie.mp4 -acodec copy -vb 500K movie-500K.mp4
+#remove source
 rm -f ${RAW_SLICES_PATH}$raw_slice
+
 LIST_LEN=${#VIDEO_FILES[@]};
 VIDEO_FILES[${LIST_LEN}]=$mp4_slice;
 #generating m3u file
