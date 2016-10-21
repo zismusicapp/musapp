@@ -54,22 +54,16 @@ public class TourActivity extends BootstrapActivity {
       }
     });
 
-    findViewById(R.id.signIn).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent authIntent = new Intent(TourActivity.this, CameraCaptureActivity.class);
-        startActivity(authIntent);
-        finish();
-      }
+    findViewById(R.id.signIn).setOnClickListener(v -> {
+      Intent authIntent = new Intent(TourActivity.this, CameraCaptureActivity.class);
+      startActivity(authIntent);
+      finish();
     });
 
-    View.OnClickListener jumpToTopListener = new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        backToTopArrow.animate().alpha(0).setDuration(0).start();
-        backToTopText.animate().alpha(0).setDuration(0).start();
-        viewPager.setCurrentItem(0, true);
-      }
+    View.OnClickListener jumpToTopListener = v -> {
+      backToTopArrow.animate().alpha(0).setDuration(0).start();
+      backToTopText.animate().alpha(0).setDuration(0).start();
+      viewPager.setCurrentItem(0, true);
     };
     backToTopText.setOnClickListener(jumpToTopListener);
     backToTopArrow.setOnClickListener(jumpToTopListener);
@@ -119,23 +113,15 @@ public class TourActivity extends BootstrapActivity {
             loginHolder.animate().y(loginY).setDuration(0).setStartDelay(0).start();
             background.animate().y(loginY - background.getHeight() + loginHolder.getHeight() +
                 Screen.dp(8)).setDuration(0).start();
-                        /*if(loginHolderBackgroundVisible){
-                            loginHolderBackgroundVisible = false;
-                            loginHolderBackground.animate().alpha(0).setDuration(0).start();
-                        } else {
 
-                        }*/
-            //loginHolderBackground.animate().alpha(page).setDuration(0).start();
             background.animate().alpha(page).setDuration(0).start();
             loginHolderStatus = LOGINHOLDER_STATUS_VISIBLE;
             float welcomeImageY = welcomeImage.getTop() - y / 2;
             float welcomeTextY = welcomeText.getTop() - y / 2;
             if (alpha > 0) {
               welcomeImage.animate()
-                  //.scaleX(alpha/2+0.5f).scaleY(alpha/2+0.5f)
                   .alpha(alpha).y(welcomeImageY).setDuration(0).start();
               welcomeText.animate()
-                  //.scaleX(alpha/2+0.5f).scaleY(alpha/2+0.5f)
                   .alpha(alpha).y(welcomeTextY).setDuration(0).start();
             } else {
               welcomeImage.animate().alpha(0).setDuration(0).start();
