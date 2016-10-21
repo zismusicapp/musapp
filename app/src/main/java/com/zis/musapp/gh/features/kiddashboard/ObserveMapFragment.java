@@ -24,7 +24,6 @@ import com.zis.musapp.gh.BootstrapApp;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.users.ZisUser;
 import javax.inject.Inject;
-import org.threeten.bp.ZonedDateTime;
 
 /**
  * Created by mikhail on 26/08/16.

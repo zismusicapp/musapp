@@ -2,9 +2,9 @@ package com.zis.musapp.gh.features.profile;
 
 import android.os.Bundle;
 import android.widget.Toast;
+import com.yatatsu.autobundle.AutoBundleField;
 import com.zis.musapp.base.android.BaseActivity;
 import com.zis.musapp.gh.model.users.ZisUser;
-import com.yatatsu.autobundle.AutoBundleField;
 
 public class ProfileActivity extends BaseActivity {
 

@@ -8,67 +8,74 @@ import android.content.res.Resources;
  */
 public class Screen {
 
-    private static float density;
-    private static float scaledDensity;
-    private static Application mApplication;
+  private static float density;
+  private static float scaledDensity;
+  private static Application mApplication;
+  private static Screen ourInstance = new Screen();
 
-    public void init(Application application) {
-        mApplication = application;
+  public static Screen getInstance() {
+    return ourInstance;
+  }
+
+  public static int dp(float dp) {
+    if (density == 0f) {
+      density = mApplication.getApplicationContext().getResources().getDisplayMetrics().density;
     }
 
-    private static Screen ourInstance = new Screen();
+    return (int) (dp * density + .5f);
+  }
 
-    public static Screen getInstance() {
-        return ourInstance;
+  public static int sp(float sp) {
+    if (scaledDensity == 0f) {
+      scaledDensity =
+          mApplication.getApplicationContext().getResources().getDisplayMetrics().scaledDensity;
     }
 
+    return (int) (sp * scaledDensity + .5f);
+  }
 
-    public static int dp(float dp) {
-        if (density == 0f)
-            density = mApplication.getApplicationContext().getResources().getDisplayMetrics().density;
+  public static int getWidth() {
+    return mApplication.getApplicationContext().getResources().getDisplayMetrics().widthPixels;
+  }
 
-        return (int) (dp * density + .5f);
+  public static int getHeight() {
+    return mApplication.getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+  }
+
+  public static int getStatusBarHeight() {
+
+    int result = 0;
+    int resourceId = mApplication.getApplicationContext()
+        .getResources()
+        .getIdentifier("status_bar_height", "dimen", "android");
+    if (resourceId > 0) {
+      result =
+          mApplication.getApplicationContext().getResources().getDimensionPixelSize(resourceId);
     }
+    return result;
+  }
 
-    public static int sp(float sp) {
-        if (scaledDensity == 0f)
-            scaledDensity = mApplication.getApplicationContext().getResources().getDisplayMetrics().scaledDensity;
-
-        return (int) (sp * scaledDensity + .5f);
+  public static int getNavbarHeight() {
+    if (hasNavigationBar()) {
+      int resourceId = mApplication.getApplicationContext()
+          .getResources()
+          .getIdentifier("navigation_bar_height", "dimen", "android");
+      if (resourceId > 0) {
+        return mApplication.getApplicationContext()
+            .getResources()
+            .getDimensionPixelSize(resourceId);
+      }
     }
+    return 0;
+  }
 
+  public static boolean hasNavigationBar() {
+    Resources resources = mApplication.getApplicationContext().getResources();
+    int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+    return (id > 0) && resources.getBoolean(id);
+  }
 
-    public static int getWidth() {
-        return mApplication.getApplicationContext().getResources().getDisplayMetrics().widthPixels;
-    }
-
-    public static int getHeight() {
-        return mApplication.getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-    }
-
-    public static int getStatusBarHeight() {
-
-        int result = 0;
-        int resourceId = mApplication.getApplicationContext().getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = mApplication.getApplicationContext().getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-    public static int getNavbarHeight() {
-        if (hasNavigationBar()) {
-            int resourceId = mApplication.getApplicationContext().getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                return mApplication.getApplicationContext().getResources().getDimensionPixelSize(resourceId);
-            }
-        }
-        return 0;
-    }
-
-    public static boolean hasNavigationBar() {
-        Resources resources = mApplication.getApplicationContext().getResources();
-        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
-        return (id > 0) && resources.getBoolean(id);
-    }
+  public void init(Application application) {
+    mApplication = application;
+  }
 }

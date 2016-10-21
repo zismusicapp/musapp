@@ -31,10 +31,10 @@ public class TriangleShapeView extends View {
   @Override protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
     mPath = new Path();
-    mPath.moveTo(w/2 - ARROW_WIDTH / 2, 0);
-    mPath.lineTo(w/2 + ARROW_WIDTH / 2, 0);
-    mPath.lineTo(w/2, h);
-    mPath.lineTo(w/2 - ARROW_WIDTH / 2, 0);
+    mPath.moveTo(w / 2 - ARROW_WIDTH / 2, 0);
+    mPath.lineTo(w / 2 + ARROW_WIDTH / 2, 0);
+    mPath.lineTo(w / 2, h);
+    mPath.lineTo(w / 2 - ARROW_WIDTH / 2, 0);
     mPath.close();
   }
 

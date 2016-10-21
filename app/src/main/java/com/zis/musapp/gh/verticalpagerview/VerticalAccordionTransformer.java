@@ -7,9 +7,9 @@ import android.view.View;
  */
 public class VerticalAccordionTransformer extends VerticalBaseTransformer {
 
-    @Override
-    protected void onTransform(View page, float position) {
-        page.setPivotY(position < 0 ? 0 : page.getHeight());
-        page.setScaleY(position < 0 ? 1f + position : 1f - position);
-    }
+  @Override
+  protected void onTransform(View page, float position) {
+    page.setPivotY(position < 0 ? 0 : page.getHeight());
+    page.setScaleY(position < 0 ? 1f + position : 1f - position);
+  }
 }

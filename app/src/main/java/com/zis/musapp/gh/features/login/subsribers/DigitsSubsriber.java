@@ -5,7 +5,6 @@ import com.digits.sdk.android.AuthConfig;
 import com.digits.sdk.android.Digits;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
-
 import rx.Observable;
 import rx.Subscriber;
 
@@ -14,58 +13,55 @@ import rx.Subscriber;
  */
 public class DigitsSubsriber implements Observable.OnSubscribe<DigitsSubsriber.DigitLoginResult> {
 
+  private final String mPhoneNumber;
+  public AuthCallback authCallback;
+
+  public DigitsSubsriber(String phoneNumber) {
+    mPhoneNumber = phoneNumber;
+  }
+
+  @Override
+  public void call(Subscriber<? super DigitsSubsriber.DigitLoginResult> subscriber) {
+    authCallback = new AuthCallback() {
+      @Override
+      public void success(DigitsSession session, String phoneNumber) {
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onNext(new DigitLoginResult(session, phoneNumber));
+          subscriber.onCompleted();
+        }
+      }
+
+      @Override
+      public void failure(DigitsException exception) {
+        if (!subscriber.isUnsubscribed()) {
+          subscriber.onError(exception);
+        }
+      }
+    };
+
+    AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
+        .withAuthCallBack(authCallback)
+        .withPhoneNumber(mPhoneNumber);
+
+    Digits.authenticate(authConfigBuilder.build());
+  }
+
+  public class DigitLoginResult {
+
+    private final DigitsSession mSession;
     private final String mPhoneNumber;
 
-    public DigitsSubsriber(String phoneNumber) {
-        mPhoneNumber = phoneNumber;
+    public DigitLoginResult(DigitsSession session, String phoneNumber) {
+      mSession = session;
+      mPhoneNumber = phoneNumber;
     }
 
-
-    public class DigitLoginResult {
-
-        private final DigitsSession mSession;
-        private final String mPhoneNumber;
-
-        public DigitLoginResult(DigitsSession session, String phoneNumber) {
-            mSession = session;
-            mPhoneNumber = phoneNumber;
-        }
-
-        public DigitsSession getSession() {
-            return mSession;
-        }
-
-        public String getPhoneNumber() {
-            return mPhoneNumber;
-        }
+    public DigitsSession getSession() {
+      return mSession;
     }
 
-    public AuthCallback authCallback;
-
-    @Override
-    public void call(Subscriber<? super DigitsSubsriber.DigitLoginResult> subscriber) {
-        authCallback = new AuthCallback() {
-            @Override
-            public void success(DigitsSession session, String phoneNumber) {
-                if (!subscriber.isUnsubscribed()) {
-                    subscriber.onNext(new DigitLoginResult(session, phoneNumber));
-                    subscriber.onCompleted();
-                }
-            }
-
-            @Override
-            public void failure(DigitsException exception) {
-                if (!subscriber.isUnsubscribed()) {
-                    subscriber.onError(exception);
-                }
-            }
-        };
-
-        AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
-                .withAuthCallBack(authCallback)
-                .withPhoneNumber(mPhoneNumber);
-
-        Digits.authenticate(authConfigBuilder.build());
-
+    public String getPhoneNumber() {
+      return mPhoneNumber;
     }
+  }
 }

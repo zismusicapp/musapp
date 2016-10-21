@@ -29,17 +29,20 @@ public class KidDashboardActivity extends BootstrapActivity {
       switch (action) {
         case MotionEvent.ACTION_DOWN:
           // Disallow ScrollView to intercept touch events.
-          ((NestedScrollView) findViewById(R.id.scrollView)).requestDisallowInterceptTouchEvent(true);
+          ((NestedScrollView) findViewById(R.id.scrollView)).requestDisallowInterceptTouchEvent(
+              true);
           // Disable touch on transparent view
           return false;
 
         case MotionEvent.ACTION_UP:
           // Allow ScrollView to intercept touch events.
-          ((NestedScrollView) findViewById(R.id.scrollView)).requestDisallowInterceptTouchEvent(false);
+          ((NestedScrollView) findViewById(R.id.scrollView)).requestDisallowInterceptTouchEvent(
+              false);
           return true;
 
         case MotionEvent.ACTION_MOVE:
-          ((NestedScrollView) findViewById(R.id.scrollView)).requestDisallowInterceptTouchEvent(true);
+          ((NestedScrollView) findViewById(R.id.scrollView)).requestDisallowInterceptTouchEvent(
+              true);
           return false;
 
         default:

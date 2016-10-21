@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class MyVideoActivity extends AppCompatActivity {
 
-
   public static Intent newIntent(Context context, String videoPath, String videoTitle) {
     Intent intent = new Intent(context, MyVideoActivity.class);
     intent.putExtra("videoPath", videoPath);
@@ -43,6 +42,7 @@ public class MyVideoActivity extends AppCompatActivity {
     verticalViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
       int previousPage = 0;
+
       @Override
       public void onPageScrolled(final int position, final float positionOffset,
           final int positionOffsetPixels) {
@@ -51,18 +51,15 @@ public class MyVideoActivity extends AppCompatActivity {
 
       @Override public void onPageSelected(final int position) {
 
-
-
         int currentPage = verticalViewPager.getCurrentItem();
 
         //when scroll up
         Fragment curFragment = adapter.getFragMap().get(currentPage);
-        if (curFragment !=null){
+        if (curFragment != null) {
           if (curFragment instanceof VideoFragment) {
             VideoFragment video = (VideoFragment) curFragment;
             video.resume();
           }
-
         }
 
         //when scroll down

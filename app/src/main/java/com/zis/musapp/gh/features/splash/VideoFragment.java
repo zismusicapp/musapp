@@ -66,6 +66,15 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
   //  context.startActivity(newIntent(context, videoPath, videoTitle));
   //}
 
+  public static Fragment newInstance(int position) {
+
+    VideoFragment fragment = new VideoFragment();
+    Bundle args = new Bundle();
+    // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+    // fragment.setArguments(args);
+    return fragment;
+  }
+
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
@@ -173,6 +182,7 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
   public void stop() {
     mVideoView.pause();
   }
+
   @Override public void onDetach() {
 
     stopAll();
@@ -206,15 +216,6 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
     }
 
     return mVideoView.getSelectedTrack(trackType);
-  }
-
-  public static Fragment newInstance(int position) {
-
-    VideoFragment fragment = new VideoFragment();
-    Bundle args = new Bundle();
-    // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-    // fragment.setArguments(args);
-    return fragment;
   }
 }
 

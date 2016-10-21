@@ -24,12 +24,10 @@
 
 package com.zis.musapp.gh;
 
-import android.app.Application;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
-
 import com.facebook.stetho.Stetho;
 import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.github.anrwatchdog.ANRWatchDog;
