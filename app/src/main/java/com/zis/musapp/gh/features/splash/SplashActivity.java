@@ -24,7 +24,6 @@
 
 package com.zis.musapp.gh.features.splash;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.bugtags.library.Bugtags;
@@ -33,7 +32,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.github.promeg.androidgitsha.lib.GitShaUtils;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
-import com.tsengvn.typekit.Typekit;
 import com.zis.musapp.base.di.HasComponent;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
@@ -105,24 +103,10 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       return Observable.just(true);
     }).subscribeOn(Schedulers.io()).subscribe(success -> {
 
-      //Intent intent = newIntent(this,
-      //    "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
-      //    "bipbop basic 400x300 @ 232 kbps");
-      //startActivity(intent);
-
       startActivity(new Intent(this, WelcomeActivity.class));
-//      if (!Once.beenDone(WelcomeActivity.TAG)) {
-//        startActivity(new Intent(this, WelcomeActivity.class));
-//      } else {
-//        Intent intent = MyVideoActivity.newIntent(this,
-//            "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
-//            "bipbop basic 400x300 @ 232 kbps");
-//        startActivity(intent);
-//      }
       finish();
     }, RxUtil.ON_ERROR_LOGGER);
   }
-
 
   @Override
   public SplashComponent getComponent() {
