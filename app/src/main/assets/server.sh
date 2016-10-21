@@ -109,18 +109,39 @@ echo "Converting ${raw_slice}">>/tmp/istream.txt
 mp4_slice="live-${LAST_CONVERTED}.ts";
 #$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec libfaac -ac 1 -ar 48000 -ab 96k -vcodec libx264 -preset baseline -preset fast -preset 720p -b 800k -g 5 -async 25 -keyint_min 5 -s 512x256 -aspect 16:9 -bt 100k -maxrate 800k -bufsize 800k -deinterlace -f mpegts ${MP4_SLICES_PATH}${mp4_slice}
 #
-mkdir ${MP4_SLICES_PATH}500k
-#$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 500K ${MP4_SLICES_PATH}500k/${mp4_slice}
+#mkdir ${MP4_SLICES_PATH}500k
+##$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 500K ${MP4_SLICES_PATH}500k/${mp4_slice}
+#
+#mkdir ${MP4_SLICES_PATH}500k
+#$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 500K -f segment -segment_list ${MP4_SLICES_PATH}500k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}500k/stream%05d.ts
+#
+#mkdir ${MP4_SLICES_PATH}128k
+#$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 128K  -f segment -segment_list ${MP4_SLICES_PATH}128k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}128k/stream%05d.ts
+#
+#mkdir ${MP4_SLICES_PATH}2000k
+#$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 2000k  -f segment -segment_list ${MP4_SLICES_PATH}2000k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}2000k/stream%05d.ts
+#
+#$FFMPEG_CMD -i ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 500K ${MP4_SLICES_PATH}movie-500K.mp4
+#$FFMPEG_CMD -i ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 1000K ${MP4_SLICES_PATH}movie-1000K.mp4
+#$FFMPEG_CMD -i ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 2000K ${MP4_SLICES_PATH}movie-2000K.mp4
 
-mkdir ${MP4_SLICES_PATH}500k
-$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 500K -f segment -segment_list ${MP4_SLICES_PATH}500k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}500k/stream%05d.ts
+mkdir ${MP4_SLICES_PATH}
 
-mkdir ${MP4_SLICES_PATH}128k
-$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 128K  -f segment -segment_list ${MP4_SLICES_PATH}128k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}128k/stream%05d.ts
+ffmpeg -i ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 500K ${MP4_SLICES_PATH}movie-500K.mp4
+ffmpeg -i ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 1000K ${MP4_SLICES_PATH}movie-1000K.mp4
+ffmpeg -i ${RAW_SLICES_PATH}${raw_slice} -acodec copy -vb 2000K ${MP4_SLICES_PATH}movie-2000K.mp4
 
-mkdir ${MP4_SLICES_PATH}2000k
-$FFMPEG_CMD ${RAW_SLICES_PATH}${raw_slice} -acodec copy -map 0 -vb 2000k  -f segment -segment_list ${MP4_SLICES_PATH}2000k/playlist.m3u8 -segment_list_flags +live -segment_time 10  -segment_format mpegts  ${MP4_SLICES_PATH}2000k/stream%05d.ts
+mkdir ${MP4_SLICES_PATH}500K
+mediafilesegmenter -I -f ${MP4_SLICES_PATH}500K -B segment ${MP4_SLICES_PATH}movie-500K.mp4
+mkdir ${MP4_SLICES_PATH}1000K
+mediafilesegmenter -I -f ${MP4_SLICES_PATH}1000K -B segment ${MP4_SLICES_PATH}movie-1000K.mp4
+mkdir ${MP4_SLICES_PATH}2000K
+mediafilesegmenter -I -f ${MP4_SLICES_PATH}2000K -B segment ${MP4_SLICES_PATH}movie-2000K.mp4
 
+variantplaylistcreator -r -o ${MP4_SLICES_PATH}movie.m3u8 \
+	${MP4_SLICES_PATH}500K/prog_index.m3u8  ${MP4_SLICES_PATH}movie-500K.plist\
+	${MP4_SLICES_PATH}1000K/prog_index.m3u8  ${MP4_SLICES_PATH}movie-1000K.plist\
+	${MP4_SLICES_PATH}2000K/prog_index.m3u8 ${MP4_SLICES_PATH}movie-2000K.plist
 
 #ffmpeg -i movie.mp4 -acodec copy -vb 500K movie-500K.mp4
 #remove source
