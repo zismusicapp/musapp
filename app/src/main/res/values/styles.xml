@@ -38,4 +38,18 @@
   <style name="AppTheme.Launcher">
     <item name="android:windowBackground">@drawable/launch_screen</item>
   </style>
+
+  <style name="TitleWhite">
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textSize">@dimen/text_size_xlarge</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:textColor">@color/white</item>
+  </style>
+
+  <style name="DefaultTextWhite">
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:textSize">@dimen/text_size_medium</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:textColor">@color/palette_text_white_primary</item>
+  </style>
 </resources>

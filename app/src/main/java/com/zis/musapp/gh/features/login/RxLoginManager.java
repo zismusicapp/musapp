@@ -98,7 +98,7 @@ public class RxLoginManager {
     return Observable.create(digitsSubsriber);
   }
 
-  public void startDigits(String phone){
+  public void startDigitsLogining(String phone){
     digitsSubsriber.startLogin(phone);
   }
 

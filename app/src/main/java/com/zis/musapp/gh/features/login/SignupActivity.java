@@ -1,32 +1,32 @@
 package com.zis.musapp.gh.features.login;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jakewharton.rxbinding.view.RxView;
-import com.trello.rxlifecycle.RxLifecycle;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
-import rx.observables.ConnectableObservable;
 
 /**
  * Created by mikhailz on 24/09/2016.
  */
 public class SignupActivity extends BootstrapActivity {
 
-  @BindView(R.id.digits)
-  TextView mDigits;
-  @BindView(R.id.facebook)
-  TextView mFacebook;
-  @BindView(R.id.twitter)
-  TextView mTwitter;
+  @BindView(R.id.digitsLogin)
+  ImageButton mDigits;
+
+  @BindView(R.id.phoneDigits)
+  EditText mPhoneDigits;
 
   RxLoginManager mRxLoginManager = new RxLoginManager();
 
@@ -38,6 +38,10 @@ public class SignupActivity extends BootstrapActivity {
     add("user_about_me");
   }};
 
+  private final PhoneNumberFormattingTextWatcher mPhoneWatcher =
+      new PhoneNumberFormattingTextWatcher();
+  private boolean mIsLoginStarted;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,42 +49,33 @@ public class SignupActivity extends BootstrapActivity {
     setContentView(R.layout.singup_activity);
     ButterKnife.bind(this);
 
-    ConnectableObservable<Boolean> digitsObservable =
-        mRxLoginManager.loginDigitsObservable(SignupActivity.this)
-            .map(digitLoginResult -> digitLoginResult.getSession().isValidUser())
-            .retry().publish();
+    mPhoneDigits.addTextChangedListener(mPhoneWatcher);
+    mPhoneDigits.setRawInputType(Configuration.KEYBOARD_QWERTY);
+    mPhoneDigits.setOnEditorActionListener((v, actionId, event) -> {
+      if (actionId == EditorInfo.IME_ACTION_DONE) {
+        mIsLoginStarted = true;
+        doLogin();
+        return true;
+      }
+      return false;
+    });
 
-    ConnectableObservable<Boolean> facebookResultObservable =
-        mRxLoginManager.loginFacebook(SignupActivity.this, true, facebookPermissions)
-            .map(loginResult -> true)
-            .retry()
-            .publish();
-
-    RxView.clicks(mDigits)
-        .subscribe(aVoid -> {
-          digitsObservable.connect();
-          mRxLoginManager.startDigits("");
-        });
-
-    RxView.clicks(mFacebook)
-        .subscribe(aVoid -> {
-          facebookResultObservable.connect();
-        });
-
-    Observable.merge(digitsObservable, facebookResultObservable)
-        .compose(RxLifecycle.bindActivity(lifecycle()))
-        .compose(RxUtil.applyIOToMainThreadSchedulers())
+    mRxLoginManager.loginDigitsObservable(SignupActivity.this)
+        .map(digitLoginResult -> digitLoginResult.getSession().isValidUser())
         .subscribe(success -> {
           if (success) {
             startActivity(new Intent(SignupActivity.this, ChooseSongActivtity.class));
           }
-        }, throwable -> {
+        }, RxUtil.ON_ERROR_LOGGER);
 
-          if (throwable instanceof LoginException) {
-
-          }
-          //TODO handle
+    RxView.clicks(mDigits)
+        .subscribe(aVoid -> {
+          doLogin();
         });
+  }
+
+  private void doLogin() {
+    mRxLoginManager.startDigitsLogining(mPhoneDigits.getText().toString());
   }
 
   @Override

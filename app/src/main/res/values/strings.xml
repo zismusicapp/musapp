@@ -67,4 +67,11 @@
     <string name="tour_secure_title">Secure title</string>
     <string name="tour_secure_text">Secure text</string>
 
+
+    <!-- Login-->
+    <string name="login_title">Welcome to app!</string>
+    <string name="login_description">Let\'s get you started.</string>
+    <string name="login_enter_phone">Enter you phone number</string>
+
+
 </resources>

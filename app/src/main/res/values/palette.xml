@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+
+        This palette is managed by design team, check with design team when you need a new color
+        Reference is https://app.zeplin.io/project.html#pid=5630079103c7af7e4c0f8e2d&sid=563007b3762f63eb5caac361
+
+        Helper for alpha
+
+            100% — FF
+            95% — F2
+            90% — E6
+            85% — D9
+            80% — CC
+            75% — BF
+            70% — B3
+            65% — A6
+            60% — 99
+            55% — 8C
+            50% — 80
+            45% — 73
+            40% — 66
+            35% — 59
+            30% — 4D
+            25% — 40
+            20% — 33
+            15% — 26
+            10% — 1A
+            5% — 0D
+            0% — 00
+
+    -->
+
+    <!--suppress UnusedResources -->
+    <color name="palette_primary_light">#646875</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_primary">#494e5c</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_primary_dark">#343742</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_secondary_light">#c9f2ff</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_secondary">#2ac0f1</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_secondary_dark">#0c7fa4</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_tertiary_light">#eeeff2</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_tertiary">#c7cad3</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_tertiary_dark">#8f95a8</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_accent_light">#fec1b3</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_accent">#fe6443</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_accent_dark">#cc5135</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_green_light">#bef0e4</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_green_light_secondary">#3ed4ae</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_green">#29cfa5</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_green_dark">#1e9677</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_base">#ffffff</color>
+    <!--suppress UnusedResources -->
+    <color name="palette_base_dark">#f8f8f8</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_black">#000000</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_confirm">#29cfa5</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_error">#fb6464</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_alert">#f7d21c</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_text_black_primary">#343742</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_text_black_secondary">#E6343742</color>
+
+    <color name="palette_text_black_secondary_69">#B0343742</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_text_black_tertiary">#80343742</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_text_white_primary">#ffffff</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_text_white_secondary">#B3ffffff</color>
+
+    <!--suppress UnusedResources -->
+    <color name="palette_text_white_tertiary">#80ffffff</color>
+</resources>

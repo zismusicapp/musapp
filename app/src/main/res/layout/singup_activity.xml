@@ -1,27 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/palette_primary_dark">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+    >
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+        />
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Digits"
-              android:id="@+id/digits"
-              android:layout_marginBottom="32dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_horizontal"
+            style="@style/TitleWhite"
+            android:text="@string/login_title"
+        />
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Facebook"
-              android:id="@+id/facebook"
-              android:layout_marginBottom="32dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_horizontal"
+            style="@style/DefaultTextWhite"
+            android:text="@string/login_description"
+        />
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Twitter"
-              android:id="@+id/twitter"
-              android:layout_marginBottom="32dp"/>
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" >
+
+            <EditText
+                android:id="@+id/phoneDigits"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textSize="@dimen/text_size_large"
+                android:textColor="@color/palette_secondary_dark"
+                android:fontFamily="sans-serif-light"
+                android:layout_centerVertical="true"
+                android:background="@drawable/box_white_rounded"
+                android:hint="@string/login_enter_phone"
+                android:textColorHint="@color/palette_secondary_dark"/>
+
+            <ImageButton
+                android:id="@+id/digitsLogin"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="fitCenter"
+                android:layout_alignParentRight="true"
+                android:paddingRight="5dp"
+                android:background="@color/white"
+                android:src="@mipmap/ic_launcher"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:text="Button"/>
+
+        </RelativeLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+        />
+    </LinearLayout>
 
 
 </LinearLayout>
