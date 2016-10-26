@@ -13,12 +13,8 @@ import rx.Subscriber;
  */
 public class DigitsSubsriber implements Observable.OnSubscribe<DigitsSubsriber.DigitLoginResult> {
 
-  private final String mPhoneNumber;
   public AuthCallback authCallback;
 
-  public DigitsSubsriber(String phoneNumber) {
-    mPhoneNumber = phoneNumber;
-  }
 
   @Override
   public void call(Subscriber<? super DigitsSubsriber.DigitLoginResult> subscriber) {
@@ -38,13 +34,18 @@ public class DigitsSubsriber implements Observable.OnSubscribe<DigitsSubsriber.D
         }
       }
     };
+  }
+
+  public void startLogin(String phoneNumber){
 
     AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
         .withAuthCallBack(authCallback)
-        .withPhoneNumber(mPhoneNumber);
+        .withPhoneNumber(phoneNumber);
 
     Digits.authenticate(authConfigBuilder.build());
   }
+
+
 
   public class DigitLoginResult {
 

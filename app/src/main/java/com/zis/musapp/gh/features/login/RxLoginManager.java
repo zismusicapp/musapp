@@ -24,6 +24,8 @@ public class RxLoginManager {
   com.facebook.login.LoginManager mFbManager;
   com.facebook.CallbackManager mFbCallbackManager;
   FacebookCallback<LoginResult> mFacebookCallback;
+
+  DigitsSubsriber digitsSubsriber = new DigitsSubsriber();
   private TwitterAuthClient mTwitterClient;
 
   /**
@@ -88,13 +90,16 @@ public class RxLoginManager {
     return false;
   }
 
-  public Observable<DigitsSubsriber.DigitLoginResult> loginDigits(Activity activity,
-      String phoneNumber) {
+  public Observable<DigitsSubsriber.DigitLoginResult> loginDigitsObservable(Activity activity) {
     TwitterAuthConfig authConfig = new TwitterAuthConfig(activity.getString(R.string.twitter_key),
         activity.getString(R.string.twitter_secret));
     Fabric.with(activity, new TwitterCore(authConfig), new Digits.Builder().build());
 
-    return Observable.create(new DigitsSubsriber(phoneNumber));
+    return Observable.create(digitsSubsriber);
+  }
+
+  public void startDigits(String phone){
+    digitsSubsriber.startLogin(phone);
   }
 
   public Observable<Result<TwitterSession>> loginTwitter(Activity activity) {

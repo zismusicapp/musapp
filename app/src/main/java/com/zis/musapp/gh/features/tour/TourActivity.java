@@ -15,6 +15,7 @@ import com.zis.musapp.gh.Fonts;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.Screen;
 import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
+import com.zis.musapp.gh.features.login.SignupActivity;
 import com.zis.musapp.gh.features.songRecord.CameraCaptureActivity;
 
 public class TourActivity extends BootstrapActivity {
@@ -45,13 +46,10 @@ public class TourActivity extends BootstrapActivity {
     ((TextView) findViewById(R.id.signUpButtonText)).setTypeface(Fonts.getInstance().medium());
     ((TextView) findViewById(R.id.signIn)).setTypeface(Fonts.getInstance().medium());
 
-    findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        Intent authIntent = new Intent(TourActivity.this, ChooseSongActivtity.class);
-        startActivity(authIntent);
-        finish();
-      }
+    findViewById(R.id.signUpButton).setOnClickListener(v -> {
+      Intent authIntent = new Intent(TourActivity.this, SignupActivity.class);
+      startActivity(authIntent);
+      finish();
     });
 
     findViewById(R.id.signIn).setOnClickListener(v -> {

@@ -5,19 +5,16 @@ import android.os.Bundle;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.facebook.login.LoginResult;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.RxLifecycle;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterSession;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.R;
-import com.zis.musapp.gh.features.login.subsribers.DigitsSubsriber;
-import com.zis.musapp.gh.features.splash.MyVideoActivity;
+import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 
 /**
  * Created by mikhailz on 24/09/2016.
@@ -48,31 +45,34 @@ public class SignupActivity extends BootstrapActivity {
     setContentView(R.layout.singup_activity);
     ButterKnife.bind(this);
 
-    Observable<DigitsSubsriber.DigitLoginResult> digitResult = RxView.clicks(mDigits)
-        .flatMap(aVoid -> mRxLoginManager.loginDigits(SignupActivity.this, "+79995355366"));
+    ConnectableObservable<Boolean> digitsObservable =
+        mRxLoginManager.loginDigitsObservable(SignupActivity.this)
+            .map(digitLoginResult -> digitLoginResult.getSession().isValidUser())
+            .retry().publish();
 
-    Observable<LoginResult> fbResult = RxView.clicks(mFacebook)
-        .flatMap(aVoid ->
-            mRxLoginManager.loginFacebook(SignupActivity.this, true, facebookPermissions));
+    ConnectableObservable<Boolean> facebookResultObservable =
+        mRxLoginManager.loginFacebook(SignupActivity.this, true, facebookPermissions)
+            .map(loginResult -> true)
+            .retry()
+            .publish();
 
-    Observable<Result<TwitterSession>> twitterResult = RxView.clicks(mTwitter)
-        .flatMap(aVoid ->
-            mRxLoginManager.loginTwitter(SignupActivity.this));
+    RxView.clicks(mDigits)
+        .subscribe(aVoid -> {
+          digitsObservable.connect();
+          mRxLoginManager.startDigits("");
+        });
 
-    Observable<Boolean> loginSuccessObservable =
-        Observable.merge(
-            digitResult.map(digitLoginResult -> digitLoginResult.getSession().isValidUser()),
-            fbResult.map(loginResult -> true),
-            twitterResult.map(twitterSessionResult ->
-                twitterSessionResult.response.isSuccessful())
-        );
+    RxView.clicks(mFacebook)
+        .subscribe(aVoid -> {
+          facebookResultObservable.connect();
+        });
 
-    loginSuccessObservable
+    Observable.merge(digitsObservable, facebookResultObservable)
         .compose(RxLifecycle.bindActivity(lifecycle()))
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .subscribe(success -> {
           if (success) {
-            startActivity(new Intent(SignupActivity.this, MyVideoActivity.class));
+            startActivity(new Intent(SignupActivity.this, ChooseSongActivtity.class));
           }
         }, throwable -> {
 

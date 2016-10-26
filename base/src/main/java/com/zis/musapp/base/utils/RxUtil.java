@@ -24,6 +24,7 @@
 
 package com.zis.musapp.base.utils;
 
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -69,12 +70,22 @@ public final class RxUtil {
    */
   @SuppressWarnings("unchecked")
   private static <T> Observable.Transformer<T, T> createIOToMainThreadScheduler() {
-    return observable -> observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    return observable -> observable.subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   @SuppressWarnings("unchecked")
   public static <T> Observable.Transformer<T, T> applyIOToMainThreadSchedulers() {
     return sIoToMainThreadSchedulerTransformer;
+  }
+
+  public static <T> Observable.Transformer<T, T> applyExponentialBackoff() {
+    return observable -> observable.retryWhen(errors ->
+        errors
+            .zipWith(Observable.range(1, 3), (n, i) -> i)
+            .flatMap(
+                retryCount -> Observable.timer((long) Math.pow(5, retryCount), TimeUnit.SECONDS))
+    );
   }
 }
 // CHECKSTYLE:ON
