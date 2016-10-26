@@ -90,11 +90,7 @@ public class RxLoginManager {
     return false;
   }
 
-  public Observable<DigitsSubsriber.DigitLoginResult> loginDigitsObservable(Activity activity) {
-    TwitterAuthConfig authConfig = new TwitterAuthConfig(activity.getString(R.string.twitter_key),
-        activity.getString(R.string.twitter_secret));
-    Fabric.with(activity, new TwitterCore(authConfig), new Digits.Builder().build());
-
+  public Observable<DigitsSubsriber.DigitLoginResult> loginDigitsObservable() {
     return Observable.create(digitsSubsriber);
   }
 

@@ -60,7 +60,7 @@ public class SignupActivity extends BootstrapActivity {
       return false;
     });
 
-    mRxLoginManager.loginDigitsObservable(SignupActivity.this)
+    mRxLoginManager.loginDigitsObservable()
         .map(digitLoginResult -> digitLoginResult.getSession().isValidUser())
         .subscribe(success -> {
           if (success) {

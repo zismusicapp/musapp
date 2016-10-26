@@ -23,9 +23,11 @@
       android:supportsRtl="true"
       android:theme="@style/AppTheme"
   >
+
+    <!--zisman.mikhail@gmail.com-->
     <meta-data
         android:name="io.fabric.ApiKey"
-        android:value="03bc0f690add9fe0b29a06fa9f3aace1ac45d998"
+        android:value="072592524e88e44f67662301a297cbc81f8b2898"
     />
 
     <activity
