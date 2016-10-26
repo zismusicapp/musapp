@@ -41,9 +41,9 @@
     <string name="google_maps_key">AIzaSyA9vspt07A3nqkzhmYrbKt5sHbZPpPIWRE</string>
     <string name="panic_button">PANIC</string>
     <string name="welcome">Welcome</string>
-    <string name="Complete">Complete</string>
-    <string name="Error">Error</string>
-    <string name="Upload">Upload</string>
+    <string name="start_record">Record</string>
+    <string name="download_error">Error</string>
+    <string name="download_start">Download</string>
 
     <!-- Tour -->
     <string name="tour_sign_up">Sign UP</string>
@@ -70,6 +70,7 @@
     <string name="login_title">Welcome to app!</string>
     <string name="login_description">Let\'s get you started.</string>
     <string name="login_enter_phone">Enter you phone number</string>
+    <string name="download_progress">Downloading...</string>
 
 
 </resources>

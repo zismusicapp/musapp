@@ -36,7 +36,7 @@ public class ChooseSongActivtity extends Activity {
     viewPager.setAdapter(new PagerAdapter() {
       @Override
       public int getCount() {
-        return 5;
+        return 4;
       }
 
       @Override
@@ -69,41 +69,42 @@ public class ChooseSongActivtity extends Activity {
 
     final String[] colors = getResources().getStringArray(R.array.default_preview);
 
+    //top, all, downloaded, competition, your records
     final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
     final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
     models.add(
         new NavigationTabBar.Model.Builder(
             getResources().getDrawable(R.drawable.ic_first),
             Color.parseColor(colors[0]))
-            .title("Heart")
+            .title("Top")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
             getResources().getDrawable(R.drawable.ic_second),
             Color.parseColor(colors[1]))
-            .title("Cup")
+            .title("All")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
             getResources().getDrawable(R.drawable.ic_third),
             Color.parseColor(colors[2]))
-            .title("Diploma")
+            .title("Downloaded")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
             getResources().getDrawable(R.drawable.ic_fourth),
             Color.parseColor(colors[3]))
-            .title("Flag")
+            .title("Competition")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
             getResources().getDrawable(R.drawable.ic_fifth),
             Color.parseColor(colors[4]))
-            .title("Medal")
+            .title("Your records")
             .build()
     );
 
