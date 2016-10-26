@@ -1,6 +1,5 @@
 package com.zis.musapp.gh.features.choosesong;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,18 +16,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.dd.CircularProgressButton;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
+import com.parse.ParseUser;
+import com.zis.musapp.base.android.BaseActivity;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.splash.MyVideoActivity;
 import java.util.ArrayList;
 import java.util.Random;
+import rx.Observable;
+import rx.parse.ParseObservable;
 
-public class ChooseSongActivtity extends Activity {
+public class ChooseSongActivtity extends BaseActivity {
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_horizontal_coordinator_ntb);
     initUI();
+  }
+
+  @Override protected void initializeInjector() {
+
   }
 
   private void initUI() {
@@ -60,7 +67,11 @@ public class ChooseSongActivtity extends Activity {
                 getBaseContext(), LinearLayoutManager.VERTICAL, false
             )
         );
-        recyclerView.setAdapter(new RecycleAdapter());
+        SongAdapter adapter = new SongAdapter();
+        recyclerView.setAdapter(adapter);
+
+        Observable<ParseUser> users = ParseObservable.find(ParseUser.getQuery());
+        users.subscribe(user -> System.out.println(user.getObjectId()));
 
         container.addView(view);
         return view;
@@ -183,7 +194,7 @@ public class ChooseSongActivtity extends Activity {
     collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#9f90af"));
   }
 
-  public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
+  public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {

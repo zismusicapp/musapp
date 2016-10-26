@@ -209,6 +209,8 @@ dependencies {
   compile 'com.github.amlcurran.showcaseview:library:5.4.3'
   compile 'life.knowledge4:k4l-video-trimmer:1.1.3-SNAPSHOT'
 
+  compile 'com.infstory:rxparse-facebook-v4:2.0.3' // if needed
+
   compile appDependencies.parse
   compile appDependencies.rxparse
 

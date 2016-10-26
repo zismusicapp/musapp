@@ -30,6 +30,15 @@
         android:value="072592524e88e44f67662301a297cbc81f8b2898"
     />
 
+    <meta-data
+        android:name="com.parse.CLIENT_KEY"
+        android:value="072592524e88e44f67662301a297cbc81f8b2898"/>
+
+    <meta-data
+        android:name="com.parse.APPLICATION_ID"
+        android:value="APPLICATION_ID" />
+
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
     <activity
         android:name="com.zis.musapp.gh.features.splash.SplashActivity"
         android:theme="@style/AppTheme.Launcher"
@@ -41,6 +50,17 @@
       </intent-filter>
     </activity>
 
+    <!--facebook-->
+    <activity android:name="com.facebook.FacebookActivity"
+        android:configChanges=
+            "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        android:label="@string/app_name" />
+
+    <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
+        android:name="com.facebook.FacebookContentProvider"
+        android:exported="true" />
+    <!--facebook-->
     <!-- Tour -->
     <activity
         android:name=".features.tour.TourActivity"
@@ -76,9 +96,11 @@
     <activity android:name=".features.previewActivity.PreviewActivity"
         android:screenOrientation="portrait"/>
 
+
     <meta-data
         android:name="com.google.android.geo.API_KEY"
         android:value="@string/google_maps_key"/>
+
 
   </application>
 

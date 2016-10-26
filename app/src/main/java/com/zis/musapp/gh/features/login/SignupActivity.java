@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import butterknife.BindView;
@@ -15,7 +16,9 @@ import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import rx.parse.ParseFacebookObservable;
 
 /**
  * Created by mikhailz on 24/09/2016.
@@ -27,6 +30,9 @@ public class SignupActivity extends BootstrapActivity {
 
   @BindView(R.id.phoneDigits)
   EditText mPhoneDigits;
+
+  @BindView(R.id.facebook)
+  Button mFacebookBtn;
 
   RxLoginManager mRxLoginManager = new RxLoginManager();
 
@@ -45,7 +51,6 @@ public class SignupActivity extends BootstrapActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     setContentView(R.layout.singup_activity);
     ButterKnife.bind(this);
 
@@ -60,18 +65,28 @@ public class SignupActivity extends BootstrapActivity {
       return false;
     });
 
+    RxView.clicks(mFacebookBtn)
+        .flatMap((Void) -> ParseFacebookObservable.logInWithReadPermissions(this,
+            Arrays.asList("public_profile", "email")))
+        .subscribe(parseUser -> {
+          startChooseSongsActivity();
+        });
+
     mRxLoginManager.loginDigitsObservable()
         .map(digitLoginResult -> digitLoginResult.getSession().isValidUser())
         .subscribe(success -> {
           if (success) {
-            startActivity(new Intent(SignupActivity.this, ChooseSongActivtity.class));
+            startChooseSongsActivity();
           }
         }, RxUtil.ON_ERROR_LOGGER);
-
     RxView.clicks(mDigits)
         .subscribe(aVoid -> {
           doLogin();
         });
+  }
+
+  private void startChooseSongsActivity() {
+    startActivity(new Intent(SignupActivity.this, ChooseSongActivtity.class));
   }
 
   private void doLogin() {

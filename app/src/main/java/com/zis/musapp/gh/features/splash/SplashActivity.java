@@ -28,10 +28,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.bugtags.library.Bugtags;
 import com.bugtags.library.BugtagsOptions;
+import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.github.promeg.androidgitsha.lib.GitShaUtils;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.MaterialModule;
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.zis.musapp.base.di.HasComponent;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
@@ -96,6 +99,10 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       Iconify.with(new MaterialModule());
       Once.initialise(app);
       Fresco.initialize(app);
+
+      FacebookSdk.sdkInitialize(getApplicationContext());
+      Parse.initialize(this);
+      ParseFacebookUtils.initialize(this);
 
       Fonts.getInstance().init(getApplication());
       Screen.getInstance().init(getApplication());

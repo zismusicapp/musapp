@@ -2,22 +2,24 @@ package com.zis.musapp.gh.features.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import com.digits.sdk.android.Digits;
+import com.digits.sdk.android.DigitsSession;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
+import com.twitter.sdk.android.core.OAuthSigning;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
-import com.zis.musapp.gh.R;
+import com.zis.musapp.base.model.provider.ICloud;
 import com.zis.musapp.gh.features.login.subsribers.DigitsSubsriber;
 import com.zis.musapp.gh.features.login.subsribers.FacebookSubscriber;
 import com.zis.musapp.gh.features.login.subsribers.TwitterSubscriber;
-import io.fabric.sdk.android.Fabric;
 import java.util.List;
+import java.util.Map;
 import rx.Observable;
 
 public class RxLoginManager {
@@ -94,12 +96,29 @@ public class RxLoginManager {
     return Observable.create(digitsSubsriber);
   }
 
-  public void startDigitsLogining(String phone){
+  public void startDigitsLogining(String phone) {
     digitsSubsriber.startLogin(phone);
   }
 
   public Observable<Result<TwitterSession>> loginTwitter(Activity activity) {
     mTwitterClient = new TwitterAuthClient();
     return Observable.create(new TwitterSubscriber(mTwitterClient, activity));
+  }
+
+  public Observable<String> verifyDigitsSession(ICloud cloud, DigitsSession session) {
+    TwitterAuthConfig authConfig = TwitterCore.getInstance().getAuthConfig();
+
+    // Cast from AuthToken to TwitterAuthToken
+    TwitterAuthToken authToken = session.getAuthToken();
+
+    OAuthSigning oAuthSigning = new OAuthSigning(authConfig, authToken);
+    // First value should be the location we're querying to twitter.
+    // The second is the actual validation information
+    Map<String, String> authHeaders = oAuthSigning.getOAuthEchoHeadersForVerifyCredentials();
+
+    return cloud.verifyCredentials(
+        authHeaders.get(ICloud.serviceProviderHeader),
+        authHeaders.get(ICloud.credentialsAuthorizationHeader),
+        session.getId());
   }
 }

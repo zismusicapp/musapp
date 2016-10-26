@@ -25,6 +25,7 @@
 package com.zis.musapp.gh.model.users;
 
 import com.zis.musapp.base.di.ActivityScope;
+import com.zis.musapp.base.model.provider.ICloud;
 import com.zis.musapp.gh.model.ServerApi;
 import dagger.Module;
 import dagger.Provides;
@@ -39,6 +40,11 @@ public class UsersModule {
   @ActivityScope
   @Provides ServerApi provideServerAPI(final Retrofit retrofit) {
     return retrofit.create(ServerApi.class);
+  }
+
+  @ActivityScope
+  @Provides ICloud provideCloud(final Retrofit retrofit) {
+    return retrofit.create(ICloud.class);
   }
 
   @ActivityScope

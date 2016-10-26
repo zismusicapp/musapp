@@ -30,6 +30,7 @@ import com.zis.musapp.base.model.provider.ProviderModule;
 import com.zis.musapp.base.utils.UtilsModule;
 import com.zis.musapp.gh.features.kiddashboard.ObserveMapComponent;
 import com.zis.musapp.gh.features.kiddashboard.ObserveMapModule;
+import com.zis.musapp.gh.features.login.SignupActivity;
 import com.zis.musapp.gh.features.search.di.SearchComponent;
 import com.zis.musapp.gh.features.search.di.SearchModule;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
