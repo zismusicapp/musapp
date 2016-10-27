@@ -1,31 +1,41 @@
 package com.zis.musapp.gh.features.choosesong;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
-import com.dd.CircularProgressButton;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
-import com.parse.ParseUser;
 import com.zis.musapp.base.android.BaseActivity;
 import com.zis.musapp.gh.R;
-import com.zis.musapp.gh.features.splash.MyVideoActivity;
 import java.util.ArrayList;
 import java.util.Random;
-import rx.Observable;
-import rx.parse.ParseObservable;
 
 public class ChooseSongActivtity extends BaseActivity {
+
+  private static final int PAGES_COUNT = 4;
+
+  public static class SongsFragmentsAdapter extends FragmentPagerAdapter {
+    public SongsFragmentsAdapter(FragmentManager fm) {
+      super(fm);
+    }
+
+    @Override
+    public int getCount() {
+      return PAGES_COUNT;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+      return SongsListFragment.newInstance(position);
+    }
+  }
 
   @Override
   protected void onCreate(final Bundle savedInstanceState) {
@@ -40,43 +50,7 @@ public class ChooseSongActivtity extends BaseActivity {
 
   private void initUI() {
     final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
-    viewPager.setAdapter(new PagerAdapter() {
-      @Override
-      public int getCount() {
-        return 4;
-      }
-
-      @Override
-      public boolean isViewFromObject(final View view, final Object object) {
-        return view.equals(object);
-      }
-
-      @Override
-      public void destroyItem(final View container, final int position, final Object object) {
-        ((ViewPager) container).removeView((View) object);
-      }
-
-      @Override
-      public Object instantiateItem(final ViewGroup container, final int position) {
-        final View view = LayoutInflater.from(
-            getBaseContext()).inflate(R.layout.item_vp_list, null, false);
-
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(
-                getBaseContext(), LinearLayoutManager.VERTICAL, false
-            )
-        );
-        SongAdapter adapter = new SongAdapter();
-        recyclerView.setAdapter(adapter);
-
-        Observable<ParseUser> users = ParseObservable.find(ParseUser.getQuery());
-        users.subscribe(user -> System.out.println(user.getObjectId()));
-
-        container.addView(view);
-        return view;
-      }
-    });
+    viewPager.setAdapter(new SongsFragmentsAdapter(getSupportFragmentManager()));
 
     final String[] colors = getResources().getStringArray(R.array.default_preview);
 
@@ -192,44 +166,5 @@ public class ChooseSongActivtity extends BaseActivity {
         (CollapsingToolbarLayout) findViewById(R.id.toolbar);
     collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#009F90AF"));
     collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#9f90af"));
-  }
-
-  public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
-
-    @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-      final View view =
-          LayoutInflater.from(getBaseContext()).inflate(R.layout.item_list, parent, false);
-      return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-      holder.txt.setText(String.format("Navigation Item #%d", position));
-    }
-
-    @Override
-    public int getItemCount() {
-      return 20;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-      public TextView txt;
-
-      public ViewHolder(final View itemView) {
-        super(itemView);
-        txt = (TextView) itemView.findViewById(R.id.txt_vp_item_list);
-        CircularProgressButton circularProgressButton =
-            (CircularProgressButton) itemView.findViewById(R.id.circularButton1);
-
-        circularProgressButton.setOnClickListener(view -> {
-          Intent intent = MyVideoActivity.newIntent(ChooseSongActivtity.this,
-              "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
-              "bipbop basic 400x300 @ 232 kbps");
-          startActivity(intent);
-        });
-      }
-    }
   }
 }

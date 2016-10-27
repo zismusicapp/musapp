@@ -59,17 +59,19 @@ public class SignupActivity extends BootstrapActivity {
     mPhoneDigits.setOnEditorActionListener((v, actionId, event) -> {
       if (actionId == EditorInfo.IME_ACTION_DONE) {
         mIsLoginStarted = true;
-        doLogin();
+        doDigitsLogin();
         return true;
       }
       return false;
     });
 
     RxView.clicks(mFacebookBtn)
-        .flatMap((Void) -> ParseFacebookObservable.logInWithReadPermissions(this,
-            Arrays.asList("public_profile", "email")))
-        .subscribe(parseUser -> {
-          startChooseSongsActivity();
+        .subscribe(aVoid -> {
+          ParseFacebookObservable.logInWithReadPermissions(SignupActivity.this,
+              Arrays.asList("public_profile", "email"))
+              .subscribe(parseUser -> {
+                startChooseSongsActivity();
+              });
         });
 
     mRxLoginManager.loginDigitsObservable()
@@ -79,9 +81,10 @@ public class SignupActivity extends BootstrapActivity {
             startChooseSongsActivity();
           }
         }, RxUtil.ON_ERROR_LOGGER);
+
     RxView.clicks(mDigits)
         .subscribe(aVoid -> {
-          doLogin();
+          doDigitsLogin();
         });
   }
 
@@ -89,7 +92,7 @@ public class SignupActivity extends BootstrapActivity {
     startActivity(new Intent(SignupActivity.this, ChooseSongActivtity.class));
   }
 
-  private void doLogin() {
+  private void doDigitsLogin() {
     mRxLoginManager.startDigitsLogining(mPhoneDigits.getText().toString());
   }
 
