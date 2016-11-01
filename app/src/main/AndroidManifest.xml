@@ -36,9 +36,10 @@
 
     <meta-data
         android:name="com.parse.APPLICATION_ID"
-        android:value="APPLICATION_ID" />
+        android:value="@string/parse_application_id"/>
 
-    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    <meta-data android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id"/>
     <activity
         android:name="com.zis.musapp.gh.features.splash.SplashActivity"
         android:theme="@style/AppTheme.Launcher"
@@ -55,11 +56,11 @@
         android:configChanges=
             "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
         android:theme="@android:style/Theme.Translucent.NoTitleBar"
-        android:label="@string/app_name" />
+        android:label="@string/app_name"/>
 
     <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
         android:name="com.facebook.FacebookContentProvider"
-        android:exported="true" />
+        android:exported="true"/>
     <!--facebook-->
     <!-- Tour -->
     <activity

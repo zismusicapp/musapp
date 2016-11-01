@@ -245,6 +245,11 @@ dependencies {
   compile(appDependencies.iconifyMD) {
     exclude module: 'support-v4'
   }
+
+  compile(appDependencies.iconifyEN) {
+    exclude module: 'support-v4'
+  }
+
   compile(appDependencies.statusBarUtil) {
     exclude module: 'appcompat-v7'
   }

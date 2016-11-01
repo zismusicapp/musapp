@@ -5,12 +5,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jakewharton.rxbinding.view.RxView;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.R;
@@ -26,13 +26,13 @@ import rx.parse.ParseFacebookObservable;
 public class SignupActivity extends BootstrapActivity {
 
   @BindView(R.id.digitsLogin)
-  ImageButton mDigits;
+  IconTextView mDigits;
 
   @BindView(R.id.phoneDigits)
   EditText mPhoneDigits;
 
   @BindView(R.id.facebook)
-  Button mFacebookBtn;
+  IconTextView mFacebookBtn;
 
   RxLoginManager mRxLoginManager = new RxLoginManager();
 
