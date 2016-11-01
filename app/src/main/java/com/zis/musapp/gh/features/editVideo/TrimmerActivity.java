@@ -19,6 +19,7 @@ public class TrimmerActivity extends AppCompatActivity
   public static final String EXTRA_VIDEO_PATH = "VIDEO_PATH";
   private K4LVideoTrimmer mVideoTrimmer;
   private ProgressDialog mProgressDialog;
+  private String mFileToSave;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +30,12 @@ public class TrimmerActivity extends AppCompatActivity
       startActivity(new Intent(this, PreviewActivity.class));
     });
     Intent extraIntent = getIntent();
-    String path = "";
+    mFileToSave = "";
 
     if (extraIntent != null) {
-      path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
+      mFileToSave = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
     }
-    File file = new File(path);
+    File file = new File(mFileToSave);
 
     //setting progressbar
     mProgressDialog = new ProgressDialog(this);
@@ -97,6 +98,7 @@ public class TrimmerActivity extends AppCompatActivity
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
+        PreviewActivity.start(TrimmerActivity.this, new File(mFileToSave));
         Toast.makeText(TrimmerActivity.this, "onVideoPrepared", Toast.LENGTH_SHORT).show();
       }
     });

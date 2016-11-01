@@ -1,17 +1,23 @@
 package com.zis.musapp.gh.features.previewActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import com.parse.ParseFile;
+import com.zis.musapp.base.android.BaseActivity;
+import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import java.io.File;
+import java.net.URI;
+import rx.parse.ParseObservable;
 import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
 
 /**
  * Created by mikhail on 11/10/16.
  */
-public class PreviewActivity extends Activity {
+public class PreviewActivity extends BaseActivity {
 
   private static String fileUri = "FILE_URI";
 
@@ -30,12 +36,23 @@ public class PreviewActivity extends Activity {
 
     Uri fileUri = getIntent().getParcelableExtra(PreviewActivity.fileUri);
 
+    ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
     findViewById(R.id.btn_send).setOnClickListener(v -> {
-      //send file
+      ParseFile parseFile = new ParseFile(new File(URI.create(fileUri.toString())));
+      ParseObservable.save(parseFile, progressDialog::setProgress)
+          .subscribe(parseFile1 -> {
+            //well done!
+            finish();
+          }, RxUtil.ON_ERROR_LOGGER);
     });
 
     ijkVideoView.setVideoURI(fileUri);
 
     ijkVideoView.start();
+  }
+
+  @Override protected void initializeInjector() {
+
   }
 }

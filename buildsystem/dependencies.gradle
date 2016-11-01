@@ -94,6 +94,8 @@ ext {
 
   modelDependencies = [multiDex     : "com.android.support:multidex:${multiDexVersion}",
                        rxPreferences: "com.f2prateek.rx.preferences:rx-preferences:1.0.1",
+                       parse        : 'com.parse:parse-android:1.13.1',
+                       rxparse      : 'com.infstory:rxparse:2.0.3',
   ]
 
   appDependencies =
@@ -122,8 +124,6 @@ ext {
            googlePlayMaps     : "com.google.android.gms:play-services-maps:${googlePlayServicesVersion}",
            firebase           : "com.google.firebase:firebase-messaging:${googlePlayServicesVersion}",
 
-           parse              : 'com.parse:parse-android:1.13.1',
-           rxparse            : 'com.infstory:rxparse:2.0.3',
            bugTags            : "com.bugtags.library:bugtags-lib:1.2.7",
 
            gitSha             : "com.github.promeg:android-git-sha-lib:1.0.0",

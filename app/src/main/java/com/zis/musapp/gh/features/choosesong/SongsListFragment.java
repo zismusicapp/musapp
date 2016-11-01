@@ -10,10 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.dd.CircularProgressButton;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.yatatsu.autobundle.AutoBundleField;
 import com.zis.musapp.base.android.BaseFragment;
+import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
-import com.zis.musapp.gh.features.splash.MyVideoActivity;
+import com.zis.musapp.gh.features.songRecord.CameraCaptureActivity;
+import com.zis.musapp.gh.model.songs.Song;
+import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
+import java.util.ArrayList;
+import rx.parse.ParseObservable;
 
 public class SongsListFragment extends BaseFragment {
 
@@ -42,8 +49,20 @@ public class SongsListFragment extends BaseFragment {
             getContext(), LinearLayoutManager.VERTICAL, false
         )
     );
+
     SongAdapter adapter = new SongAdapter();
     recyclerView.setAdapter(adapter);
+
+    PaginationTool<Song> songPaginationTool =
+        PaginationTool.buildPagingObservable(recyclerView, offset -> {
+          ParseQuery<Song> songParseQuery = ParseQuery.getQuery(Song.class)
+              .setSkip(offset);
+          return ParseObservable.find(songParseQuery);
+        })
+            .setRetryCount(3).build();
+
+    songPaginationTool.getPagingObservable()
+        .subscribe(adapter::addSong, RxUtil.ON_ERROR_LOGGER);
   }
 
   @Override protected void startBusiness() {
@@ -51,6 +70,8 @@ public class SongsListFragment extends BaseFragment {
   }
 
   public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
+
+    ArrayList<Song> songs = new ArrayList<>();
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -69,6 +90,10 @@ public class SongsListFragment extends BaseFragment {
       return 20;
     }
 
+    public void addSong(Song song) {
+      songs.add(song);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
       public TextView txt;
@@ -79,12 +104,22 @@ public class SongsListFragment extends BaseFragment {
         CircularProgressButton circularProgressButton =
             (CircularProgressButton) itemView.findViewById(R.id.circularButton1);
 
-        circularProgressButton.setOnClickListener(view -> {
-          Intent intent = MyVideoActivity.newIntent(getActivity(),
-              "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
-              "bipbop basic 400x300 @ 232 kbps");
-          startActivity(intent);
+        listenOnClickRxy(circularProgressButton, aVoid -> {
+          Song song = songs.get(getAdapterPosition());
+          ParseFile audioFile = song.getParseFile("audio");
+          ParseObservable.getFile(audioFile, circularProgressButton::setProgress)
+              .compose(RxUtil.applyIOToMainThreadSchedulers())
+              .subscribe(file -> {
+                if (!getActivity().isFinishing()) {
+                  startActivity(new Intent(getActivity(), CameraCaptureActivity.class));
+                }
+              }, RxUtil.ON_ERROR_LOGGER);
         });
+
+        //Intent intent = MyVideoActivity.newIntent(getActivity(),
+        //    "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8",
+        //    "bipbop basic 400x300 @ 232 kbps");
+        //startActivity(intent);
       }
     }
   }

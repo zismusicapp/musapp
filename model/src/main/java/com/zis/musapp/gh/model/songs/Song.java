@@ -1,4 +1,6 @@
 package com.zis.musapp.gh.model.songs;
 
-public class Song {
+import com.parse.ParseObject;
+
+public class Song extends ParseObject {
 }

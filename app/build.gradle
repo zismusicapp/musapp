@@ -211,8 +211,6 @@ dependencies {
 
   compile 'com.infstory:rxparse-facebook-v4:2.0.3'
 
-  compile appDependencies.parse
-  compile appDependencies.rxparse
 
   all32Compile project(':ijkplayer-armv5')
   all32Compile project(':ijkplayer-armv7a')

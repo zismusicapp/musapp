@@ -81,6 +81,11 @@ dependencies {
   def testDependencies = rootProject.ext.testDependencies
 
   compile project(':base')
+
+
+  compile modelDependencies.parse
+  compile modelDependencies.rxparse
+
   compile modelDependencies.multiDex
 
   apt aptDependencies.daggerApt
