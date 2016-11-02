@@ -60,7 +60,8 @@ android {
     multiDexEnabled true
     testInstrumentationRunner "com.zis.musapp.gh.CustomTestRunner"
 
-    buildConfigField "String", "API_BASE_URL", "\"https://api.github.com/\""
+    buildConfigField "String", "API_LOCAL_URL", "\"http://localhost:1337/parse/\""
+    buildConfigField "String", "API_REMOTE_URL", "\"http://52471659.ngrok.io/parse/\""
   }
 
   compileOptions {
@@ -86,35 +87,25 @@ android {
   }
 
   signingConfigs {
-    //    develop {
-    //      storeFile file('../buildsystem/some.jks')
-    //      storePassword 'X0WQ0pVJ-jtn'
-    //      keyAlias 'TODOkeyalias'
-    //      keyPassword 'X0WQ0pVJ-jtn'
-    //    }
+    //inflates from android-signing.gradle
+    develop
 
-    /*production {
-        storeFile file(props['keystore'])
-        storePassword props['keystore.password']
-        keyAlias props['key.alias']
-        keyPassword props['key.password']
-    }*/
   }
 
   buildTypes {
     debug {
       minifyEnabled false
       debuggable true
-      //signingConfig signingConfigs.develop
+      signingConfig signingConfigs.develop
     }
 
     release {
       minifyEnabled true
       debuggable false
-      shrinkResources true
-      //signingConfig signingConfigs.develop
-      //signingConfig signingConfigs.production
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      //      shrinkResources true
+      signingConfig signingConfigs.develop
+      //      signingConfig signingConfigs.production
+      //      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
 
@@ -192,10 +183,10 @@ dependencies {
   compile appDependencies.design
 
   // facebook sdk
-  compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
-    transitive = true
-    exclude module: 'bolts-android'
-  }
+//  compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
+//    transitive = true
+//    exclude module: 'bolts-android'
+//  }
 
   compile('com.digits.sdk.android:digits:2.0.0@aar') {
     transitive = true;
@@ -298,4 +289,24 @@ dependencies {
   androidTestApt(aptDependencies.daggerApt) {
     exclude module: 'dagger'
   }
+}
+
+def Properties props = new Properties()
+def propFile = new File('debug.properties')
+if (propFile.canRead()){
+  props.load(new FileInputStream(propFile))
+
+  if ((props!=null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+          props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD'))) {
+    android.signingConfigs.develop.storeFile = file(props['STORE_FILE'])
+    android.signingConfigs.develop.storePassword = props['STORE_PASSWORD']
+    android.signingConfigs.develop.keyAlias = props['KEY_ALIAS']
+    android.signingConfigs.develop.keyPassword = props['KEY_PASSWORD']
+  } else {
+    println 'debug.properties found but some entries are missing'
+    android.buildTypes.debug.signingConfig = null
+  }
+}else {
+  println 'debug.properties not found'
+  android.buildTypes.debug.signingConfig = null
 }

@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.jakewharton.rxbinding.view.RxView;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.parse.ParseFacebookUtils;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.R;
@@ -71,7 +71,7 @@ public class SignupActivity extends BootstrapActivity {
               Arrays.asList("public_profile", "email"))
               .subscribe(parseUser -> {
                 startChooseSongsActivity();
-              });
+              },RxUtil.ON_ERROR_LOGGER);
         });
 
     mRxLoginManager.loginDigitsObservable()
@@ -99,7 +99,8 @@ public class SignupActivity extends BootstrapActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    mRxLoginManager.onActivityResult(requestCode, resultCode, data);
+    //mRxLoginManager.onActivityResult(requestCode, resultCode, data);
+    ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override

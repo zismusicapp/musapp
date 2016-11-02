@@ -52,7 +52,7 @@ public class ProviderConfigModule {
 
   @Singleton
   @Provides RetrofitConfig provideRestConfig() {
-    return RetrofitConfig.builder().baseUrl(BuildConfig.API_BASE_URL).build();
+    return RetrofitConfig.builder().baseUrl(BuildConfig.API_REMOTE_URL).build();
   }
 
   @Singleton

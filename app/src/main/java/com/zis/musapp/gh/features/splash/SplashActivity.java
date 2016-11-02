@@ -42,6 +42,7 @@ import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.BootstrapApp;
 import com.zis.musapp.gh.BuildConfig;
 import com.zis.musapp.gh.Fonts;
+import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.Screen;
 import com.zis.musapp.gh.analytics.CrashReportingTree;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
@@ -102,8 +103,14 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       Once.initialise(app);
       Fresco.initialize(app);
 
-      FacebookSdk.sdkInitialize(getApplicationContext());
-      Parse.initialize(this);
+//      FacebookSdk.sdkInitialize(getApplicationContext());
+
+      Parse.initialize(new Parse.Configuration.Builder(this)
+          .applicationId(getString(R.string.parse_application_id))
+          .server(BuildConfig.API_REMOTE_URL) // The trailing slash is important.
+          .build()
+      );
+
       ParseFacebookUtils.initialize(this);
 
       Fonts.getInstance().init(getApplication());
@@ -115,6 +122,11 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       startActivity(new Intent(this, WelcomeActivity.class));
       finish();
     }, RxUtil.ON_ERROR_LOGGER);
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   @Override
