@@ -1,5 +1,6 @@
 package com.zis.musapp.gh.features.choosesong;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,12 +15,15 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.yatatsu.autobundle.AutoBundleField;
 import com.zis.musapp.base.android.BaseFragment;
+import com.zis.musapp.base.utils.FileUtils;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.songRecord.CameraCaptureActivity;
 import com.zis.musapp.gh.model.songs.Song;
 import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
+import java.io.IOException;
 import java.util.ArrayList;
+import rx.functions.Actions;
 import rx.parse.ParseObservable;
 
 public class SongsListFragment extends BaseFragment {
@@ -67,6 +71,25 @@ public class SongsListFragment extends BaseFragment {
 
   @Override protected void startBusiness() {
     super.startBusiness();
+    //test inflate
+    ProgressDialog progressDialog = new ProgressDialog(getActivity());
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+    FileUtils.copyAssetsToExternalFilesDir(getActivity(), "songs")
+        .map(file -> {
+          try {
+            return FileUtils.read(file);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+          return new byte[0];
+        })
+        .flatMap(bytes -> ParseObservable.save(new ParseFile("song.aac", bytes),
+            progressDialog::setProgress))
+        .compose(RxUtil.applyIOToMainThreadSchedulers())
+        .compose(RxUtil.applyProgressDialog(progressDialog))
+        .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
+    //
   }
 
   public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {

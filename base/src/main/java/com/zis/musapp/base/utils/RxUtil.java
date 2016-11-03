@@ -24,6 +24,9 @@
 
 package com.zis.musapp.base.utils;
 
+import android.app.ProgressDialog;
+import android.view.View;
+import android.widget.ProgressBar;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -86,6 +89,17 @@ public final class RxUtil {
             .flatMap(
                 retryCount -> Observable.timer((long) Math.pow(5, retryCount), TimeUnit.SECONDS))
     );
+  }
+
+  public static <T> Observable.Transformer<T, T> applyProgressBar(ProgressBar progressBar) {
+    return tObservable -> tObservable.doOnSubscribe(() -> progressBar.setVisibility(View.VISIBLE))
+        .doOnUnsubscribe(() -> progressBar.setVisibility(View.INVISIBLE));
+  }
+
+
+  public static <T> Observable.Transformer<T, T> applyProgressDialog(ProgressDialog progressDialog) {
+    return tObservable -> tObservable.doOnSubscribe(progressDialog::show)
+        .doOnUnsubscribe(progressDialog::hide);
   }
 }
 // CHECKSTYLE:ON
