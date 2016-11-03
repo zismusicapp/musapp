@@ -2,6 +2,7 @@ package com.zis.musapp.gh.features.splash;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
@@ -11,9 +12,15 @@ import android.widget.TextView;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.joanzapata.iconify.widget.IconTextView;
+import com.parse.ParseFile;
+import com.zis.musapp.base.utils.FileUtils;
+import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.tour.TourActivity;
+import java.io.IOException;
 import jonathanfinerty.once.Once;
+import rx.functions.Actions;
+import rx.parse.ParseObservable;
 
 public class WelcomeActivity extends Activity {
 
@@ -39,6 +46,26 @@ public class WelcomeActivity extends Activity {
       Once.markDone(WelcomeActivity.TAG);
       startActivity(new Intent(this, TourActivity.class));
     });
+
+    //test inflate
+    ProgressDialog progressDialog = new ProgressDialog(this);
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+    FileUtils.copyAssetsToExternalFilesDir(this, "songs")
+        .map(file -> {
+          try {
+            return FileUtils.read(file);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+          return new byte[0];
+        })
+        .flatMap(bytes -> ParseObservable.save(new ParseFile("song.aac", bytes),
+            progressDialog::setProgress))
+        .compose(RxUtil.applyIOToMainThreadSchedulers())
+        .compose(RxUtil.applyProgressDialog(progressDialog))
+        .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
+    //
   }
 
   private void animationLogo() {
