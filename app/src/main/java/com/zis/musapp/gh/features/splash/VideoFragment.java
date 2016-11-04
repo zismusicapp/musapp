@@ -2,15 +2,19 @@ package com.zis.musapp.gh.features.splash;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import butterknife.BindView;
+import com.yatatsu.autobundle.AutoBundleField;
+import com.zis.musapp.base.android.BaseFragment;
 import com.zis.musapp.gh.R;
 import tv.danmaku.ijk.media.example.application.Settings;
 import tv.danmaku.ijk.media.example.content.RecentMediaStorage;
@@ -20,10 +24,15 @@ import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 
-public class VideoFragment extends Fragment implements TracksFragment.ITrackHolder {
+public class VideoFragment extends BaseFragment implements TracksFragment.ITrackHolder {
   private static final String TAG = "VideoFragment";
+  @BindView(R.id.video_view) IjkVideoView videoView;
+  @BindView(R.id.toast_text_view) TextView toastTextView;
+  @BindView(R.id.hud_view) TableLayout hudView;
+  @BindView(R.id.toolbar) Toolbar toolbar;
+  @BindView(R.id.right_drawer) FrameLayout rightDrawer;
+  @BindView(R.id.drawer_layout) DrawerLayout drawerLayout;
 
-  private String mVideoPath;
   private Uri mVideoUri;
 
   private AndroidMediaController mMediaController;
@@ -36,24 +45,11 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
   private Settings mSettings;
   private boolean mBackPressed;
 
-  //public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-  //  Intent intent = new Intent(context, VideoActivity.class);
-  //  intent.putExtra("videoPath", videoPath);
-  //  intent.putExtra("videoTitle", videoTitle);
-  //  return intent;
-  //}
-  //
-  //public static void intentTo(Context context, String videoPath, String videoTitle) {
-  //  context.startActivity(newIntent(context, videoPath, videoTitle));
-  //}
+  @AutoBundleField
+  String mVideoPath;
 
-  public static Fragment newInstance(int position) {
-
-    VideoFragment fragment = new VideoFragment();
-    Bundle args = new Bundle();
-    // args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-    // fragment.setArguments(args);
-    return fragment;
+  @Override protected boolean hasArgs() {
+    return true;
   }
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -61,8 +57,7 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
 
     mSettings = new Settings(getActivity());
     //getArguments().getString("videoPath");
-    mVideoPath =
-        "http://91.109.23.24/cms/media/uploads/media/trailers/kungfupanda/adaptive_kungfu_panda.m3u8";
+
 
     // handle arguments
     //mVideoPath = getIntent().getStringExtra("videoPath");
@@ -139,10 +134,8 @@ public class VideoFragment extends Fragment implements TracksFragment.ITrackHold
     Log.d(TAG, "Video inflating finished");
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.activity_player, container, false);
+  @Override protected int getLayoutRes() {
+    return R.layout.activity_player;
   }
 
   public void stopAll() {

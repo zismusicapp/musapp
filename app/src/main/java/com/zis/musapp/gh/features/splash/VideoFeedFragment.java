@@ -34,13 +34,6 @@ public class VideoFeedFragment extends BaseFragment {
   String videoPath;
   @AutoBundleField
   String videoTitle;
-  //
-  //public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-  //  Intent intent = new Intent(context, VideoFeedFragment.class);
-  //  intent.putExtra("videoPath", videoPath);
-  //  intent.putExtra("videoTitle", videoTitle);
-  //  return intent;
-  //}
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -105,7 +98,9 @@ public class VideoFeedFragment extends BaseFragment {
 
     @Override
     public Fragment getItem(int position) {
-      Fragment fragment = VideoFragment.newInstance(position);
+      String url =
+          "http://91.109.23.24/cms/media/uploads/media/trailers/kungfupanda/adaptive_kungfu_panda.m3u8";
+      Fragment fragment = VideoFragmentAutoBundle.createFragmentBuilder(url).build();
 
       fragMap.put(position, fragment);
 
