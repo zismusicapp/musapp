@@ -69,6 +69,11 @@ dependencies {
   def aptDependencies = rootProject.ext.aptDependencies
   def testDependencies = rootProject.ext.testDependencies
 
+  compile baseDependencies.recyclerViewV7
+  compile baseDependencies.cardViewV7
+  compile baseDependencies.percentageLayout
+  compile baseDependencies.design
+
   compile baseDependencies.androidSupportAppCompatV7
 
   compile baseDependencies.typeKit

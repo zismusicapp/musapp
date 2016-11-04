@@ -177,10 +177,6 @@ dependencies {
   def aptDependencies = rootProject.ext.aptDependencies
   def testDependencies = rootProject.ext.testDependencies
 
-  compile appDependencies.recyclerViewV7
-  compile appDependencies.cardViewV7
-  compile appDependencies.percentageLayout
-  compile appDependencies.design
 
   // facebook sdk
 //  compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
@@ -238,6 +234,10 @@ dependencies {
   }
 
   compile(appDependencies.iconifyEN) {
+    exclude module: 'support-v4'
+  }
+
+  compile(appDependencies.iconifyFA) {
     exclude module: 'support-v4'
   }
 

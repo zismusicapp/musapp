@@ -46,7 +46,12 @@ public class WelcomeActivity extends Activity {
       Once.markDone(WelcomeActivity.TAG);
       startActivity(new Intent(this, TourActivity.class));
     });
+    inflateWithFiles();
 
+    //
+  }
+
+  private void inflateWithFiles() {
     //test inflate
     ProgressDialog progressDialog = new ProgressDialog(this);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -65,7 +70,6 @@ public class WelcomeActivity extends Activity {
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .compose(RxUtil.applyProgressDialog(progressDialog))
         .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
-    //
   }
 
   private void animationLogo() {

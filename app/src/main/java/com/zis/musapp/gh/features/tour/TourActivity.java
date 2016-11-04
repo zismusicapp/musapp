@@ -14,7 +14,6 @@ import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.Fonts;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.Screen;
-import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
 import com.zis.musapp.gh.features.login.SignupActivity;
 import com.zis.musapp.gh.features.songRecord.CameraCaptureActivity;
 

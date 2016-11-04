@@ -14,7 +14,7 @@ import com.parse.ParseFacebookUtils;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.BootstrapActivity;
 import com.zis.musapp.gh.R;
-import com.zis.musapp.gh.features.choosesong.ChooseSongActivtity;
+import com.zis.musapp.gh.features.choosesong.MainNavigationActivtity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -89,7 +89,7 @@ public class SignupActivity extends BootstrapActivity {
   }
 
   private void startChooseSongsActivity() {
-    startActivity(new Intent(SignupActivity.this, ChooseSongActivtity.class));
+    startActivity(new Intent(SignupActivity.this, MainNavigationActivtity.class));
   }
 
   private void doDigitsLogin() {

@@ -81,11 +81,11 @@
     <activity android:name=".features.login.SignupActivity"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.choosesong.ChooseSongActivtity"
+    <activity android:name=".features.choosesong.MainNavigationActivtity"
         android:screenOrientation="portrait"/>
 
 
-    <activity android:name=".features.splash.MyVideoActivity"
+    <activity android:name=".features.splash.VideoFeedFragment"
         android:screenOrientation="portrait"/>
 
     <activity android:name=".features.songRecord.CameraCaptureActivity"

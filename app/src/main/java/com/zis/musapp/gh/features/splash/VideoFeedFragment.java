@@ -1,14 +1,16 @@
 package com.zis.musapp.gh.features.splash;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import butterknife.BindView;
+import com.yatatsu.autobundle.AutoBundleField;
+import com.zis.musapp.base.android.BaseFragment;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.verticalpagerview.VerticalDefaultTransformer;
 import com.zis.musapp.gh.verticalpagerview.VerticalViewPager;
@@ -19,27 +21,35 @@ import java.util.Map;
 /**
  * Created by mikhail on 01/09/16.
  */
-public class MyVideoActivity extends AppCompatActivity {
+public class VideoFeedFragment extends BaseFragment {
 
-  public static Intent newIntent(Context context, String videoPath, String videoTitle) {
-    Intent intent = new Intent(context, MyVideoActivity.class);
-    intent.putExtra("videoPath", videoPath);
-    intent.putExtra("videoTitle", videoTitle);
-    return intent;
+  @BindView(R.id.verticalviewpager) VerticalViewPager verticalviewpager;
+  @BindView(R.id.container) FrameLayout container;
+
+  @Override protected boolean hasArgs() {
+    return true;
   }
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+  @AutoBundleField
+  String videoPath;
+  @AutoBundleField
+  String videoTitle;
+  //
+  //public static Intent newIntent(Context context, String videoPath, String videoTitle) {
+  //  Intent intent = new Intent(context, VideoFeedFragment.class);
+  //  intent.putExtra("videoPath", videoPath);
+  //  intent.putExtra("videoTitle", videoTitle);
+  //  return intent;
+  //}
 
-    setContentView(R.layout.video_pager_layout);
+  @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
-    VerticalViewPager verticalViewPager = (VerticalViewPager) findViewById(R.id.verticalviewpager);
-
-    verticalViewPager.setPageTransformer(true, new VerticalDefaultTransformer());
-    DummyAdapter adapter = new DummyAdapter(getSupportFragmentManager());
-    verticalViewPager.setAdapter(adapter);
-    verticalViewPager.setOffscreenPageLimit(2);
-    verticalViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+    verticalviewpager.setPageTransformer(true, new VerticalDefaultTransformer());
+    DummyAdapter adapter = new DummyAdapter(getChildFragmentManager());
+    verticalviewpager.setAdapter(adapter);
+    verticalviewpager.setOffscreenPageLimit(2);
+    verticalviewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
       int previousPage = 0;
 
@@ -51,7 +61,7 @@ public class MyVideoActivity extends AppCompatActivity {
 
       @Override public void onPageSelected(final int position) {
 
-        int currentPage = verticalViewPager.getCurrentItem();
+        int currentPage = verticalviewpager.getCurrentItem();
 
         //when scroll up
         Fragment curFragment = adapter.getFragMap().get(currentPage);
@@ -78,6 +88,10 @@ public class MyVideoActivity extends AppCompatActivity {
 
       }
     });
+  }
+
+  @Override protected int getLayoutRes() {
+    return R.layout.video_pager_layout;
   }
 
   public class DummyAdapter extends FragmentPagerAdapter {

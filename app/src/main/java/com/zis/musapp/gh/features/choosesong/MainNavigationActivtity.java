@@ -11,12 +11,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.zis.musapp.base.android.BaseActivity;
 import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.features.splash.VideoFeedFragmentAutoBundle;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ChooseSongActivtity extends BaseActivity {
+public class MainNavigationActivtity extends BaseActivity {
 
   private static final int PAGES_COUNT = 4;
 
@@ -32,6 +35,20 @@ public class ChooseSongActivtity extends BaseActivity {
 
     @Override
     public Fragment getItem(int position) {
+      switch (position) {
+        case 0:
+          return VideoFeedFragmentAutoBundle.createFragmentBuilder(
+              "http://91.109.23.24/cms/media/uploads/media/trailers/kungfupanda/adaptive_kungfu_panda.m3u8",
+              "Kungfu").build();
+        case 1:
+          break;
+        case 2:
+          break;
+        case 3:
+          break;
+        case 4:
+          break;
+      }
       return SongsListFragment.newInstance(position);
     }
   }
@@ -56,39 +73,41 @@ public class ChooseSongActivtity extends BaseActivity {
     //top, all, downloaded, competition, your records
     final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
     final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
+    int size = 40;
     models.add(
         new NavigationTabBar.Model.Builder(
-            getResources().getDrawable(R.drawable.ic_first),
+            new IconDrawable(this, FontAwesomeIcons.fa_home).sizeDp(size),
             Color.parseColor(colors[0]))
-            .title("Top")
+            .title("Home")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
-            getResources().getDrawable(R.drawable.ic_second),
+            new IconDrawable(this, FontAwesomeIcons.fa_search).sizeDp(size),
             Color.parseColor(colors[1]))
-            .title("All")
+            .title("Discover")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
-            getResources().getDrawable(R.drawable.ic_third),
+            new IconDrawable(this, FontAwesomeIcons.fa_plus_circle).sizeDp(size)
+                .colorRes(android.R.color.holo_red_dark),
             Color.parseColor(colors[2]))
-            .title("Downloaded")
+            .title("Create")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
-            getResources().getDrawable(R.drawable.ic_fourth),
+            new IconDrawable(this, FontAwesomeIcons.fa_heart).sizeDp(size),
             Color.parseColor(colors[3]))
-            .title("Competition")
+            .title("Notifications")
             .build()
     );
     models.add(
         new NavigationTabBar.Model.Builder(
-            getResources().getDrawable(R.drawable.ic_fifth),
+            new IconDrawable(this, FontAwesomeIcons.fa_user).sizeDp(size),
             Color.parseColor(colors[4]))
-            .title("Your records")
+            .title("Profile")
             .build()
     );
 

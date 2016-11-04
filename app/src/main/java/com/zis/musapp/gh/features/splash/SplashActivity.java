@@ -33,6 +33,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.github.promeg.androidgitsha.lib.GitShaUtils;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.joanzapata.iconify.fonts.MaterialModule;
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
@@ -99,7 +100,8 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
       }
 
       Iconify.with(new MaterialModule())
-          .with(new EntypoModule());
+          .with(new EntypoModule())
+          .with(new FontAwesomeModule());
       Once.initialise(app);
       Fresco.initialize(app);
 
