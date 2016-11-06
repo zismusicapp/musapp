@@ -25,6 +25,7 @@
 package com.zis.musapp.base.utils;
 
 import android.app.ProgressDialog;
+import android.database.Cursor;
 import android.view.View;
 import android.widget.ProgressBar;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +101,25 @@ public final class RxUtil {
   public static <T> Observable.Transformer<T, T> applyProgressDialog(ProgressDialog progressDialog) {
     return tObservable -> tObservable.doOnSubscribe(progressDialog::show)
         .doOnUnsubscribe(progressDialog::hide);
+  }
+
+
+
+  public static Observable<Cursor> create(Cursor cursor) {
+    return Observable.defer(() -> Observable.create(sub -> {
+      if (sub.isUnsubscribed()) {
+        return;
+      }
+      try {
+        while (cursor.moveToNext()) {
+          if (sub.isUnsubscribed()) return;
+          sub.onNext(cursor);
+        }
+        sub.onCompleted();
+      } catch (Exception e) {
+        sub.onError(e);
+      }
+    }));
   }
 }
 // CHECKSTYLE:ON

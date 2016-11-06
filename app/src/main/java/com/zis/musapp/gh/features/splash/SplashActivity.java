@@ -86,15 +86,15 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
     Observable.defer(() -> {
       final BootstrapApp app = BootstrapApp.get();
       if ("release".equals(BuildConfig.BUILD_TYPE)) {
-        Timber.plant(new CrashReportingTree());
-        final BugtagsOptions options = new BugtagsOptions.Builder().trackingLocation(false)
-            .trackingCrashLog(true)
-            .trackingConsoleLog(true)
-            .trackingUserSteps(true)
-            .build();
-        Bugtags.start("82cdb5f7f8925829ccc4a6e7d5d12216", app,
-            Bugtags.BTGInvocationEventShake, options);
-        Bugtags.setUserData("git_sha", GitShaUtils.getGitSha(app));
+        //Timber.plant(new CrashReportingTree());
+        //final BugtagsOptions options = new BugtagsOptions.Builder().trackingLocation(false)
+        //    .trackingCrashLog(true)
+        //    .trackingConsoleLog(true)
+        //    .trackingUserSteps(true)
+        //    .build();
+        //Bugtags.start("82cdb5f7f8925829ccc4a6e7d5d12216", app,
+        //    Bugtags.BTGInvocationEventShake, options);
+        //Bugtags.setUserData("git_sha", GitShaUtils.getGitSha(app));
       } else {
         Timber.plant(new Timber.DebugTree());
       }

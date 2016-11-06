@@ -34,7 +34,7 @@ ext {
   rxBindingVersion = '0.4.0'
   rxLifeCycleVersion = '0.6.1'
 
-  sqlDelightVersion = '0.4.3'
+  sqlDelightVersion = '0.5.1'
   autoBundleVersion = '3.0.0'
   onActivityResultVersion = '0.6.0'
 
@@ -86,7 +86,7 @@ ext {
            retrofit                 : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
            retrofitGsonConverter    : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
            retrofitRxJavaAdapter    : "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
-           sqlBrite                 : 'com.squareup.sqlbrite:sqlbrite:0.7.0',
+           sqlBrite                 : 'com.squareup.sqlbrite:sqlbrite:0.8.0',
            sqlDelightRuntime        : "com.squareup.sqldelight:runtime:${sqlDelightVersion}",
 
            threetenabp              : "com.jakewharton.threetenabp:threetenabp:1.0.3",
@@ -146,7 +146,7 @@ ext {
                      autoBundleApt      : "com.github.yatatsu:autobundle-processor:${autoBundleVersion}",
                      onActivityResultApt: "com.vanniktech:onactivityresult-compiler:${onActivityResultVersion}",
 
-                     sqlDelightBin      : "com.github.okbuilds:SqlDelightBin:${sqlDelightVersion}",
+                     sqlDelightBin      : "com.squareup.sqldelight:runtime:${sqlDelightVersion}",
                      retrolambda        : "net.orfjackal.retrolambda:retrolambda:2.3.0",
                      errorprone         : "com.google.errorprone:error_prone_core:2.0.11",]
 

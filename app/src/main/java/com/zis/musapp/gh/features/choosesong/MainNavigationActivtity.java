@@ -41,11 +41,12 @@ public class MainNavigationActivtity extends BaseActivity {
               "http://91.109.23.24/cms/media/uploads/media/trailers/kungfupanda/adaptive_kungfu_panda.m3u8",
               "Kungfu").build();
         case 1:
+
           break;
         case 2:
           break;
         case 3:
-          break;
+          return new StartRecordWizardBottomSheetDialogFragment();
         case 4:
           break;
       }

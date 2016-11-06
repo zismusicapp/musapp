@@ -83,26 +83,26 @@ public class BootstrapApp extends MultiDexApplication implements IApplication {
           .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
           .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
           .build());
-      LeakCanary.install(this);
-
-      StrictModeNotifier.install(this);
-      new Handler().post(() -> {
-        final StrictMode.ThreadPolicy threadPolicy =
-            new StrictMode.ThreadPolicy.Builder().detectAll()
-                .permitDiskReads()
-                .permitDiskWrites()
-                .penaltyLog() // Must!
-                .build();
-        StrictMode.setThreadPolicy(threadPolicy);
-
-        final StrictMode.VmPolicy vmPolicy =
-            new StrictMode.VmPolicy.Builder().detectAll().penaltyLog() // Must!
-                .build();
-        StrictMode.setVmPolicy(vmPolicy);
-      });
-
-      new ANRWatchDog().start();
-      BlockCanary.install(this, new AppBlockCanaryContext()).start();
+      //LeakCanary.install(this);
+      //
+      //StrictModeNotifier.install(this);
+      //new Handler().post(() -> {
+      //  final StrictMode.ThreadPolicy threadPolicy =
+      //      new StrictMode.ThreadPolicy.Builder().detectAll()
+      //          .permitDiskReads()
+      //          .permitDiskWrites()
+      //          .penaltyLog() // Must!
+      //          .build();
+      //  StrictMode.setThreadPolicy(threadPolicy);
+      //
+      //  final StrictMode.VmPolicy vmPolicy =
+      //      new StrictMode.VmPolicy.Builder().detectAll().penaltyLog() // Must!
+      //          .build();
+      //  StrictMode.setVmPolicy(vmPolicy);
+      //});
+      //
+      //new ANRWatchDog().start();
+      //BlockCanary.install(this, new AppBlockCanaryContext()).start();
     }
 
     mAppComponent = createComponent();

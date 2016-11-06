@@ -8,25 +8,33 @@ import com.squareup.sqldelight.ColumnAdapter;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
-public class ZonedDateTimeDelightAdapter implements ColumnAdapter<ZonedDateTime> {
+public class ZonedDateTimeDelightAdapter implements ColumnAdapter<ZonedDateTime,String> {
 
   private final DateTimeFormatter mDateTimeFormatter;
 
   public ZonedDateTimeDelightAdapter(final DateTimeFormatter dateTimeFormatter) {
     mDateTimeFormatter = dateTimeFormatter;
   }
+  //
+  //@NonNull
+  //@Override
+  //public ZonedDateTime map(final Cursor cursor, final int columnIndex) {
+  //  return mDateTimeFormatter.parse(cursor.getString(columnIndex), ZonedDateTime.FROM);
+  //}
+  //
+  //@Override
+  //public void marshal(final ContentValues values, final String key,
+  //    @Nullable final ZonedDateTime value) {
+  //  if (value != null) {
+  //    values.put(key, mDateTimeFormatter.format(value));
+  //  }
+  //}
 
-  @NonNull
-  @Override
-  public ZonedDateTime map(final Cursor cursor, final int columnIndex) {
-    return mDateTimeFormatter.parse(cursor.getString(columnIndex), ZonedDateTime.FROM);
+  @NonNull @Override public ZonedDateTime decode(String databaseValue) {
+    return ZonedDateTime.parse(databaseValue);
   }
 
-  @Override
-  public void marshal(final ContentValues values, final String key,
-      @Nullable final ZonedDateTime value) {
-    if (value != null) {
-      values.put(key, mDateTimeFormatter.format(value));
-    }
+  @Override public String encode(@NonNull ZonedDateTime value) {
+    return value.format(mDateTimeFormatter);
   }
 }
