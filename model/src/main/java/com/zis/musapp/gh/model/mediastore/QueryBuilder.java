@@ -1,12 +1,10 @@
-package com.zis.musapp.base.utils.providers;
+package com.zis.musapp.gh.model.mediastore;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-public class Select {
-  Activity activity = null;
+public class QueryBuilder {
   Context context = null;
   Uri uri = null;
   String[] projection = null;
@@ -14,59 +12,43 @@ public class Select {
   String[] selectionArgs = null;
   String sortOrder = null;
 
-  public Select(String... projection) {
-    projection(projection);
+  public static QueryBuilder create() {
+    return new QueryBuilder();
   }
 
-  public Select() {
-    projection(null);
+  public static QueryBuilder create(Context context) {
+    return new QueryBuilder(context);
   }
 
-  public Select from(Uri uri, Context context) {
-    return from(context, uri);
+  public QueryBuilder() {
+    this(null);
   }
 
-  public Select from(Context context, Uri uri) {
+  public QueryBuilder(Context context) {
     this.context = context;
-
-    return uri(uri);
   }
 
-  public Select from(Uri uri, Activity activity) {
-    return from(activity, uri);
-  }
-
-  public Select from(Activity activity, Uri uri) {
-    this.activity = activity;
-
-    return from((Context) activity, uri);
-  }
-
-  public Select where(String selection, String[] selectionArgs) {
-    return selection(selection).selectionArgs(selectionArgs);
-  }
-
-  public Select uri(Uri uri) {
+  public QueryBuilder uri(Uri uri) {
     this.uri = uri;
     return this;
   }
 
-  public Select projection(String[] projection) {
+  public QueryBuilder projection(String[] projection) {
     this.projection = projection;
     return this;
   }
 
-  public Select selection(String selection) {
+  public QueryBuilder selection(String selection) {
     this.selection = selection;
     return this;
   }
 
-  public Select selectionArgs(String[] selectionArgs) {
+  public QueryBuilder selectionArgs(String[] selectionArgs) {
     this.selectionArgs = selectionArgs;
     return this;
   }
 
-  public Select sortOrder(String sortOrder) {
+  public QueryBuilder sortOrder(String sortOrder) {
     this.sortOrder = sortOrder;
     return this;
   }
@@ -91,7 +73,7 @@ public class Select {
     return sortOrder;
   }
 
-  public Cursor query() {
+  public Cursor build() {
     if (context == null) return null;
     return context.getContentResolver().query(
         uri(),
