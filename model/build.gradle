@@ -82,6 +82,8 @@ dependencies {
 
   compile project(':base')
 
+  compile 'com.infstory:auto-cursor:1.0.0'
+  apt 'com.infstory:auto-cursor-processor:1.0.0'
 
   compile modelDependencies.parse
   compile modelDependencies.rxparse
