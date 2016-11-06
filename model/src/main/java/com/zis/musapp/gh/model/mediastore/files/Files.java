@@ -13,13 +13,13 @@ public abstract class Files implements Parcelable, FilesColumns {
     return new AutoCursor_Files(cursor);
   }
 
-  public Uri getExternalContentUri() {
-    return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id());
+  public Uri getExternalContentUri(String volumeName) {
+    return ContentUris.withAppendedId(MediaStore.Files.getContentUri(volumeName), id());
     // alternative:
     // return Images.Media.EXTERNAL_CONTENT_URI.buildUpon().appendPath(String.valueOf(id())).build();
   }
 
-  public Uri getContentUri() {
-    return getExternalContentUri();
+  public Uri getContentUri(String volumeName) {
+    return getExternalContentUri(volumeName);
   }
 }

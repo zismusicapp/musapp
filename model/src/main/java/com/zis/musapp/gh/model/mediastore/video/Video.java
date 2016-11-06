@@ -14,7 +14,7 @@ public abstract class Video implements Parcelable, VideoColumns {
   }
 
   public Uri getExternalContentUri() {
-    return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id());
+    return ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id());
     // alternative:
     // return Images.Media.EXTERNAL_CONTENT_URI.buildUpon().appendPath(String.valueOf(id())).build();
   }

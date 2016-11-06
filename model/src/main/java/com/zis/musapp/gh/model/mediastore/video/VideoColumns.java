@@ -8,11 +8,12 @@ import static android.provider.MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME
 import static android.provider.MediaStore.Video.VideoColumns.BUCKET_ID;
 import static android.provider.MediaStore.Video.VideoColumns.DATE_TAKEN;
 import static android.provider.MediaStore.Video.VideoColumns.DESCRIPTION;
+import static android.provider.MediaStore.Video.VideoColumns.DURATION;
 import static android.provider.MediaStore.Video.VideoColumns.IS_PRIVATE;
 import static android.provider.MediaStore.Video.VideoColumns.LATITUDE;
 import static android.provider.MediaStore.Video.VideoColumns.LONGITUDE;
 import static android.provider.MediaStore.Video.VideoColumns.MINI_THUMB_MAGIC;
-import static android.provider.MediaStore.Video.VideoColumns.DURATION;
+import static android.provider.MediaStore.Video.VideoColumns.RESOLUTION;
 
 public interface VideoColumns extends MediaColumns {
   @Nullable
@@ -51,4 +52,7 @@ public interface VideoColumns extends MediaColumns {
   @AutoCursor.Column(name = DURATION)
   public Integer duration();
 
+  @Nullable
+  @AutoCursor.Column(name = RESOLUTION)
+  public String resolution();
 }
