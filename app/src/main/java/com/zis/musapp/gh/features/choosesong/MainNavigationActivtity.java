@@ -2,6 +2,8 @@ package com.zis.musapp.gh.features.choosesong;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.joanzapata.iconify.IconDrawable;
@@ -22,6 +26,7 @@ import java.util.Random;
 public class MainNavigationActivtity extends BaseActivity {
 
   private static final int PAGES_COUNT = 4;
+  private StartRecordWizardBottomSheetDialogFragment bottomSheetDialogFragment;
 
   public static class SongsFragmentsAdapter extends FragmentPagerAdapter {
     public SongsFragmentsAdapter(FragmentManager fm) {
@@ -46,7 +51,7 @@ public class MainNavigationActivtity extends BaseActivity {
         case 2:
           break;
         case 3:
-          return new StartRecordWizardBottomSheetDialogFragment();
+          break;
         case 4:
           break;
       }
@@ -58,6 +63,7 @@ public class MainNavigationActivtity extends BaseActivity {
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_horizontal_coordinator_ntb);
+
     initUI();
   }
 
@@ -66,7 +72,9 @@ public class MainNavigationActivtity extends BaseActivity {
   }
 
   private void initUI() {
+
     final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+
     viewPager.setAdapter(new SongsFragmentsAdapter(getSupportFragmentManager()));
 
     final String[] colors = getResources().getStringArray(R.array.default_preview);
@@ -147,8 +155,27 @@ public class MainNavigationActivtity extends BaseActivity {
       }
     });
 
+    bottomSheetDialogFragment = new StartRecordWizardBottomSheetDialogFragment();
+
+    final BottomSheetBehavior behavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
+    behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+      @Override
+      public void onStateChanged(@NonNull View bottomSheet, int newState) {
+        Log.e("onStateChanged", "onStateChanged:" + newState);
+      }
+
+      @Override
+      public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        Log.e("onSlide", "onSlide");
+      }
+    });
+
+    behavior.setPeekHeight(100);
+
     final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.parent);
     findViewById(R.id.fab).setOnClickListener(v -> {
+      bottomSheetDialogFragment.show(getSupportFragmentManager(),
+          "dialog");
       for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
         final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
         navigationTabBar.postDelayed(() -> {

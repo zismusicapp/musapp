@@ -61,7 +61,7 @@ android {
     testInstrumentationRunner "com.zis.musapp.gh.CustomTestRunner"
 
     buildConfigField "String", "API_LOCAL_URL", "\"http://localhost:1337/parse/\""
-    buildConfigField "String", "API_REMOTE_URL", "\"http://52471659.ngrok.io/parse/\""
+    buildConfigField "String", "API_REMOTE_URL", "\"http://27d5e762.ngrok.io/parse/\""
   }
 
   compileOptions {
