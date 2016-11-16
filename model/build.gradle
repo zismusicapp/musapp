@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'de.mobilej.unmock'
 apply plugin: 'com.ofg.uptodate'
@@ -83,16 +82,16 @@ dependencies {
   compile project(':base')
 
   compile 'com.infstory:auto-cursor:1.0.0'
-  apt 'com.infstory:auto-cursor-processor:1.0.0'
+  annotationProcessor 'com.infstory:auto-cursor-processor:1.0.0'
 
   compile modelDependencies.parse
   compile modelDependencies.rxparse
 
   compile modelDependencies.multiDex
 
-  apt aptDependencies.daggerApt
+  annotationProcessor aptDependencies.daggerApt
   provided aptDependencies.autoValue // used for AndroidStudio sync
-  apt(aptDependencies.autoParcelApt) {
+  annotationProcessor(aptDependencies.autoParcelApt) {
     exclude module: 'auto-value'
   }
   // used for AndroidStudio sync

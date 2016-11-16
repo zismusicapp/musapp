@@ -9,47 +9,35 @@ import butterknife.ButterKnife;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.image.Image;
-import com.zis.musapp.gh.model.mediastore.video.Video;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageRecyclerViewAdapter
     extends RecyclerView.Adapter<ImageRecyclerViewAdapter.ThumbnailViewHolder> {
 
-  ArrayList dataList = new ArrayList<>();
+  private List<Image> images = new ArrayList<>();
 
-  public ImageRecyclerViewAdapter() {
+  public ImageRecyclerViewAdapter(List<Image> images) {
+    this.images = images;
   }
 
-  public void addData(Object object) {
-    dataList.add(object);
-    notifyDataSetChanged();
-  }
-
-  public void addData(ArrayList object) {
-    dataList.addAll(object);
-    notifyDataSetChanged();
-  }
-
-  @Override public ThumbnailViewHolder onCreateViewHolder(ViewGroup viewGroup,
-      int viewType) {
+  @Override public ThumbnailViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
     View view =
         LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_layout, viewGroup, false);
     return new ThumbnailViewHolder(view);
   }
 
-  @Override
-  public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
-    if (dataList.get(position) instanceof Image) {
-      Image image = (Image) dataList.get(position);
-      holder.imageView.setImageURI(image.getContentUri());
-    } else if (dataList.get(position) instanceof Video) {
-      Video video = (Video) dataList.get(position);
-      holder.imageView.setImageURI(video.getContentUri());
-    }
+  @Override public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
+    Image image1 = images.get(position);
+    holder.imageView.setImageURI(image1.getContentUri());
   }
 
   @Override public int getItemCount() {
-    return dataList.size();
+    return images.size();
+  }
+
+  public void addImage(Image image) {
+    images.add(image);
   }
 
   class ThumbnailViewHolder extends RecyclerView.ViewHolder {

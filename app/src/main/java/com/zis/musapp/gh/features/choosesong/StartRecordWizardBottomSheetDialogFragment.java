@@ -1,38 +1,48 @@
 package com.zis.musapp.gh.features.choosesong;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewParent;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.android.annotations.NonNull;
+import com.tbruyelle.rxpermissions.RxPermissions;
+import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
+import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
-import rx.Observable;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
+import java.util.ArrayList;
+import rx.functions.Actions;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
+
+  int LIMIT = 50;
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
   private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
       new BottomSheetBehavior.BottomSheetCallback() {
 
-        @Override
-        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+        @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
           switch (newState) {
             case BottomSheetBehavior.STATE_HIDDEN:
               dismiss();
               break;
             case BottomSheetBehavior.STATE_EXPANDED:
+              bottomSheet.post(() -> {
+                bottomSheet.requestLayout();
+                bottomSheet.invalidate();
+                showList();
+              });
+
               break;
             case BottomSheetBehavior.STATE_DRAGGING:
               break;
@@ -43,69 +53,67 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
           }
         }
 
-        @Override
-        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         }
       };
   private BottomSheetBehavior<View> mBehavior;
-
-  @Override
-  public void setupDialog(Dialog dialog, int style) {
-    super.setupDialog(dialog, style);
-    View contentView = View.inflate(getContext(), R.layout.fragment_bottom_sheet, null);
-    dialog.setContentView(contentView);
-
-    ViewParent parent = contentView.getParent();
-    CoordinatorLayout.LayoutParams params =
-        (CoordinatorLayout.LayoutParams) ((View) parent).getLayoutParams();
-    CoordinatorLayout.Behavior behavior = params.getBehavior();
-
-    if (behavior != null && behavior instanceof BottomSheetBehavior) {
-      ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
-    }
-  }
-
-  @Override public void onViewCreated(View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    mRecycleView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
-  }
+  private ImageRecyclerViewAdapter adapter;
 
   public void showList() {
 
-    ImageRecyclerViewAdapter simpleSectionedListAdapter =
-        new ImageRecyclerViewAdapter();
-    mRecycleView.setAdapter(simpleSectionedListAdapter);
+    PaginationTool.Builder<Image> paginationBuilder =
+        PaginationTool.buildPagingObservable(mRecycleView,
+            offset -> MediaProviderHelper.getImagesAll(getActivity(), null, null, null,
+                MediaStore.MediaColumns.DATE_ADDED + " ASC LIMIT " + LIMIT + " OFFSET " + offset))
+            .setLimit(LIMIT)
+            .setRetryCount(3);
 
-    PaginationTool.Builder imageBuilder = PaginationTool.buildPagingObservable(
-        mRecycleView, this::getSource).setRetryCount(3);
+    PaginationTool<Image> paginationTool = paginationBuilder.build();
 
-    PaginationTool build = imageBuilder.build();
-    build.getPagingObservable().subscribe();
+    paginationTool.getPagingObservable()
+        .compose(RxUtil.applyIOToMainThreadSchedulers())
+        .doOnNext(images -> {
+          adapter.addImage(images);
+          mRecycleView.getAdapter().notifyDataSetChanged();
+        })
+        .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
   }
 
-  Observable getSource(int skip) {
-    return Observable.merge(
-        MediaProviderHelper.getVideoAll(getActivity(), null, null, null, null).cast(Object.class),
-        MediaProviderHelper.getImagesAll(getActivity(), null, null, null, null).cast(Object.class)
-    ).distinct().skip(skip);
-  }
-
-  @android.support.annotation.NonNull
-  @Override
+  @android.support.annotation.NonNull @Override
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
 
     View view = View.inflate(getContext(), R.layout.fragment_bottom_sheet, null);
+    ButterKnife.bind(this, view);
 
     dialog.setContentView(view);
+
+    GridLayoutManager staggeredGridLayoutManager = new GridLayoutManager(getActivity(), 3);
+
+    mRecycleView.setLayoutManager(staggeredGridLayoutManager);
+    adapter = new ImageRecyclerViewAdapter(new ArrayList<>());
+    mRecycleView.setAdapter(adapter);
+
     mBehavior = BottomSheetBehavior.from((View) view.getParent());
+    mBehavior.setBottomSheetCallback(mBottomSheetBehaviorCallback);
+
     return dialog;
   }
 
-  @Override
-  public void onStart() {
+  @Override public void onStart() {
     super.onStart();
-    mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+    // Must be done during an initialization phase like onCreate
+    RxPermissions.getInstance(getActivity())
+        .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+        .compose(RxUtil.applyIOToMainThreadSchedulers())
+        .subscribe(granted -> {
+          if (granted) { // Always true pre-M
+            showList();
+            //mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+          } else {
+            // Oups permission denied
+          }
+        });
   }
 }
