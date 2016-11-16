@@ -20,6 +20,7 @@ import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
 import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import rx.functions.Actions;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
@@ -64,17 +65,19 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     PaginationTool.Builder<Image> paginationBuilder =
         PaginationTool.buildPagingObservable(mRecycleView,
             offset -> MediaProviderHelper.getImagesAll(getActivity(), null, null, null,
-                MediaStore.MediaColumns.DATE_ADDED + " ASC LIMIT " + LIMIT + " OFFSET " + offset))
+                MediaStore.MediaColumns.DATE_ADDED + " DESC LIMIT " + LIMIT + " OFFSET " + offset))
             .setLimit(LIMIT)
             .setRetryCount(3);
 
     PaginationTool<Image> paginationTool = paginationBuilder.build();
 
     paginationTool.getPagingObservable()
+        .buffer(200, TimeUnit.MILLISECONDS, 6)
         .compose(RxUtil.applyIOToMainThreadSchedulers())
+        .filter(images -> !images.isEmpty())
         .doOnNext(images -> {
-          adapter.addImage(images);
-          mRecycleView.getAdapter().notifyDataSetChanged();
+          adapter.addImages(images);
+          adapter.notifyDataSetChanged();
         })
         .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
   }

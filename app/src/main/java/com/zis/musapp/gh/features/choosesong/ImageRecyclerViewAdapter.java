@@ -36,8 +36,8 @@ public class ImageRecyclerViewAdapter
     return images.size();
   }
 
-  public void addImage(Image image) {
-    images.add(image);
+  public void addImages(List<Image> image) {
+    images.addAll(image);
   }
 
   class ThumbnailViewHolder extends RecyclerView.ViewHolder {

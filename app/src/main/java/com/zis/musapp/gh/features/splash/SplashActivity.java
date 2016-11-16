@@ -26,11 +26,11 @@ package com.zis.musapp.gh.features.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.bugtags.library.Bugtags;
-import com.bugtags.library.BugtagsOptions;
-import com.facebook.FacebookSdk;
+import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.github.promeg.androidgitsha.lib.GitShaUtils;
+import com.facebook.imagepipeline.core.DiskStorageCacheFactory;
+import com.facebook.imagepipeline.core.DynamicDefaultDiskStorageFactory;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -45,7 +45,6 @@ import com.zis.musapp.gh.BuildConfig;
 import com.zis.musapp.gh.Fonts;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.Screen;
-import com.zis.musapp.gh.analytics.CrashReportingTree;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
 import jonathanfinerty.once.Once;
 import rx.Observable;
@@ -56,19 +55,17 @@ import timber.log.Timber;
  * Created by Zis{github.com/Zis} on 15/9/19.
  *
  * Splash activity. Init app and handle other Intent action. I imitate the way in <a
- * href="http://frogermcs.github.io/dagger-graph-creation-performance/">frogermcs'  blog: Dagger 2 -
+ * href="http://frogermcs.github.io/dagger-graph-creation-performance/">frogermcs'  blog: Dagger 2
+ * -
  * graph creation performance</a> to avoid activity state loss.
  */
 @SuppressWarnings({
-    "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-    "PMD.ModifiedCyclomaticComplexity"
-})
-public class SplashActivity extends BootstrapActivity implements HasComponent<SplashComponent> {
+    "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"
+}) public class SplashActivity extends BootstrapActivity implements HasComponent<SplashComponent> {
 
   private SplashComponent mSplashComponent;
 
-  @Override
-  protected void onCreate(final Bundle savedInstanceState) {
+  @Override protected void onCreate(final Bundle savedInstanceState) {
     setTheme(com.zis.musapp.gh.R.style.AppTheme);
     super.onCreate(savedInstanceState);
     setContentView(com.zis.musapp.gh.R.layout.splash_activity);
@@ -76,8 +73,7 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
     initialize();
   }
 
-  @Override
-  protected void initializeInjector() {
+  @Override protected void initializeInjector() {
     mSplashComponent = BootstrapApp.get().appComponent().plus();
     mSplashComponent.inject(this);
   }
@@ -99,19 +95,20 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
         Timber.plant(new Timber.DebugTree());
       }
 
-      Iconify.with(new MaterialModule())
-          .with(new EntypoModule())
-          .with(new FontAwesomeModule());
+      Iconify.with(new MaterialModule()).with(new EntypoModule()).with(new FontAwesomeModule());
       Once.initialise(app);
-      Fresco.initialize(app);
+      ImagePipelineConfig config =
+          ImagePipelineConfig.newBuilder(this).setDownsampleEnabled(true)
+              .setFileCacheFactory(new DiskStorageCacheFactory(new DynamicDefaultDiskStorageFactory()))
+              .build();
+      Fresco.initialize(app, config);
 
-//      FacebookSdk.sdkInitialize(getApplicationContext());
+      //      FacebookSdk.sdkInitialize(getApplicationContext());
 
-      Parse.initialize(new Parse.Configuration.Builder(this)
-          .applicationId(getString(R.string.parse_application_id))
+      Parse.initialize(new Parse.Configuration.Builder(this).applicationId(
+          getString(R.string.parse_application_id))
           .server(BuildConfig.API_REMOTE_URL) // The trailing slash is important.
-          .build()
-      );
+          .build());
 
       ParseFacebookUtils.initialize(this);
 
@@ -126,13 +123,11 @@ public class SplashActivity extends BootstrapActivity implements HasComponent<Sp
     }, RxUtil.ON_ERROR_LOGGER);
   }
 
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
   }
 
-  @Override
-  public SplashComponent getComponent() {
+  @Override public SplashComponent getComponent() {
     return mSplashComponent;
   }
 }
