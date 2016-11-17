@@ -58,7 +58,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
         }
       };
   private BottomSheetBehavior<View> mBehavior;
-  private ImageRecyclerViewAdapter adapter;
+  private ImageRecyclerViewAdapter mAdapter;
 
   public void showList() {
 
@@ -69,15 +69,18 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
             .setLimit(LIMIT)
             .setRetryCount(3);
 
+    mRecycleView.setItemAnimator(null);
+
+
     PaginationTool<Image> paginationTool = paginationBuilder.build();
 
     paginationTool.getPagingObservable()
-        .buffer(200, TimeUnit.MILLISECONDS, 6)
+        .buffer(300, TimeUnit.MILLISECONDS, 6)
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .filter(images -> !images.isEmpty())
         .doOnNext(images -> {
-          adapter.addImages(images);
-          adapter.notifyDataSetChanged();
+          mAdapter.addImages(images);
+          mAdapter.notifyDataSetChanged();
         })
         .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
   }
@@ -94,8 +97,9 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     GridLayoutManager staggeredGridLayoutManager = new GridLayoutManager(getActivity(), 3);
 
     mRecycleView.setLayoutManager(staggeredGridLayoutManager);
-    adapter = new ImageRecyclerViewAdapter(new ArrayList<>());
-    mRecycleView.setAdapter(adapter);
+    mAdapter = new ImageRecyclerViewAdapter(new ArrayList<>());
+    mAdapter.setHasStableIds(true);
+    mRecycleView.setAdapter(mAdapter);
 
     mBehavior = BottomSheetBehavior.from((View) view.getParent());
     mBehavior.setBottomSheetCallback(mBottomSheetBehaviorCallback);

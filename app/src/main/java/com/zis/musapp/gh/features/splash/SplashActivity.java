@@ -95,11 +95,13 @@ import timber.log.Timber;
         Timber.plant(new Timber.DebugTree());
       }
 
-      Iconify.with(new MaterialModule()).with(new EntypoModule()).with(new FontAwesomeModule());
+      Iconify
+          .with(new MaterialModule())
+          .with(new EntypoModule())
+          .with(new FontAwesomeModule());
       Once.initialise(app);
       ImagePipelineConfig config =
           ImagePipelineConfig.newBuilder(this).setDownsampleEnabled(true)
-              .setFileCacheFactory(new DiskStorageCacheFactory(new DynamicDefaultDiskStorageFactory()))
               .build();
       Fresco.initialize(app, config);
 

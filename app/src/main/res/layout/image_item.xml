@@ -16,5 +16,22 @@
       fresco:actualImageScaleType="centerCrop"
       fresco:viewAspectRatio="1"
       />
+  <com.joanzapata.iconify.widget.IconTextView
+      android:id="@+id/selection"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="right|top"
+      android:layout_margin="8dp"
+      android:text="{fa-check-circle}"
+      android:textColor="@color/cpb_blue"
+      android:textSize="24sp"
+      />
+
+  <View
+      android:id="@+id/shadow"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#60000000"
+      ></View>
 
 </com.zis.musapp.gh.features.choosesong.FixedAspectRatioFrameLayout>
