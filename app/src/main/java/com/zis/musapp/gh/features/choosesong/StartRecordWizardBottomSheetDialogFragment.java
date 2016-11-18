@@ -16,8 +16,8 @@ import com.android.annotations.NonNull;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.model.mediastore.MediaColumns;
 import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
-import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +41,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
               bottomSheet.post(() -> {
                 bottomSheet.requestLayout();
                 bottomSheet.invalidate();
-                showList();
+                showImagesList();
               });
 
               break;
@@ -60,9 +60,9 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
   private BottomSheetBehavior<View> mBehavior;
   private ImageRecyclerViewAdapter mAdapter;
 
-  public void showList() {
+  public void showImagesList() {
 
-    PaginationTool.Builder<Image> paginationBuilder =
+    PaginationTool.Builder<MediaColumns> paginationBuilder =
         PaginationTool.buildPagingObservable(mRecycleView,
             offset -> MediaProviderHelper.getImagesAll(getActivity(), null, null, null,
                 MediaStore.MediaColumns.DATE_ADDED + " DESC LIMIT " + LIMIT + " OFFSET " + offset))
@@ -71,15 +71,20 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
 
     mRecycleView.setItemAnimator(null);
 
+    PaginationTool<MediaColumns> paginationTool = paginationBuilder.build();
 
-    PaginationTool<Image> paginationTool = paginationBuilder.build();
+    MediaProviderHelper.getVideoAll(getActivity(), null, null, null,
+        MediaStore.MediaColumns.DATE_ADDED + " DESC")
+        .toList()
+        //don't do mAdapter.notifyDataSetChanged(); , we wait until images
+        .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER);
 
     paginationTool.getPagingObservable()
-        .buffer(300, TimeUnit.MILLISECONDS, 6)
+        .buffer(1000, TimeUnit.MILLISECONDS, LIMIT)
         .compose(RxUtil.applyIOToMainThreadSchedulers())
-        .filter(images -> !images.isEmpty())
+        .filter(medias -> !medias.isEmpty())
         .doOnNext(images -> {
-          mAdapter.addImages(images);
+          mAdapter.addMedias(images);
           mAdapter.notifyDataSetChanged();
         })
         .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
@@ -97,7 +102,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     GridLayoutManager staggeredGridLayoutManager = new GridLayoutManager(getActivity(), 3);
 
     mRecycleView.setLayoutManager(staggeredGridLayoutManager);
-    mAdapter = new ImageRecyclerViewAdapter(new ArrayList<>());
+    mAdapter = new ImageRecyclerViewAdapter(getActivity(), new ArrayList<>());
     mAdapter.setHasStableIds(true);
     mRecycleView.setAdapter(mAdapter);
 
@@ -116,7 +121,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .subscribe(granted -> {
           if (granted) { // Always true pre-M
-            showList();
+            showImagesList();
             //mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
           } else {
             // Oups permission denied

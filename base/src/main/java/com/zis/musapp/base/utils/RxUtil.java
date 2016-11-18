@@ -44,8 +44,7 @@ public final class RxUtil {
    * Log error, used for {@link rx.Observable#subscribe()}
    */
   public static final Action1<Throwable> ON_ERROR_LOGGER = new Action1<Throwable>() {
-    @Override
-    public void call(final Throwable throwable) {
+    @Override public void call(final Throwable throwable) {
       Timber.e(throwable, "OnErrorLogger");
     }
   };
@@ -65,7 +64,8 @@ public final class RxUtil {
   }
 
   /**
-   * Get {@link rx.Observable.Transformer} that transforms the source observable to subscribe in the
+   * Get {@link rx.Observable.Transformer} that transforms the source observable to subscribe in
+   * the
    * io thread and observe on the Android's UI thread.
    *
    * Because it doesn't interact with the emitted items it's safe ignore the unchecked casts.
@@ -84,12 +84,10 @@ public final class RxUtil {
   }
 
   public static <T> Observable.Transformer<T, T> applyExponentialBackoff() {
-    return observable -> observable.retryWhen(errors ->
-        errors
-            .zipWith(Observable.range(1, 3), (n, i) -> i)
+    return observable -> observable.retryWhen(
+        errors -> errors.zipWith(Observable.range(1, 3), (n, i) -> i)
             .flatMap(
-                retryCount -> Observable.timer((long) Math.pow(5, retryCount), TimeUnit.SECONDS))
-    );
+                retryCount -> Observable.timer((long) Math.pow(5, retryCount), TimeUnit.SECONDS)));
   }
 
   public static <T> Observable.Transformer<T, T> applyProgressBar(ProgressBar progressBar) {
@@ -97,13 +95,11 @@ public final class RxUtil {
         .doOnUnsubscribe(() -> progressBar.setVisibility(View.INVISIBLE));
   }
 
-
-  public static <T> Observable.Transformer<T, T> applyProgressDialog(ProgressDialog progressDialog) {
+  public static <T> Observable.Transformer<T, T> applyProgressDialog(
+      ProgressDialog progressDialog) {
     return tObservable -> tObservable.doOnSubscribe(progressDialog::show)
         .doOnUnsubscribe(progressDialog::hide);
   }
-
-
 
   public static Observable<Cursor> create(Cursor cursor) {
     return Observable.defer(() -> Observable.create(sub -> {
@@ -111,6 +107,10 @@ public final class RxUtil {
         return;
       }
       try {
+        if (!cursor.moveToFirst()) {
+          sub.onCompleted();
+        }
+
         while (cursor.moveToNext()) {
           if (sub.isUnsubscribed()) return;
           sub.onNext(cursor);
@@ -118,6 +118,10 @@ public final class RxUtil {
         sub.onCompleted();
       } catch (Exception e) {
         sub.onError(e);
+      }
+
+      if (!cursor.isClosed()) {
+        cursor.close();
       }
     }));
   }

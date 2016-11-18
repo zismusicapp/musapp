@@ -2,14 +2,13 @@ package com.zis.musapp.gh.model.mediastore;
 
 import android.content.Context;
 import android.provider.MediaStore;
-import com.zis.musapp.gh.model.mediastore.audio.Audio;
-import com.zis.musapp.gh.model.mediastore.image.Image;
-import com.zis.musapp.gh.model.mediastore.video.Video;
+import com.zis.musapp.gh.model.mediastore.image.thumbnails.ImageThumbnails;
+import com.zis.musapp.gh.model.mediastore.video.thumbnails.VideoThumbnails;
 import rx.Observable;
 
 public class MediaProviderHelper {
 
-  public static Observable<Audio> getAudioAll(Context context, String[] projection,
+  public static Observable<MediaColumns> getAudioAll(Context context, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
 
     return Observable.merge(
@@ -19,7 +18,7 @@ public class MediaProviderHelper {
             selection, selectionArgs, sortOrder));
   }
 
-  public static Observable<Video> getVideoAll(Context context, String[] projection,
+  public static Observable<MediaColumns> getVideoAll(Context context, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
 
     return Observable.merge(
@@ -27,6 +26,26 @@ public class MediaProviderHelper {
             selection, selectionArgs, sortOrder),
         MediaProvider.getVideos(context, MediaStore.Video.Media.INTERNAL_CONTENT_URI, projection,
             selection, selectionArgs, sortOrder));
+  }
+
+  public static Observable<ImageThumbnails> getImageThumbnails(Context context, String[] projection,
+      String selection, String[] selectionArgs, String sortOrder) {
+
+    return Observable.merge(
+        MediaProvider.getImageThumbnail(context, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+            projection, selection, selectionArgs, sortOrder),
+        MediaProvider.getImageThumbnail(context, MediaStore.Images.Thumbnails.INTERNAL_CONTENT_URI,
+            projection, selection, selectionArgs, sortOrder));
+  }
+
+  public static Observable<VideoThumbnails> getVideoThumbnails(Context context, String[] projection,
+      String selection, String[] selectionArgs, String sortOrder) {
+
+    return Observable.merge(
+        MediaProvider.getVideoThumbnail(context, MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
+            projection, selection, selectionArgs, sortOrder),
+        MediaProvider.getVideoThumbnail(context, MediaStore.Video.Thumbnails.INTERNAL_CONTENT_URI,
+            projection, selection, selectionArgs, sortOrder));
   }
   //
   //public static Observable<Files> getFilesAll(Context context, String[] projection,
@@ -39,7 +58,7 @@ public class MediaProviderHelper {
   //          selection, selectionArgs, sortOrder));
   //}
 
-  public static Observable<Image> getImagesAll(Context context, String[] projection,
+  public static Observable<MediaColumns> getImagesAll(Context context, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
 
     return //Observable.merge(
