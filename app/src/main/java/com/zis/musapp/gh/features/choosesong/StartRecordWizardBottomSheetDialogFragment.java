@@ -106,6 +106,9 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     mAdapter.setHasStableIds(true);
     mRecycleView.setAdapter(mAdapter);
 
+    int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.items_spacing);
+    mRecycleView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+
     mBehavior = BottomSheetBehavior.from((View) view.getParent());
     mBehavior.setBottomSheetCallback(mBottomSheetBehaviorCallback);
 

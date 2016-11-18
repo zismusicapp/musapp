@@ -36,4 +36,5 @@
   <dimen name="text_size_medium">16sp</dimen>
   <dimen name="text_size_small">12sp</dimen>
   <dimen name="text_size_micro">10sp</dimen>
+  <dimen name="items_spacing">8px</dimen>
 </resources>

@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 
 public class ImageRecyclerViewAdapter
@@ -61,6 +62,8 @@ public class ImageRecyclerViewAdapter
 
       pathObservable.compose(RxUtil.applyIOToMainThreadSchedulers()).subscribe(path -> {
         holder.imageView.setImageURI(path);
+        holder.typeIcon.setText("{fa-camera}");
+        holder.infoText.setText(image.width() + "x" + image.height());
       }, RxUtil.ON_ERROR_LOGGER);
       //holder.imageView.setImageURI(image.getContentUri());
 
@@ -76,6 +79,10 @@ public class ImageRecyclerViewAdapter
 
       pathObservable.compose(RxUtil.applyIOToMainThreadSchedulers()).subscribe(path -> {
         holder.imageView.setImageURI(path);
+        holder.typeIcon.setText("{fa-video-camera}");
+        if (video != null) {
+          holder.infoText.setText(millisToString(video.duration()));
+        }
       }, RxUtil.ON_ERROR_LOGGER);
     }
 
@@ -87,6 +94,12 @@ public class ImageRecyclerViewAdapter
         toggleSelection(position);
       }
     });
+  }
+
+  private String millisToString(long millis) {
+    return String.format("%02d : %02d", TimeUnit.MILLISECONDS.toMinutes(millis),
+        TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+            TimeUnit.MILLISECONDS.toMinutes(millis)));
   }
 
   private Observable<Uri> prepareThumbnail(Video video) {
@@ -120,6 +133,8 @@ public class ImageRecyclerViewAdapter
     public @BindView(R.id.imageView) SimpleDraweeView imageView;
     public @BindView(R.id.selection) IconTextView selection;
     public @BindView(R.id.shadow) View shadow;
+    public @BindView(R.id.typeIcon) IconTextView typeIcon;
+    public @BindView(R.id.infoText) IconTextView infoText;
     private OnItemClickListener mItemClickListener;
 
     public ThumbnailViewHolder(View itemView) {

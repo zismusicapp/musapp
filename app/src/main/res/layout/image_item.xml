@@ -23,8 +23,28 @@
       android:layout_gravity="right|top"
       android:layout_margin="8dp"
       android:text="{fa-check-circle}"
-      android:textColor="@color/cpb_blue"
+      android:textColor="#5151f7"
       android:textSize="24sp"
+      />
+
+  <com.joanzapata.iconify.widget.IconTextView
+      android:id="@+id/typeIcon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="left|bottom"
+      android:gravity="center"
+      android:padding="12dp"
+      android:textColor="@android:color/white"
+      />
+
+  <com.joanzapata.iconify.widget.IconTextView
+      android:id="@+id/infoText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="right|bottom"
+      android:gravity="bottom"
+      android:padding="8dp"
+      android:textColor="@android:color/white"
       />
 
   <View
@@ -32,6 +52,6 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="#60000000"
-      ></View>
+      />
 
 </com.zis.musapp.gh.features.choosesong.FixedAspectRatioFrameLayout>
