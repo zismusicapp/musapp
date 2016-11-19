@@ -16,43 +16,23 @@ import static android.provider.MediaStore.Images.ImageColumns.ORIENTATION;
 import static android.provider.MediaStore.Images.ImageColumns.PICASA_ID;
 
 public interface ImageColumns extends MediaColumns {
-  @Nullable
-  @AutoCursor.Column(name = BUCKET_DISPLAY_NAME)
-  public String bucketDisplayName();
+  @Nullable @AutoCursor.Column(name = BUCKET_DISPLAY_NAME) public String bucketDisplayName();
 
-  @Nullable
-  @AutoCursor.Column(name = BUCKET_ID)
-  public Long bucketId();
+  @Nullable @AutoCursor.Column(name = BUCKET_ID) public Long bucketId();
 
-  @Nullable
-  @AutoCursor.Column(name = DATE_TAKEN)
-  public Long dateTaken();
+  @Nullable @AutoCursor.Column(name = DATE_TAKEN) public Long dateTaken();
 
-  @Nullable
-  @AutoCursor.Column(name = DESCRIPTION)
-  public String description();
+  @Nullable @AutoCursor.Column(name = DESCRIPTION) public String description();
 
-  @Nullable
-  @AutoCursor.Column(name = IS_PRIVATE)
-  public Boolean isPrivate();
+  @Nullable @AutoCursor.Column(name = IS_PRIVATE) public Boolean isPrivate();
 
-  @Nullable
-  @AutoCursor.Column(name = LATITUDE)
-  public Double latitude();
+  @Nullable @AutoCursor.Column(name = LATITUDE) public Double latitude();
 
-  @Nullable
-  @AutoCursor.Column(name = LONGITUDE)
-  public Double longitude();
+  @Nullable @AutoCursor.Column(name = LONGITUDE) public Double longitude();
 
-  @Nullable
-  @AutoCursor.Column(name = MINI_THUMB_MAGIC)
-  public String miniThumbMagic();
+  @Nullable @AutoCursor.Column(name = MINI_THUMB_MAGIC) public Long miniThumbMagic();
 
-  @Nullable
-  @AutoCursor.Column(name = ORIENTATION)
-  public Integer orientation();
+  @Nullable @AutoCursor.Column(name = ORIENTATION) public Integer orientation();
 
-  @Nullable
-  @AutoCursor.Column(name = PICASA_ID)
-  public String picasaId();
+  @Nullable @AutoCursor.Column(name = PICASA_ID) public String picasaId();
 }

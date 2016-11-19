@@ -6,9 +6,11 @@
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
+ * or implied. See the License for the specific language governing permissions and limitations
+ * under
  * the License.
  */
 package com.zis.musapp.gh.pagination.utils.pagination;
@@ -16,6 +18,7 @@ package com.zis.musapp.gh.pagination.utils.pagination;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import com.zis.musapp.gh.pagination.utils.BackgroundExecutor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +32,8 @@ import rx.subscriptions.Subscriptions;
  * @author e.matsyuk
  */
 public class PaginationTool<T> {
+
+  private static final String TAG = "PaginationTool";
 
   // for first start of items loading then on RecyclerView there are not items and no scrolling
   private static final int EMPTY_LIST_ITEMS_COUNT = 0;
@@ -54,8 +59,8 @@ public class PaginationTool<T> {
 
   public Observable<T> getPagingObservable() {
     int startNumberOfRetryAttempt = 0;
-    return getScrollObservable(recyclerView, limit, emptyListCount)
-        .subscribeOn(AndroidSchedulers.mainThread())
+    return getScrollObservable(recyclerView, limit, emptyListCount).subscribeOn(
+        AndroidSchedulers.mainThread())
         .distinctUntilChanged()
         .observeOn(Schedulers.from(BackgroundExecutor.getSafeBackgroundExecutor()))
         .switchMap(offset -> getPagingObservable(pagingListener, pagingListener.onNextPage(offset),
@@ -66,8 +71,7 @@ public class PaginationTool<T> {
       int emptyListCount) {
     return Observable.create(subscriber -> {
       final RecyclerView.OnScrollListener sl = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
           if (!subscriber.isUnsubscribed()) {
             int position = getLastVisibleItemPosition(recyclerView);
             int updatePosition = recyclerView.getAdapter().getItemCount() - 1 - (limit / 2);
@@ -113,6 +117,7 @@ public class PaginationTool<T> {
   private Observable<T> getPagingObservable(PagingListener<T> listener, Observable<T> observable,
       int numberOfAttemptToRetry, int offset, int retryCount) {
     return observable.onErrorResumeNext(throwable -> {
+      Log.e(TAG, throwable.toString());
       // retry to load new data portion if error occurred
       if (numberOfAttemptToRetry < retryCount) {
         int attemptToRetryInc = numberOfAttemptToRetry + 1;

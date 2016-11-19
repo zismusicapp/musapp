@@ -14,28 +14,28 @@ import rx.Observable;
 
 public class MediaProvider {
 
-  public static Observable<MediaColumns> getImages(Context context, Uri uri, String[] projection,
+  public static Observable<Image> getImages(Context context, Uri uri, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
     Cursor cursor = getCursor(context, uri, projection, selection, selectionArgs, sortOrder);
 
     return RxUtil.create(cursor).map(Image::create);
   }
 
-  public static Observable<MediaColumns> getVideos(Context context, Uri uri, String[] projection,
+  public static Observable<Video> getVideos(Context context, Uri uri, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
     Cursor cursor = getCursor(context, uri, projection, selection, selectionArgs, sortOrder);
 
     return RxUtil.create(cursor).map(Video::create);
   }
 
-  public static Observable<MediaColumns> getFiles(Context context, Uri uri, String[] projection,
+  public static Observable<Files> getFiles(Context context, Uri uri, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
     Cursor cursor = getCursor(context, uri, projection, selection, selectionArgs, sortOrder);
 
     return RxUtil.create(cursor).map(Files::create);
   }
 
-  public static Observable<MediaColumns> getAudio(Context context, Uri uri, String[] projection,
+  public static Observable<Audio> getAudio(Context context, Uri uri, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
     Cursor cursor = getCursor(context, uri, projection, selection, selectionArgs, sortOrder);
 
@@ -59,11 +59,11 @@ public class MediaProvider {
   private static Cursor getCursor(Context context, Uri uri, String[] projection, String selection,
       String[] selectionArgs, String sortOrder) {
     return QueryBuilder.create(context)
-          .uri(uri)
-          .projection(projection)
-          .selection(selection)
-          .selectionArgs(selectionArgs)
-          .sortOrder(sortOrder)
-          .build();
+        .uri(uri)
+        .projection(projection)
+        .selection(selection)
+        .selectionArgs(selectionArgs)
+        .sortOrder(sortOrder)
+        .build();
   }
 }

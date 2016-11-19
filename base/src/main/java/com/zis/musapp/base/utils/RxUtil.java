@@ -102,22 +102,25 @@ public final class RxUtil {
   }
 
   public static Observable<Cursor> create(Cursor cursor) {
-    return Observable.defer(() -> Observable.create(sub -> {
-      if (sub.isUnsubscribed()) {
+    return Observable.defer(() -> Observable.create(subscriber -> {
+      if (subscriber.isUnsubscribed()) {
         return;
       }
       try {
         if (!cursor.moveToFirst()) {
-          sub.onCompleted();
+          if (!cursor.isClosed()) {
+            cursor.close();
+          }
+          subscriber.onCompleted();
         }
 
         while (cursor.moveToNext()) {
-          if (sub.isUnsubscribed()) return;
-          sub.onNext(cursor);
+          if (subscriber.isUnsubscribed()) return;
+          subscriber.onNext(cursor);
         }
-        sub.onCompleted();
+        subscriber.onCompleted();
       } catch (Exception e) {
-        sub.onError(e);
+        subscriber.onError(e);
       }
 
       if (!cursor.isClosed()) {

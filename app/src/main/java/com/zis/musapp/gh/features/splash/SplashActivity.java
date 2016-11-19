@@ -24,12 +24,10 @@
 
 package com.zis.musapp.gh.features.splash;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
-import com.facebook.common.memory.NoOpMemoryTrimmableRegistry;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.DiskStorageCacheFactory;
-import com.facebook.imagepipeline.core.DynamicDefaultDiskStorageFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
@@ -45,6 +43,7 @@ import com.zis.musapp.gh.BuildConfig;
 import com.zis.musapp.gh.Fonts;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.Screen;
+import com.zis.musapp.gh.features.choosesong.LollipopBitmapMemoryCacheParamsSupplier;
 import com.zis.musapp.gh.features.splash.di.SplashComponent;
 import jonathanfinerty.once.Once;
 import rx.Observable;
@@ -95,14 +94,14 @@ import timber.log.Timber;
         Timber.plant(new Timber.DebugTree());
       }
 
-      Iconify
-          .with(new MaterialModule())
-          .with(new EntypoModule())
-          .with(new FontAwesomeModule());
+      ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+      Iconify.with(new MaterialModule()).with(new EntypoModule()).with(new FontAwesomeModule());
       Once.initialise(app);
-      ImagePipelineConfig config =
-          ImagePipelineConfig.newBuilder(this).setDownsampleEnabled(true)
-              .build();
+      ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
+          .setDownsampleEnabled(true)
+          .setBitmapMemoryCacheParamsSupplier(
+              new LollipopBitmapMemoryCacheParamsSupplier(activityManager))
+          .build();
       Fresco.initialize(app, config);
 
       //      FacebookSdk.sdkInitialize(getApplicationContext());
