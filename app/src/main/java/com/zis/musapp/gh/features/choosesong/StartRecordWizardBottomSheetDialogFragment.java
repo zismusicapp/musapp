@@ -2,35 +2,40 @@ package com.zis.musapp.gh.features.choosesong;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.AttrRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.android.annotations.NonNull;
+import com.pavlospt.rxfile.RxFile;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.MediaColumns;
 import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
+import com.zis.musapp.gh.model.mediastore.image.Image;
+import com.zis.musapp.gh.model.mediastore.video.Video;
 import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Actions;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
   int LIMIT = 50;
+
+
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
   private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
@@ -47,7 +52,6 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
               bottomSheet.post(() -> {
                 bottomSheet.requestLayout();
                 bottomSheet.invalidate();
-                showImagesList();
               });
 
               break;
@@ -68,13 +72,14 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
       };
   private BottomSheetBehavior<View> mBehavior;
   private ImageRecyclerViewAdapter mAdapter;
+  private ProgressDialog progressDialog;
 
   private void setStatusBarDim(boolean dim) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getActivity().getWindow()
-          .setStatusBarColor(dim ? Color.TRANSPARENT
-              : ContextCompat.getColor(getActivity(), getThemedResId(R.attr.colorPrimaryDark)));
-    }
+    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    //  getActivity().getWindow()
+    //      .setStatusBarColor(dim ? Color.TRANSPARENT
+    //          : ContextCompat.getColor(getActivity(), getThemedResId(R.attr.colorPrimaryDark)));
+    //}
   }
 
   private int getThemedResId(@AttrRes int attr) {
@@ -90,26 +95,47 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
         PaginationTool.buildPagingObservable(mRecycleView,
             offset -> MediaProviderHelper.getImages(getActivity(), null, null, null,
                 MediaStore.MediaColumns.DATE_ADDED + " DESC LIMIT " + LIMIT + " OFFSET " + offset)
+                //we use description to keep video id thumnail
+                .filter(image -> !String.valueOf(image.id()).equals(image.description()))
                 .cast(MediaColumns.class)).setLimit(LIMIT);//.setRetryCount(3);
 
     mRecycleView.setItemAnimator(null);
 
     PaginationTool<MediaColumns> paginationTool = paginationBuilder.build();
-    //
-    //MediaProviderHelper.getVideo(getActivity(), null, null, null,
-    //    MediaStore.MediaColumns.DATE_ADDED + " DESC")
-    //    .cast(MediaColumns.class)
-    //    .toList()
-    //    //don't do mAdapter.notifyDataSetChanged(); , we wait until images
-    //    .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER);
+
+    MediaProviderHelper.getVideo(getActivity(), null, null, null,
+        MediaStore.MediaColumns.DATE_ADDED + " DESC")
+        .doOnNext(this::createThumbnailInImageTable)
+        .cast(MediaColumns.class)
+        .compose(RxUtil.applyIOToMainThreadSchedulers())
+        .compose(RxUtil.applyProgressDialog(progressDialog))
+        .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER, () -> {
+          mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+          mAdapter.sort();
+        });
 
     paginationTool.getPagingObservable()
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .doOnNext(images -> {
           mAdapter.addMedias(images);
         })
-        //.buffer(10000, TimeUnit.MILLISECONDS, LIMIT)
         .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
+  }
+
+  private void createThumbnailInImageTable(Video video) {
+    Observable<Image> images = MediaProviderHelper.getImages(getActivity(), null,
+        MediaStore.Images.Media.DESCRIPTION + " = ?", new String[] { String.valueOf(video.id()) },
+        null);
+
+    boolean thumbExists = images.isEmpty().toBlocking().firstOrDefault(false);
+    if (!thumbExists) {
+      RxFile.getVideoThumbnail(video.data())
+          .map(bitmap1 -> MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),
+              bitmap1, "", String.valueOf(video.id())))
+          .subscribe(url -> {
+            Log.d("Thumb", "Thumbnail added: " + url);
+          }, RxUtil.ON_ERROR_LOGGER);
+    }
   }
 
   @android.support.annotation.NonNull @Override
@@ -128,6 +154,10 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     mAdapter.setHasStableIds(true);
     mRecycleView.setAdapter(mAdapter);
 
+    progressDialog = new ProgressDialog(getActivity());
+    progressDialog.setMessage("Magic");
+    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    progressDialog.setCancelable(false);
     int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.items_spacing);
     mRecycleView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
@@ -139,7 +169,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
 
   @Override public void onStart() {
     super.onStart();
-    mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
     // Must be done during an initialization phase like onCreate
     RxPermissions.getInstance(getActivity())
         .request(Manifest.permission.READ_EXTERNAL_STORAGE)

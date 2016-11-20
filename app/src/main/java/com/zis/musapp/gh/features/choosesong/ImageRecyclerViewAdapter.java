@@ -1,10 +1,10 @@
 package com.zis.musapp.gh.features.choosesong;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +19,9 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.joanzapata.iconify.widget.IconTextView;
-import com.zis.musapp.base.utils.FileUtils;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.MediaColumns;
+import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
 import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.model.mediastore.video.Video;
 import java.io.File;
@@ -52,24 +52,41 @@ public class ImageRecyclerViewAdapter
   @Override public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
     MediaColumns media = medias.get(position);
 
+    Uri uri = null;
     //assume that we have image or video
-    Uri uri =
-        media instanceof Image ? ((Image) media).getContentUri() : ((Video) media).getContentUri();
+    if (media instanceof Image) {
+      Image media1 = (Image) media;
 
-    ImageRequest mainRequest = ImageRequestBuilder.newBuilderWithSource(uri)
-        .setLocalThumbnailPreviewsEnabled(true)
-        .setRequestPriority(Priority.HIGH)
-        .setResizeOptions(new ResizeOptions(120, 120))
-        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
-        .build();
+      uri = media1.getContentUri();
+    } else {
+      Video video = (Video) media;
 
-    PipelineDraweeControllerBuilder pipelineDraweeControllerBuilder =
-        Fresco.newDraweeControllerBuilder()
-            .setImageRequest(mainRequest)
-            .setOldController(holder.imageView.getController());
+      Observable<Image> images =
+          MediaProviderHelper.getImages(context, null, MediaStore.Images.Media.DESCRIPTION + " = ?",
+              new String[] { String.valueOf(video.id()) }, null);
 
-    holder.imageView.setController(pipelineDraweeControllerBuilder.build());
+      Image image = images.toBlocking().firstOrDefault(null);
+      if (image != null) {
+        uri = image.getContentUri();
+      }
+    }
 
+    if (uri != null) {
+      ImageRequest mainRequest = ImageRequestBuilder.newBuilderWithSource(uri)
+          .setLocalThumbnailPreviewsEnabled(true)
+          .setRequestPriority(Priority.HIGH)
+          .setResizeOptions(new ResizeOptions(100, 100))
+          .setAutoRotateEnabled(true)
+          .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
+          .build();
+
+      PipelineDraweeControllerBuilder pipelineDraweeControllerBuilder =
+          Fresco.newDraweeControllerBuilder()
+              .setImageRequest(mainRequest)
+              .setOldController(holder.imageView.getController());
+
+      holder.imageView.setController(pipelineDraweeControllerBuilder.build());
+    }
     if (media instanceof Image) {
       Image image = (Image) media;
       holder.typeIcon.setText("{fa-camera}");
@@ -77,7 +94,9 @@ public class ImageRecyclerViewAdapter
     } else {
       Video video = (Video) media;
       holder.typeIcon.setText("{fa-video-camera}");
-      holder.infoText.setText(millisToString(video.duration()));
+      if (video.duration() != null) {
+        holder.infoText.setText(millisToString(video.duration()));
+      }
     }
 
     holder.selection.setAlpha(isSelected(position) ? 1 : 0);
@@ -96,32 +115,24 @@ public class ImageRecyclerViewAdapter
             TimeUnit.MILLISECONDS.toMinutes(millis)));
   }
 
-  private Observable<Uri> prepareThumbnail(Video video) {
-    return Observable.defer(() -> {
-      Bitmap videoThumbnail =
-          ThumbnailUtils.createVideoThumbnail(video.data(), MediaStore.Video.Thumbnails.MINI_KIND);
-
-      String absolutePath = context.getCacheDir().getAbsolutePath() + "/" + video.id() + ".jpg";
-      File file = new File(absolutePath);
-      Uri uri = Uri.fromFile(file);
-      if (file.exists()) {
-        return Observable.just(uri);
-      }
-      FileUtils.saveBitmapToFile(absolutePath, videoThumbnail);
-
-      return Observable.just(uri);
-    });
+  @NonNull private String getThumbnailFileName(Video video) {
+    return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+        video.id() + ".jpg").getAbsolutePath();
   }
 
   @Override public int getItemCount() {
     return medias.size();
   }
 
-  public void addMedias(MediaColumns image) {
-    medias.add(image);
-    //Collections.sort(medias, (o1, o2) -> (int) (o1.dateAdded() - o2.dateAdded()));
-    int i = medias.indexOf(image);
+  public void addMedias(MediaColumns media) {
+    medias.add(media);
+    int i = medias.indexOf(media);
     notifyItemInserted(i);
+  }
+
+  public void sort() {
+    Collections.sort(medias, (o1, o2) -> (int) (o1.dateAdded() - o2.dateAdded()));
+    notifyDataSetChanged();
   }
 
   class ThumbnailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

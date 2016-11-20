@@ -23,11 +23,11 @@ public class MediaProviderHelper {
   public static Observable<Video> getVideo(Context context, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
 
-    return Observable.merge(
+    return //Observable.merge(
         MediaProvider.getVideos(context, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection,
-            selection, selectionArgs, sortOrder),
-        MediaProvider.getVideos(context, MediaStore.Video.Media.INTERNAL_CONTENT_URI, projection,
-            selection, selectionArgs, sortOrder));
+            selection, selectionArgs, sortOrder);
+        //MediaProvider.getVideos(context, MediaStore.Video.Media.INTERNAL_CONTENT_URI, projection,
+        //    selection, selectionArgs, sortOrder));
   }
 
   public static Observable<ImageThumbnails> getImageThumbnails(Context context, String[] projection,

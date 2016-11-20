@@ -115,7 +115,9 @@ public final class RxUtil {
         }
 
         while (cursor.moveToNext()) {
-          if (subscriber.isUnsubscribed()) return;
+          if (subscriber.isUnsubscribed()) {
+            return;
+          }
           subscriber.onNext(cursor);
         }
         subscriber.onCompleted();
