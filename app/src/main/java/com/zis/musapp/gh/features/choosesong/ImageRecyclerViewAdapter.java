@@ -130,8 +130,12 @@ public class ImageRecyclerViewAdapter
     notifyItemInserted(i);
   }
 
+  public void addMedias(List<MediaColumns> media) {
+    medias.addAll(media);
+  }
+
   public void sort() {
-    Collections.sort(medias, (o1, o2) -> (int) (o1.dateAdded() - o2.dateAdded()));
+    Collections.sort(medias, (o1, o2) -> (int) (o2.dateAdded() - o1.dateAdded()));
     notifyDataSetChanged();
   }
 

@@ -25,17 +25,12 @@ import com.zis.musapp.gh.model.mediastore.MediaColumns;
 import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
 import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.model.mediastore.video.Video;
-import com.zis.musapp.gh.pagination.utils.pagination.PaginationTool;
 import java.util.ArrayList;
 import rx.Observable;
-import rx.functions.Action0;
-import rx.functions.Actions;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
   int LIMIT = 50;
-
-
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
   private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
@@ -91,35 +86,28 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
 
   public void showImagesList() {
 
-    PaginationTool.Builder<MediaColumns> paginationBuilder =
-        PaginationTool.buildPagingObservable(mRecycleView,
-            offset -> MediaProviderHelper.getImages(getActivity(), null, null, null,
-                MediaStore.MediaColumns.DATE_ADDED + " DESC LIMIT " + LIMIT + " OFFSET " + offset)
-                //we use description to keep video id thumnail
-                .filter(image -> !String.valueOf(image.id()).equals(image.description()))
-                .cast(MediaColumns.class)).setLimit(LIMIT);//.setRetryCount(3);
-
     mRecycleView.setItemAnimator(null);
 
-    PaginationTool<MediaColumns> paginationTool = paginationBuilder.build();
-
-    MediaProviderHelper.getVideo(getActivity(), null, null, null,
-        MediaStore.MediaColumns.DATE_ADDED + " DESC")
-        .doOnNext(this::createThumbnailInImageTable)
-        .cast(MediaColumns.class)
+    Observable.merge(
+        ///
+        MediaProviderHelper.getImages(getActivity(), null, null, null,
+            MediaStore.MediaColumns.DATE_ADDED
+                + " DESC")//we use description to keep video id thumnail
+            .filter(image -> !String.valueOf(image.id()).equals(image.description()))
+            .cast(MediaColumns.class).onBackpressureBuffer(1000),
+        //
+        MediaProviderHelper.getVideo(getActivity(), null, null, null,
+            MediaStore.MediaColumns.DATE_ADDED + " DESC")
+            .doOnNext(this::createThumbnailInImageTable)).onBackpressureBuffer(1000)
+        //
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .compose(RxUtil.applyProgressDialog(progressDialog))
+        .onBackpressureBuffer(1000)
+        .buffer(1000)
         .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER, () -> {
-          mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
           mAdapter.sort();
+          mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
-
-    paginationTool.getPagingObservable()
-        .compose(RxUtil.applyIOToMainThreadSchedulers())
-        .doOnNext(images -> {
-          mAdapter.addMedias(images);
-        })
-        .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
   }
 
   private void createThumbnailInImageTable(Video video) {
