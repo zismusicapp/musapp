@@ -2,32 +2,32 @@ include ':base', ':testbase', ":model", ':app'
 String projectDir = "/Users/mikhail/temp/musapp/android"
 include(':ijkplayer-java')
 project(':ijkplayer-java').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-java')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-java')
 
 include(':ijkplayer-exo')
 project(':ijkplayer-exo').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-exo')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-exo')
 
 include(':ijkplayer-example')
 project(':ijkplayer-example').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-example')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-example')
 
 include ':ijkplayer-armv5'
 project(':ijkplayer-armv5').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-armv5')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-armv5')
 include ':ijkplayer-x86_64'
 project(':ijkplayer-x86_64').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-x86_64')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-x86_64')
 include ':ijkplayer-armv7a'
 project(':ijkplayer-armv7a').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-armv7a')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-armv7a')
 include ':ijkplayer-arm64'
 project(':ijkplayer-arm64').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-arm64')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-arm64')
 include ':ijkplayer-x86'
 project(':ijkplayer-x86').projectDir = new File(projectDir,
-        '/deps/ijkplayer/android/ijkplayer/ijkplayer-x86')
+    '/deps/ijkplayer/android/ijkplayer/ijkplayer-x86')
 
 
 include(':grafika')
-project(':grafika').projectDir = new File(projectDir,'/deps/grafika')
+project(':grafika').projectDir = new File(projectDir, '/deps/grafika')

@@ -2,11 +2,16 @@ package com.zis.musapp.gh.features.choosesong;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.AttrRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -38,6 +43,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
               dismiss();
               break;
             case BottomSheetBehavior.STATE_EXPANDED:
+              setStatusBarDim(false);
               bottomSheet.post(() -> {
                 bottomSheet.requestLayout();
                 bottomSheet.invalidate();
@@ -46,10 +52,13 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
 
               break;
             case BottomSheetBehavior.STATE_DRAGGING:
+              setStatusBarDim(true);
               break;
             case BottomSheetBehavior.STATE_SETTLING:
+              setStatusBarDim(true);
               break;
             case BottomSheetBehavior.STATE_COLLAPSED:
+              setStatusBarDim(true);
               break;
           }
         }
@@ -60,33 +69,46 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
   private BottomSheetBehavior<View> mBehavior;
   private ImageRecyclerViewAdapter mAdapter;
 
+  private void setStatusBarDim(boolean dim) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getActivity().getWindow()
+          .setStatusBarColor(dim ? Color.TRANSPARENT
+              : ContextCompat.getColor(getActivity(), getThemedResId(R.attr.colorPrimaryDark)));
+    }
+  }
+
+  private int getThemedResId(@AttrRes int attr) {
+    TypedArray a = getActivity().getTheme().obtainStyledAttributes(new int[] { attr });
+    int resId = a.getResourceId(0, 0);
+    a.recycle();
+    return resId;
+  }
+
   public void showImagesList() {
 
     PaginationTool.Builder<MediaColumns> paginationBuilder =
         PaginationTool.buildPagingObservable(mRecycleView,
-            offset -> MediaProviderHelper.getImagesAll(getActivity(), null, null, null,
-                MediaStore.MediaColumns.DATE_ADDED + " DESC LIMIT " + LIMIT + " OFFSET " + offset))
-            .setLimit(LIMIT)
-            .setRetryCount(3);
+            offset -> MediaProviderHelper.getImages(getActivity(), null, null, null,
+                MediaStore.MediaColumns.DATE_ADDED + " DESC LIMIT " + LIMIT + " OFFSET " + offset)
+                .cast(MediaColumns.class)).setLimit(LIMIT);//.setRetryCount(3);
 
     mRecycleView.setItemAnimator(null);
 
     PaginationTool<MediaColumns> paginationTool = paginationBuilder.build();
-
-    MediaProviderHelper.getVideoAll(getActivity(), null, null, null,
-        MediaStore.MediaColumns.DATE_ADDED + " DESC")
-        .toList()
-        //don't do mAdapter.notifyDataSetChanged(); , we wait until images
-        .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER);
+    //
+    //MediaProviderHelper.getVideo(getActivity(), null, null, null,
+    //    MediaStore.MediaColumns.DATE_ADDED + " DESC")
+    //    .cast(MediaColumns.class)
+    //    .toList()
+    //    //don't do mAdapter.notifyDataSetChanged(); , we wait until images
+    //    .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER);
 
     paginationTool.getPagingObservable()
-        .buffer(1000, TimeUnit.MILLISECONDS, LIMIT)
         .compose(RxUtil.applyIOToMainThreadSchedulers())
-        .filter(medias -> !medias.isEmpty())
         .doOnNext(images -> {
           mAdapter.addMedias(images);
-          mAdapter.notifyDataSetChanged();
         })
+        //.buffer(10000, TimeUnit.MILLISECONDS, LIMIT)
         .subscribe(Actions.empty(), RxUtil.ON_ERROR_LOGGER);
   }
 
@@ -117,7 +139,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
 
   @Override public void onStart() {
     super.onStart();
-
+    mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     // Must be done during an initialization phase like onCreate
     RxPermissions.getInstance(getActivity())
         .request(Manifest.permission.READ_EXTERNAL_STORAGE)

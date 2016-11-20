@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,17 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.Priority;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.zis.musapp.base.utils.FileUtils;
-import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.MediaColumns;
-import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
 import com.zis.musapp.gh.model.mediastore.image.Image;
-import com.zis.musapp.gh.model.mediastore.image.thumbnails.ImageThumbnailsColumns;
 import com.zis.musapp.gh.model.mediastore.video.Video;
-import com.zis.musapp.gh.model.mediastore.video.thumbnails.VideoThumbnails;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,40 +51,33 @@ public class ImageRecyclerViewAdapter
 
   @Override public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
     MediaColumns media = medias.get(position);
+
+    //assume that we have image or video
+    Uri uri =
+        media instanceof Image ? ((Image) media).getContentUri() : ((Video) media).getContentUri();
+
+    ImageRequest mainRequest = ImageRequestBuilder.newBuilderWithSource(uri)
+        .setLocalThumbnailPreviewsEnabled(true)
+        .setRequestPriority(Priority.HIGH)
+        .setResizeOptions(new ResizeOptions(120, 120))
+        .setLowestPermittedRequestLevel(ImageRequest.RequestLevel.FULL_FETCH)
+        .build();
+
+    PipelineDraweeControllerBuilder pipelineDraweeControllerBuilder =
+        Fresco.newDraweeControllerBuilder()
+            .setImageRequest(mainRequest)
+            .setOldController(holder.imageView.getController());
+
+    holder.imageView.setController(pipelineDraweeControllerBuilder.build());
+
     if (media instanceof Image) {
       Image image = (Image) media;
-      boolean hasMagic = image.miniThumbMagic() != null && !"0".equals(image.miniThumbMagic());
-      String defaultValue = image.getContentUri().toString();
-      Observable<String> pathObservable =
-          hasMagic ? MediaProviderHelper.getImageThumbnails(context, null, BaseColumns._ID + " = ?",
-              new String[] { image.miniThumbMagic() }, null)
-              .map(ImageThumbnailsColumns::data)
-              .defaultIfEmpty(defaultValue) : Observable.just(defaultValue);
-
-      pathObservable.compose(RxUtil.applyIOToMainThreadSchedulers()).subscribe(path -> {
-        holder.imageView.setImageURI(path);
-        holder.typeIcon.setText("{fa-camera}");
-        holder.infoText.setText(image.width() + "x" + image.height());
-      }, RxUtil.ON_ERROR_LOGGER);
-      //holder.imageView.setImageURI(image.getContentUri());
-
-    } else if (media instanceof Video) {
+      holder.typeIcon.setText("{fa-camera}");
+      holder.infoText.setText(image.width() + "x" + image.height());
+    } else {
       Video video = (Video) media;
-      boolean hasMagic = video.miniThumbMagic() != null && !"0".equals(video.miniThumbMagic());
-      Observable<Uri> pathObservable =
-          hasMagic ? MediaProviderHelper.getVideoThumbnails(context, null, BaseColumns._ID + " = ?",
-              new String[] { video.miniThumbMagic() }, null)
-              .map(VideoThumbnails::data)
-              .map(path -> Uri.fromFile(new File(path)))
-              .switchIfEmpty(prepareThumbnail(video)) : prepareThumbnail(video);
-
-      pathObservable.compose(RxUtil.applyIOToMainThreadSchedulers()).subscribe(path -> {
-        holder.imageView.setImageURI(path);
-        holder.typeIcon.setText("{fa-video-camera}");
-        if (video != null) {
-          holder.infoText.setText(millisToString(video.duration()));
-        }
-      }, RxUtil.ON_ERROR_LOGGER);
+      holder.typeIcon.setText("{fa-video-camera}");
+      holder.infoText.setText(millisToString(video.duration()));
     }
 
     holder.selection.setAlpha(isSelected(position) ? 1 : 0);
@@ -123,9 +117,11 @@ public class ImageRecyclerViewAdapter
     return medias.size();
   }
 
-  public void addMedias(List<MediaColumns> image) {
-    medias.addAll(image);
-    Collections.sort(medias, (o1, o2) -> (int) (o1.dateAdded() - o2.dateAdded()));
+  public void addMedias(MediaColumns image) {
+    medias.add(image);
+    //Collections.sort(medias, (o1, o2) -> (int) (o1.dateAdded() - o2.dateAdded()));
+    int i = medias.indexOf(image);
+    notifyItemInserted(i);
   }
 
   class ThumbnailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

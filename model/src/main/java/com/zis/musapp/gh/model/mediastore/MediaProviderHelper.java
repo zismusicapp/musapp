@@ -20,7 +20,7 @@ public class MediaProviderHelper {
             selection, selectionArgs, sortOrder));
   }
 
-  public static Observable<Video> getVideoAll(Context context, String[] projection,
+  public static Observable<Video> getVideo(Context context, String[] projection,
       String selection, String[] selectionArgs, String sortOrder) {
 
     return Observable.merge(

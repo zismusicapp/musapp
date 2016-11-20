@@ -88,7 +88,6 @@ android {
   signingConfigs {
     //inflates from android-signing.gradle
     develop
-
   }
 
   buildTypes {
@@ -178,10 +177,10 @@ dependencies {
 
 
   // facebook sdk
-//  compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
-//    transitive = true
-//    exclude module: 'bolts-android'
-//  }
+  //  compile('com.facebook.android:facebook-android-sdk:4.8.2@aar') {
+  //    transitive = true
+  //    exclude module: 'bolts-android'
+  //  }
 
   compile('com.digits.sdk.android:digits:2.0.0@aar') {
     transitive = true;
@@ -286,18 +285,21 @@ dependencies {
     exclude module: 'support-annotations'
     exclude module: 'hamcrest-core'
   }
-  annotationProcessor (aptDependencies.daggerApt) {
+  annotationProcessor(aptDependencies.daggerApt) {
     exclude module: 'dagger'
   }
 }
 
 def Properties props = new Properties()
 def propFile = new File('debug.properties')
-if (propFile.canRead()){
+if (propFile.canRead()) {
   props.load(new FileInputStream(propFile))
 
-  if ((props!=null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
-          props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD'))) {
+  if ((props != null &&
+      props.containsKey('STORE_FILE') &&
+      props.containsKey('STORE_PASSWORD') &&
+      props.containsKey('KEY_ALIAS') &&
+      props.containsKey('KEY_PASSWORD'))) {
     android.signingConfigs.develop.storeFile = file(props['STORE_FILE'])
     android.signingConfigs.develop.storePassword = props['STORE_PASSWORD']
     android.signingConfigs.develop.keyAlias = props['KEY_ALIAS']
@@ -306,7 +308,7 @@ if (propFile.canRead()){
     println 'debug.properties found but some entries are missing'
     android.buildTypes.debug.signingConfig = null
   }
-}else {
+} else {
   println 'debug.properties not found'
   android.buildTypes.debug.signingConfig = null
 }
