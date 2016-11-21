@@ -26,11 +26,12 @@ import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
 import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.model.mediastore.video.Video;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
-  int LIMIT = 50;
+  int LIMIT = 1000;
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
   private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
@@ -44,14 +45,11 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
               break;
             case BottomSheetBehavior.STATE_EXPANDED:
               setStatusBarDim(false);
-              bottomSheet.post(() -> {
-                bottomSheet.requestLayout();
-                bottomSheet.invalidate();
-              });
+
 
               break;
             case BottomSheetBehavior.STATE_DRAGGING:
-              setStatusBarDim(true);
+              mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
               break;
             case BottomSheetBehavior.STATE_SETTLING:
               setStatusBarDim(true);
@@ -94,19 +92,28 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
             MediaStore.MediaColumns.DATE_ADDED
                 + " DESC")//we use description to keep video id thumnail
             .filter(image -> !String.valueOf(image.id()).equals(image.description()))
-            .cast(MediaColumns.class).onBackpressureBuffer(1000),
+            .cast(MediaColumns.class)
+            .onBackpressureBuffer(LIMIT),
         //
         MediaProviderHelper.getVideo(getActivity(), null, null, null,
             MediaStore.MediaColumns.DATE_ADDED + " DESC")
-            .doOnNext(this::createThumbnailInImageTable)).onBackpressureBuffer(1000)
+            .doOnNext(this::createThumbnailInImageTable))
+        .onBackpressureBuffer(LIMIT)
+        .cast(MediaColumns.class)
         //
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .compose(RxUtil.applyProgressDialog(progressDialog))
-        .onBackpressureBuffer(1000)
-        .buffer(1000)
+        .onBackpressureBuffer(LIMIT)
+        .buffer(3, TimeUnit.SECONDS, LIMIT)
         .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER, () -> {
           mAdapter.sort();
           mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+
+          //bottomSheet.post(() -> {
+          //  bottomSheet.requestLayout();
+          //  bottomSheet.invalidate();
+          //});
         });
   }
 

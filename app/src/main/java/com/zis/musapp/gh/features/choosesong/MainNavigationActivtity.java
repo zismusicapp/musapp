@@ -33,13 +33,11 @@ public class MainNavigationActivtity extends BaseActivity {
       super(fm);
     }
 
-    @Override
-    public int getCount() {
+    @Override public int getCount() {
       return PAGES_COUNT;
     }
 
-    @Override
-    public Fragment getItem(int position) {
+    @Override public Fragment getItem(int position) {
       switch (position) {
         case 0:
           return VideoFeedFragmentAutoBundle.createFragmentBuilder(
@@ -59,8 +57,7 @@ public class MainNavigationActivtity extends BaseActivity {
     }
   }
 
-  @Override
-  protected void onCreate(final Bundle savedInstanceState) {
+  @Override protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_horizontal_coordinator_ntb);
 
@@ -83,42 +80,23 @@ public class MainNavigationActivtity extends BaseActivity {
     final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
     final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
     int size = 40;
-    models.add(
-        new NavigationTabBar.Model.Builder(
-            new IconDrawable(this, FontAwesomeIcons.fa_home).sizeDp(size),
-            Color.parseColor(colors[0]))
-            .title("Home")
-            .build()
-    );
-    models.add(
-        new NavigationTabBar.Model.Builder(
-            new IconDrawable(this, FontAwesomeIcons.fa_search).sizeDp(size),
-            Color.parseColor(colors[1]))
-            .title("Discover")
-            .build()
-    );
-    models.add(
-        new NavigationTabBar.Model.Builder(
-            new IconDrawable(this, FontAwesomeIcons.fa_plus_circle).sizeDp(size)
-                .colorRes(android.R.color.holo_red_dark),
-            Color.parseColor(colors[2]))
-            .title("Create")
-            .build()
-    );
-    models.add(
-        new NavigationTabBar.Model.Builder(
-            new IconDrawable(this, FontAwesomeIcons.fa_heart).sizeDp(size),
-            Color.parseColor(colors[3]))
-            .title("Notifications")
-            .build()
-    );
-    models.add(
-        new NavigationTabBar.Model.Builder(
-            new IconDrawable(this, FontAwesomeIcons.fa_user).sizeDp(size),
-            Color.parseColor(colors[4]))
-            .title("Profile")
-            .build()
-    );
+    models.add(new NavigationTabBar.Model.Builder(
+        new IconDrawable(this, FontAwesomeIcons.fa_home).sizeDp(size),
+        Color.parseColor(colors[0])).title("Home").build());
+    models.add(new NavigationTabBar.Model.Builder(
+        new IconDrawable(this, FontAwesomeIcons.fa_search).sizeDp(size),
+        Color.parseColor(colors[1])).title("Discover").build());
+    models.add(new NavigationTabBar.Model.Builder(
+        new IconDrawable(this, FontAwesomeIcons.fa_plus_circle).sizeDp(size)
+            .colorRes(android.R.color.holo_red_dark), Color.parseColor(colors[2])).title("Create")
+        .build());
+    models.add(new NavigationTabBar.Model.Builder(
+        new IconDrawable(this, FontAwesomeIcons.fa_heart).sizeDp(size), Color.parseColor(colors[3]))
+        .title("Notifications")
+        .build());
+    models.add(new NavigationTabBar.Model.Builder(
+        new IconDrawable(this, FontAwesomeIcons.fa_user).sizeDp(size),
+        Color.parseColor(colors[4])).title("Profile").build());
 
     navigationTabBar.setModels(models);
     navigationTabBar.setViewPager(viewPager, 2);
@@ -138,19 +116,16 @@ public class MainNavigationActivtity extends BaseActivity {
           }
         });
     navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(final int position, final float positionOffset,
+      @Override public void onPageScrolled(final int position, final float positionOffset,
           final int positionOffsetPixels) {
 
       }
 
-      @Override
-      public void onPageSelected(final int position) {
+      @Override public void onPageSelected(final int position) {
 
       }
 
-      @Override
-      public void onPageScrollStateChanged(final int state) {
+      @Override public void onPageScrollStateChanged(final int state) {
 
       }
     });
@@ -159,23 +134,26 @@ public class MainNavigationActivtity extends BaseActivity {
 
     final BottomSheetBehavior behavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
     behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-      @Override
-      public void onStateChanged(@NonNull View bottomSheet, int newState) {
+      @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
         Log.e("onStateChanged", "onStateChanged:" + newState);
       }
 
-      @Override
-      public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+      @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         Log.e("onSlide", "onSlide");
       }
     });
 
-    behavior.setPeekHeight(100);
-
     final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.parent);
     findViewById(R.id.fab).setOnClickListener(v -> {
-      bottomSheetDialogFragment.show(getSupportFragmentManager(),
-          "dialog");
+
+      bottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog");
+
+      if (behavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+      } else {
+        behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+      }
+
       for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
         final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
         navigationTabBar.postDelayed(() -> {
@@ -193,8 +171,8 @@ public class MainNavigationActivtity extends BaseActivity {
         final Snackbar snackbar =
             Snackbar.make(navigationTabBar, "Coordinator NTB", Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundColor(Color.parseColor("#9b92b3"));
-        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text))
-            .setTextColor(Color.parseColor("#423752"));
+        ((TextView) snackbar.getView().findViewById(R.id.snackbar_text)).setTextColor(
+            Color.parseColor("#423752"));
         snackbar.show();
       }, 1000);
     });

@@ -99,7 +99,7 @@ public class ImageRecyclerViewAdapter
       }
     }
 
-    holder.selection.setAlpha(isSelected(position) ? 1 : 0);
+    holder.selection.setText(isSelected(position) ? "{md-check-circle}" : "{md-panorama-fish-eye}");
     holder.shadow.setAlpha(isSelected(position) ? 1 : 0);
 
     holder.setOnItemClickListener(new OnItemClickListener() {

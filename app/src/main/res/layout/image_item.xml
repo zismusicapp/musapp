@@ -32,17 +32,6 @@
   </FrameLayout>
 
   <com.joanzapata.iconify.widget.IconTextView
-      android:id="@+id/selection"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="right|top"
-      android:padding="8dp"
-      android:text="{md-panorama-fish-eye}"
-      android:textColor="#5151f7"
-      android:textSize="24sp"
-      />
-
-  <com.joanzapata.iconify.widget.IconTextView
       android:id="@+id/typeIcon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -67,7 +56,19 @@
       android:id="@+id/shadow"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="#60000000"
+      android:background="#80000000"
+      />
+
+
+  <com.joanzapata.iconify.widget.IconTextView
+      android:id="@+id/selection"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="right|top"
+      android:padding="8dp"
+      android:text="{md-panorama-fish-eye}"
+      android:textColor="#7474fd"
+      android:textSize="24sp"
       />
 
 </com.zis.musapp.gh.features.choosesong.FixedAspectRatioFrameLayout>
