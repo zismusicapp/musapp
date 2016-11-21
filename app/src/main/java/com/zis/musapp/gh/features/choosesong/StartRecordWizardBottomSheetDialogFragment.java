@@ -197,7 +197,9 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
           .compose(RxUtil.applyIOToMainThreadSchedulers())
           .compose(RxUtil.applyProgressDialog(progressDialog))
           .subscribe(mediaColumns -> {
-            Intent intent = new Intent(getActivity(), TimeLineActivity.class);
+
+            //TimeLineActivity.class
+            Intent intent = new Intent(getActivity(), TestEffectActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(BUNDLE, mediaColumns);
             intent.putExtra(EXTRA, bundle);
