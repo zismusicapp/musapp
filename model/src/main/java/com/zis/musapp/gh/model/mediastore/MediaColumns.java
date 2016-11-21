@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import static android.provider.MediaStore.MediaColumns.*;
 
-public interface MediaColumns extends IBaseColumns , Parcelable{
+public interface MediaColumns extends IBaseColumns{
   @Nullable
   @AutoCursor.Column(name = DATA)
   public abstract String data();
