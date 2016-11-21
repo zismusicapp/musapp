@@ -41,6 +41,7 @@
         android:padding="16dp"
         >
       <com.joanzapata.iconify.widget.IconButton
+          android:id="@+id/new_photo"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_weight="1"
@@ -48,6 +49,7 @@
           />
 
       <com.joanzapata.iconify.widget.IconButton
+          android:id="@+id/new_clip"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_weight="1"

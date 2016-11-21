@@ -17,6 +17,8 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.android.annotations.NonNull;
+import com.jakewharton.rxbinding.view.RxView;
+import com.joanzapata.iconify.widget.IconButton;
 import com.pavlospt.rxfile.RxFile;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zis.musapp.base.utils.RxUtil;
@@ -34,6 +36,8 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
   int LIMIT = 1000;
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
+  @BindView(R.id.new_clip) IconButton mNewClip;
+  @BindView(R.id.new_photo) IconButton mNewPhoto;
   private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
       new BottomSheetBehavior.BottomSheetCallback() {
 
@@ -45,7 +49,6 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
               break;
             case BottomSheetBehavior.STATE_EXPANDED:
               setStatusBarDim(false);
-
 
               break;
             case BottomSheetBehavior.STATE_DRAGGING:
@@ -92,23 +95,23 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
             MediaStore.MediaColumns.DATE_ADDED
                 + " DESC")//we use description to keep video id thumnail
             .filter(image -> !String.valueOf(image.id()).equals(image.description()))
-            .cast(MediaColumns.class)
             .onBackpressureBuffer(LIMIT),
         //
         MediaProviderHelper.getVideo(getActivity(), null, null, null,
             MediaStore.MediaColumns.DATE_ADDED + " DESC")
+            .limit(LIMIT / 10)
             .doOnNext(this::createThumbnailInImageTable))
-        .onBackpressureBuffer(LIMIT)
-        .cast(MediaColumns.class)
+
         //
+        .onBackpressureBuffer(LIMIT + LIMIT / 10)
+        .cast(MediaColumns.class)
         .compose(RxUtil.applyIOToMainThreadSchedulers())
         .compose(RxUtil.applyProgressDialog(progressDialog))
-        .onBackpressureBuffer(LIMIT)
+
         .buffer(3, TimeUnit.SECONDS, LIMIT)
         .subscribe(mediaColumns -> mAdapter.addMedias(mediaColumns), RxUtil.ON_ERROR_LOGGER, () -> {
           mAdapter.sort();
           mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
 
           //bottomSheet.post(() -> {
           //  bottomSheet.requestLayout();
@@ -158,6 +161,15 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
 
     mBehavior = BottomSheetBehavior.from((View) view.getParent());
     mBehavior.setBottomSheetCallback(mBottomSheetBehaviorCallback);
+
+    RxView.clicks(mNewClip)
+        .compose(RxPermissions.getInstance(getActivity())
+            .ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        .subscribe(granted -> {
+          if (granted) {
+            CameraHelper.startRecord(getActivity());
+          }
+        });
 
     return dialog;
   }
