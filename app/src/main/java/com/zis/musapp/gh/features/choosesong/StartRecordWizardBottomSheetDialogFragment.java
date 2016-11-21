@@ -22,6 +22,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.joanzapata.iconify.widget.IconButton;
 import com.pavlospt.rxfile.RxFile;
 import com.tbruyelle.rxpermissions.RxPermissions;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageOptions;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.MediaColumns;
@@ -34,7 +36,7 @@ import rx.Observable;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
-  public final static int LIMIT = 1000;
+  public final static int LIMIT = 10000;
 
   public final static int TAKE_PHOTO_CODE = 101;
   public static final String BUNDLE = "bundle";
@@ -146,7 +148,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
   public Dialog onCreateDialog(Bundle savedInstanceState) {
     BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
 
-    View view = View.inflate(getContext(), R.layout.fragment_bottom_sheet, null);
+    View view = View.inflate(getContext(), R.layout.fragment_image_selection_bottom_sheet, null);
     ButterKnife.bind(this, view);
 
     dialog.setContentView(view);
@@ -157,6 +159,23 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     mAdapter = new ImageRecyclerViewAdapter(getActivity(), new ArrayList<>());
     mAdapter.setHasStableIds(true);
     mRecycleView.setAdapter(mAdapter);
+
+    mAdapter.setEditListener(new IEditListener() {
+      @Override public void onEditPhoto(Image image) {
+        CropImageOptions cropImageOptions = new CropImageOptions();
+        cropImageOptions.aspectRatioX = 1;
+        cropImageOptions.aspectRatioY = 1;
+        Intent build = CropFilterImageActivityAutoBundle.createIntentBuilder(image.getContentUri(),
+            cropImageOptions).build(getActivity());
+        startActivityForResult(build,CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+        //CropImage.activity(image.getContentUri())
+        //    .start(getContext(), StartRecordWizardBottomSheetDialogFragment.this);
+      }
+
+      @Override public void onEditVideo(Video video) {
+
+      }
+    });
 
     progressDialog = new ProgressDialog(getActivity());
     progressDialog.setMessage("Magic");
@@ -199,7 +218,7 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
           .subscribe(mediaColumns -> {
 
             //TimeLineActivity.class
-            Intent intent = new Intent(getActivity(), TestEffectActivity.class);
+            Intent intent = new Intent(getActivity(), FiltersBottomSheetFragment.class);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(BUNDLE, mediaColumns);
             intent.putExtra(EXTRA, bundle);

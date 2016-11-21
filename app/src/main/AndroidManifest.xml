@@ -113,9 +113,8 @@
 
     <activity android:name="com.afollestad.materialcamera.CaptureActivity"/>
 
+    <activity android:name=".features.choosesong.CropFilterImageActivity"/>
     <activity android:name=".features.choosesong.TimeLineActivity"/>
-
-    <activity android:name=".features.choosesong.TestEffectActivity"/>
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"

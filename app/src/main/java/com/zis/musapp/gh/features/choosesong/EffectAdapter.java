@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,11 @@ public class EffectAdapter extends RecyclerView.Adapter<EffectAdapter.ViewHolder
 
   private Context context;
   private List<Type> dataSet;
+  private IEffectListener filtersBottomSheetFragment;
+
+  public void setOnItemClickListener(IEffectListener filtersBottomSheetFragment) {
+    this.filtersBottomSheetFragment = filtersBottomSheetFragment;
+  }
 
   enum Type {
     Mask,
@@ -140,15 +146,26 @@ public class EffectAdapter extends RecyclerView.Adapter<EffectAdapter.ViewHolder
     return dataSet.size();
   }
 
-  static class ViewHolder extends RecyclerView.ViewHolder {
+  class ViewHolder extends RecyclerView.ViewHolder {
 
     public SimpleDraweeView drawee;
     public TextView title;
 
     ViewHolder(View itemView) {
       super(itemView);
+      itemView.setOnClickListener(v -> {
+        if (filtersBottomSheetFragment != null) {
+          filtersBottomSheetFragment.onEffect(dataSet.get(getAdapterPosition()));
+        } else {
+          Log.w("EffectAdapter", "listener does not set");
+        }
+      });
       drawee = (SimpleDraweeView) itemView.findViewById(R.id.image);
       title = (TextView) itemView.findViewById(R.id.title);
     }
+  }
+
+  public interface IEffectListener {
+    void onEffect(Type type);
   }
 }

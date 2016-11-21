@@ -2,9 +2,7 @@ package com.zis.musapp.gh.features.choosesong;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,6 @@ import com.zis.musapp.gh.model.mediastore.MediaColumns;
 import com.zis.musapp.gh.model.mediastore.MediaProviderHelper;
 import com.zis.musapp.gh.model.mediastore.image.Image;
 import com.zis.musapp.gh.model.mediastore.video.Video;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,15 +99,33 @@ public class ImageRecyclerViewAdapter
     holder.selection.setText(isSelected(position) ? "{md-check-circle}" : "{md-panorama-fish-eye}");
     holder.shadow.setAlpha(isSelected(position) ? 1 : 0);
 
-    holder.setOnItemClickListener((view, position1) -> toggleSelection(position1));
+    holder.setOnItemClickListener((view, position1) -> {
+      toggleSelection(position1);
+      MediaColumns mediaColumns = getMedias().get(position1);
+
+      if (editListener != null) {
+        if (mediaColumns instanceof Image) {
+          Image image = (Image) mediaColumns;
+          editListener.onEditPhoto(image);
+        } else if (mediaColumns instanceof Video) {
+          Video video = (Video) mediaColumns;
+          editListener.onEditVideo(video);
+        }
+      }
+    });
   }
+
+  public void setEditListener(IEditListener editListener) {
+    this.editListener = editListener;
+  }
+
+  IEditListener editListener;
 
   private String millisToString(long millis) {
     return String.format("%02d : %02d", TimeUnit.MILLISECONDS.toMinutes(millis),
         TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
             TimeUnit.MILLISECONDS.toMinutes(millis)));
   }
-
 
   @Override public int getItemCount() {
     return medias.size();
