@@ -3,11 +3,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.zis.musapp.gh"
->
+    >
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -21,16 +21,16 @@
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
-      tools:replace="icon,label"
       android:supportsRtl="true"
       android:theme="@style/AppTheme"
-  >
+      tools:replace="icon,label"
+      >
 
     <!--zisman.mikhail@gmail.com-->
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="072592524e88e44f67662301a297cbc81f8b2898"
-    />
+        />
 
     <meta-data
         android:name="com.parse.CLIENT_KEY"
@@ -40,12 +40,14 @@
         android:name="com.parse.APPLICATION_ID"
         android:value="@string/parse_application_id"/>
 
-    <meta-data android:name="com.facebook.sdk.ApplicationId"
+    <meta-data
+        android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
+
     <activity
         android:name="com.zis.musapp.gh.features.splash.SplashActivity"
         android:theme="@style/AppTheme.Launcher"
-    >
+        >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
@@ -54,14 +56,16 @@
     </activity>
 
     <!--facebook-->
-    <activity android:name="com.facebook.FacebookActivity"
+    <activity
+        android:name="com.facebook.FacebookActivity"
         android:configChanges=
             "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar"
-        android:label="@string/app_name"/>
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
-    <provider android:authorities="com.facebook.app.FacebookContentProvider1234"
+    <provider
         android:name="com.facebook.FacebookContentProvider"
+        android:authorities="com.facebook.app.FacebookContentProvider1234"
         android:exported="true"/>
     <!--facebook-->
     <!-- Tour -->
@@ -74,33 +78,42 @@
 
     <activity android:name="com.zis.musapp.gh.features.search.SearchActivity"/>
     <activity android:name="com.zis.musapp.gh.features.profile.ProfileActivity"/>
-    <activity android:name="com.zis.musapp.gh.features.kiddashboard.KidDashboardActivity"
+    <activity
+        android:name="com.zis.musapp.gh.features.kiddashboard.KidDashboardActivity"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.splash.WelcomeActivity"
+    <activity
+        android:name=".features.splash.WelcomeActivity"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.login.SignupActivity"
+    <activity
+        android:name=".features.login.SignupActivity"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.choosesong.MainNavigationActivtity"
+    <activity
+        android:name=".features.choosesong.MainNavigationActivtity"
         android:screenOrientation="portrait"/>
 
 
-    <activity android:name=".features.splash.VideoFeedFragment"
+    <activity
+        android:name=".features.splash.VideoFeedFragment"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.songRecord.CameraCaptureActivity"
+    <activity
+        android:name=".features.songRecord.CameraCaptureActivity"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.editVideo.TrimmerActivity"
+    <activity
+        android:name=".features.editVideo.TrimmerActivity"
         android:screenOrientation="portrait"/>
 
-    <activity android:name=".features.previewActivity.PreviewActivity"
+    <activity
+        android:name=".features.previewActivity.PreviewActivity"
         android:screenOrientation="portrait"/>
 
     <activity android:name="com.afollestad.materialcamera.CaptureActivity"/>
 
+    <activity android:name=".features.choosesong.TimeLineActivity"/>
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"

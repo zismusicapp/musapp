@@ -102,11 +102,7 @@ public class ImageRecyclerViewAdapter
     holder.selection.setText(isSelected(position) ? "{md-check-circle}" : "{md-panorama-fish-eye}");
     holder.shadow.setAlpha(isSelected(position) ? 1 : 0);
 
-    holder.setOnItemClickListener(new OnItemClickListener() {
-      @Override public void onItemClick(View view, int position) {
-        toggleSelection(position);
-      }
-    });
+    holder.setOnItemClickListener((view, position1) -> toggleSelection(position1));
   }
 
   private String millisToString(long millis) {
@@ -115,10 +111,6 @@ public class ImageRecyclerViewAdapter
             TimeUnit.MILLISECONDS.toMinutes(millis)));
   }
 
-  @NonNull private String getThumbnailFileName(Video video) {
-    return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-        video.id() + ".jpg").getAbsolutePath();
-  }
 
   @Override public int getItemCount() {
     return medias.size();
@@ -128,6 +120,10 @@ public class ImageRecyclerViewAdapter
     medias.add(media);
     int i = medias.indexOf(media);
     notifyItemInserted(i);
+  }
+
+  public List<MediaColumns> getMedias() {
+    return medias;
   }
 
   public void addMedias(List<MediaColumns> media) {

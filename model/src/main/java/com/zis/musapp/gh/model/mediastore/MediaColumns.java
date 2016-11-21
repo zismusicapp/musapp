@@ -1,11 +1,14 @@
 package com.zis.musapp.gh.model.mediastore;
 
+import android.os.Parcelable;
 import auto.cursor.*;
 
 import android.support.annotation.Nullable;
+import java.io.Serializable;
+
 import static android.provider.MediaStore.MediaColumns.*;
 
-public interface MediaColumns extends IBaseColumns {
+public interface MediaColumns extends IBaseColumns , Parcelable{
   @Nullable
   @AutoCursor.Column(name = DATA)
   public abstract String data();

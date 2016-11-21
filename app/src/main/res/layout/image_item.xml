@@ -18,6 +18,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         fresco:actualImageScaleType="centerCrop"
+        fresco:fadeDuration="300"
+
+        fresco:roundAsCircle="false"
+        fresco:roundBottomLeft="false"
+        fresco:roundBottomRight="true"
+        fresco:roundTopLeft="true"
+        fresco:roundTopRight="false"
+        fresco:roundWithOverlayColor="#7d7d9b"
+        fresco:roundedCornerRadius="2dp"
+        fresco:roundingBorderColor="#dcd7d7"
+        fresco:roundingBorderWidth="2dp"
         fresco:viewAspectRatio="1"
         />
 

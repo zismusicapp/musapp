@@ -1,5 +1,6 @@
 package com.zis.musapp.gh.features.choosesong;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.splash.VideoFeedFragmentAutoBundle;
 import java.util.ArrayList;
 import java.util.Random;
+
+import static com.zis.musapp.gh.features.choosesong.StartRecordWizardBottomSheetDialogFragment.TAKE_PHOTO_CODE;
 
 public class MainNavigationActivtity extends BaseActivity {
 
@@ -182,4 +185,13 @@ public class MainNavigationActivtity extends BaseActivity {
     collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#009F90AF"));
     collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#9f90af"));
   }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == TAKE_PHOTO_CODE && resultCode == RESULT_OK) {
+      Log.d("CameraDemo", "Pic saved");
+    }
+
+  }
+
 }

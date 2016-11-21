@@ -3,6 +3,7 @@ package com.zis.musapp.gh.features.choosesong;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,11 +34,16 @@ import rx.Observable;
 
 public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
-  int LIMIT = 1000;
+  public final static int LIMIT = 1000;
+
+  public final static int TAKE_PHOTO_CODE = 101;
+  public static final String BUNDLE = "bundle";
+  public static final String EXTRA = "extra";
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
   @BindView(R.id.new_clip) IconButton mNewClip;
   @BindView(R.id.new_photo) IconButton mNewPhoto;
+  @BindView(R.id.next) IconButton mNext;
   private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback =
       new BottomSheetBehavior.BottomSheetCallback() {
 
@@ -162,6 +168,18 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     mBehavior = BottomSheetBehavior.from((View) view.getParent());
     mBehavior.setBottomSheetCallback(mBottomSheetBehaviorCallback);
 
+    RxView.clicks(mNewPhoto)
+        .compose(RxPermissions.getInstance(getActivity())
+            .ensure(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        .subscribe(aBoolean -> {
+          if (aBoolean) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            //cameraIntent.putExtra(MediaStore.Extra, outputFileUri);
+
+            getActivity().startActivityForResult(cameraIntent, TAKE_PHOTO_CODE);
+          }
+        });
+
     RxView.clicks(mNewClip)
         .compose(RxPermissions.getInstance(getActivity())
             .ensure(Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -170,6 +188,22 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
             CameraHelper.startRecord(getActivity());
           }
         });
+
+    RxView.clicks(mNext).retry().subscribe(aVoid -> {
+      Observable.from(mAdapter.getSelectedItems())
+          .map(selectedIndex -> mAdapter.getMedias().get(selectedIndex))
+          .toList()
+          .cast(ArrayList.class)
+          .compose(RxUtil.applyIOToMainThreadSchedulers())
+          .compose(RxUtil.applyProgressDialog(progressDialog))
+          .subscribe(mediaColumns -> {
+            Intent intent = new Intent(getActivity(), TimeLineActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList(BUNDLE, mediaColumns);
+            intent.putExtra(EXTRA, bundle);
+            startActivity(intent);
+          });
+    });
 
     return dialog;
   }
