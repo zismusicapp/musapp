@@ -27,30 +27,28 @@ package com.zis.musapp.base.android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.github.piasy.safelyandroid.activity.StartActivityDelegate;
 import com.github.piasy.safelyandroid.fragment.SupportFragmentTransactionDelegate;
 import com.github.piasy.safelyandroid.fragment.TransactionCommitter;
-import com.zis.musapp.base.di.ActivityModule;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.tsengvn.typekit.TypekitContextWrapper;
 import com.yatatsu.autobundle.AutoBundle;
+import com.zis.musapp.base.di.ActivityModule;
 import onactivityresult.ActivityResult;
 
-/**
- * Created by Zis{github.com/Zis} on 15/7/23.
- *
- * Base Activity class.
- */
 public abstract class BaseActivity extends RxAppCompatActivity implements TransactionCommitter {
 
   private final SupportFragmentTransactionDelegate mSupportFragmentTransactionDelegate =
       new SupportFragmentTransactionDelegate();
   private volatile boolean mIsResumed;
+  private Unbinder mUnBinder;
 
-  @Override
-  protected void onCreate(final Bundle savedInstanceState) {
+  @Override protected void onCreate(final Bundle savedInstanceState) {
     initializeInjector();
     super.onCreate(savedInstanceState);
     if (hasArgs()) {
@@ -63,13 +61,36 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Transa
     mIsResumed = true;
   }
 
-  @Override
-  protected void attachBaseContext(final Context newBase) {
+  @Override protected void onResume() {
+    super.onResume();
+
+    bindView();
+    startBussinies();
+  }
+
+  //Override this
+  public void startBussinies() {
+
+  }
+
+  /**
+   * bind views, should override this method when bind view manually.
+   */
+  @CallSuper protected void bindView() {
+    if (autoBindViews()) {
+      mUnBinder = ButterKnife.bind(this);
+    }
+  }
+
+  public boolean autoBindViews() {
+    return true;
+  }
+
+  @Override protected void attachBaseContext(final Context newBase) {
     super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
   }
 
-  @Override
-  protected void onPause() {
+  @Override protected void onPause() {
     super.onPause();
     mIsResumed = false;
   }
@@ -78,15 +99,13 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Transa
     return mSupportFragmentTransactionDelegate.safeCommit(this, transaction);
   }
 
-  @Override
-  protected void onResumeFragments() {
+  @Override protected void onResumeFragments() {
     super.onResumeFragments();
     mIsResumed = true;
     mSupportFragmentTransactionDelegate.onResumed();
   }
 
-  @Override
-  public boolean isCommitterResumed() {
+  @Override public boolean isCommitterResumed() {
     return mIsResumed;
   }
 
@@ -95,12 +114,18 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Transa
   }
 
   @Override
-  protected void onActivityResult(final int requestCode, final int resultCode,
-      final Intent data) {
+  protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (handleActivityResult()) {
       ActivityResult.onResult(requestCode, resultCode, data).into(this);
     }
+  }
+
+  @Override protected void onDestroy() {
+    if (mUnBinder != null) {
+      mUnBinder.unbind();
+    }
+    super.onDestroy();
   }
 
   protected boolean handleActivityResult() {

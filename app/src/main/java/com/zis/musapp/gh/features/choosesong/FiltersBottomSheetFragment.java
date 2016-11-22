@@ -33,6 +33,7 @@ public class FiltersBottomSheetFragment extends BottomSheetDialogFragment
     BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
 
     View view = View.inflate(getContext(), R.layout.fragment_filters_bottom_sheet, null);
+    dialog.setContentView(view);
     ButterKnife.bind(this, view);
 
     recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
@@ -61,6 +62,8 @@ public class FiltersBottomSheetFragment extends BottomSheetDialogFragment
     mBehavior = BottomSheetBehavior.from((View) view.getParent());
     mBehavior.setBottomSheetCallback(mBottomSheetBehaviorCallback);
 
+    mBehavior.setPeekHeight(320);
+
     return dialog;
   }
 
@@ -76,7 +79,7 @@ public class FiltersBottomSheetFragment extends BottomSheetDialogFragment
             case BottomSheetBehavior.STATE_EXPANDED:
               break;
             case BottomSheetBehavior.STATE_DRAGGING:
-              mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+             // mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
               break;
             case BottomSheetBehavior.STATE_SETTLING:
               break;

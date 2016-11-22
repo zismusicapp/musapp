@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import butterknife.BindView;
+import com.jakewharton.rxbinding.view.RxView;
+import com.joanzapata.iconify.widget.IconButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageOptions;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -29,6 +32,8 @@ public class CropFilterImageActivity extends BaseActivity
 
   @AutoBundleField Uri source;
   @AutoBundleField CropImageOptions mOptions;
+
+  @BindView(R.id.showFilters) IconButton showFilters;
 
   @Override protected boolean hasArgs() {
     return true;
@@ -67,6 +72,12 @@ public class CropFilterImageActivity extends BaseActivity
       @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         Log.e("onSlide", "onSlide");
       }
+    });
+  }
+
+  @Override public void startBussinies() {
+    RxView.clicks(showFilters).subscribe(aVoid -> {
+      filtersBottomSheetFragment.show(getSupportFragmentManager(), "filters");
     });
   }
 
