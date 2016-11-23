@@ -28,8 +28,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.github.piasy.safelyandroid.activity.StartActivityDelegate;
@@ -61,10 +63,19 @@ public abstract class BaseActivity extends RxAppCompatActivity implements Transa
     mIsResumed = true;
   }
 
+  @Override public void setContentView(@LayoutRes int layoutResID) {
+    super.setContentView(layoutResID);
+    bindView();
+  }
+
+  @Override public void setContentView(View view) {
+    super.setContentView(view);
+    bindView();
+  }
+
   @Override protected void onResume() {
     super.onResume();
 
-    bindView();
     startBussinies();
   }
 

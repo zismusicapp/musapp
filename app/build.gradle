@@ -196,6 +196,8 @@ dependencies {
   compile 'com.facebook.rebound:rebound:0.3.8'
   compile 'com.afollestad:material-camera:0.4.4'
   compile 'com.afollestad:easyvideoplayer:0.3.0'
+  compile "com.github.VictorAlbertos:RxActivityResult:0.3.9"
+  compile 'com.yqritc:recyclerview-multiple-viewtypes-adapter:1.1.0'
 
   compile 'com.theartofdev.edmodo:android-image-cropper:2.3.1'
   //for fresco

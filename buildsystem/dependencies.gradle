@@ -35,7 +35,7 @@ ext {
   rxLifeCycleVersion = '0.6.1'
 
   sqlDelightVersion = '0.5.1'
-  autoBundleVersion = '3.0.0'
+  autoBundleVersion = '3.1.1'
   onActivityResultVersion = '0.6.0'
 
   //Google Play Services

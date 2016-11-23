@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.android.annotations.NonNull;
+import com.yatatsu.autobundle.AutoBundle;
+import com.yatatsu.autobundle.AutoBundleField;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.features.choosesong.EffectAdapter.Type;
 import java.util.ArrayList;
@@ -29,14 +31,15 @@ public class FiltersBottomSheetFragment extends BottomSheetDialogFragment
 
   @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    AutoBundle.bind(this);
     BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
 
     View view = View.inflate(getContext(), R.layout.fragment_filters_bottom_sheet, null);
     dialog.setContentView(view);
     ButterKnife.bind(this, view);
 
-    recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+    recyclerView.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
     List<Type> dataSet = new ArrayList<>();
     dataSet.add(Type.Blur);
@@ -79,7 +82,7 @@ public class FiltersBottomSheetFragment extends BottomSheetDialogFragment
             case BottomSheetBehavior.STATE_EXPANDED:
               break;
             case BottomSheetBehavior.STATE_DRAGGING:
-             // mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+              // mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
               break;
             case BottomSheetBehavior.STATE_SETTLING:
               break;

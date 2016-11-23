@@ -24,26 +24,20 @@
 
 package com.zis.musapp.gh;
 
-import android.os.Handler;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 import com.digits.sdk.android.Digits;
 import com.facebook.stetho.Stetho;
 import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
-import com.github.anrwatchdog.ANRWatchDog;
-import com.github.moduth.blockcanary.BlockCanary;
-import com.nshmura.strictmodenotifier.StrictModeNotifier;
-import com.squareup.leakcanary.LeakCanary;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.zis.musapp.base.utils.UtilsModule;
-import com.zis.musapp.gh.analytics.AppBlockCanaryContext;
 import com.zis.musapp.gh.di.AppComponent;
 import com.zis.musapp.gh.di.AppModule;
 import com.zis.musapp.gh.di.DaggerAppComponent;
 import com.zis.musapp.gh.di.IApplication;
 import io.fabric.sdk.android.Fabric;
+import rx_activity_result.RxActivityResult;
 
 /**
  * Created by Zis{github.com/Zis} on 15/7/23.
@@ -52,10 +46,9 @@ import io.fabric.sdk.android.Fabric;
  */
 public class BootstrapApp extends MultiDexApplication implements IApplication {
 
-    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = "9endXcReM2639UVLYojQws29r";
-    private static final String TWITTER_SECRET = "5gcDDZkIrEJ8N9a4Kn93nX3ns5PKRGyVwtd0c38RwEg0v6w7GC";
-
+  // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+  private static final String TWITTER_KEY = "9endXcReM2639UVLYojQws29r";
+  private static final String TWITTER_SECRET = "5gcDDZkIrEJ8N9a4Kn93nX3ns5PKRGyVwtd0c38RwEg0v6w7GC";
 
   private static BootstrapApp sInstance;
 
@@ -69,13 +62,13 @@ public class BootstrapApp extends MultiDexApplication implements IApplication {
     sInstance = instance;
   }
 
-  @Override
-  public void onCreate() {
+  @Override public void onCreate() {
     super.onCreate();
     TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
     Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
     setInstance(this);
 
+    RxActivityResult.register(this);
     if ("debug".equals(BuildConfig.BUILD_TYPE)) {
       // developer tools
       AndroidDevMetrics.initWith(this);
@@ -115,9 +108,7 @@ public class BootstrapApp extends MultiDexApplication implements IApplication {
         .build();
   }
 
-  @NonNull
-  @Override
-  public AppComponent appComponent() {
+  @NonNull @Override public AppComponent appComponent() {
     return mAppComponent;
   }
 }

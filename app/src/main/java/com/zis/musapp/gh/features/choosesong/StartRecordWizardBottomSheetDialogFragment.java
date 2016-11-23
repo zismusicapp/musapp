@@ -22,8 +22,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.joanzapata.iconify.widget.IconButton;
 import com.pavlospt.rxfile.RxFile;
 import com.tbruyelle.rxpermissions.RxPermissions;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageOptions;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
 import com.zis.musapp.gh.model.mediastore.MediaColumns;
@@ -39,8 +37,6 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
   public final static int LIMIT = 10000;
 
   public final static int TAKE_PHOTO_CODE = 101;
-  public static final String BUNDLE = "bundle";
-  public static final String EXTRA = "extra";
 
   @BindView(R.id.imagesRecycleView) RecyclerView mRecycleView;
   @BindView(R.id.new_clip) IconButton mNewClip;
@@ -160,23 +156,6 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
     mAdapter.setHasStableIds(true);
     mRecycleView.setAdapter(mAdapter);
 
-    mAdapter.setEditListener(new IEditListener() {
-      @Override public void onEditPhoto(Image image) {
-        CropImageOptions cropImageOptions = new CropImageOptions();
-        cropImageOptions.aspectRatioX = 1;
-        cropImageOptions.aspectRatioY = 1;
-        Intent build = CropFilterImageActivityAutoBundle.createIntentBuilder(image.getContentUri(),
-            cropImageOptions).build(getActivity());
-        startActivityForResult(build,CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
-        //CropImage.activity(image.getContentUri())
-        //    .start(getContext(), StartRecordWizardBottomSheetDialogFragment.this);
-      }
-
-      @Override public void onEditVideo(Video video) {
-
-      }
-    });
-
     progressDialog = new ProgressDialog(getActivity());
     progressDialog.setMessage("Magic");
     progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -216,12 +195,10 @@ public class StartRecordWizardBottomSheetDialogFragment extends BottomSheetDialo
           .compose(RxUtil.applyIOToMainThreadSchedulers())
           .compose(RxUtil.applyProgressDialog(progressDialog))
           .subscribe(mediaColumns -> {
-
-            //TimeLineActivity.class
-            Intent intent = new Intent(getActivity(), FiltersBottomSheetFragment.class);
+            Intent intent = new Intent(getActivity(), TimeLineCompileActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(BUNDLE, mediaColumns);
-            intent.putExtra(EXTRA, bundle);
+            bundle.putParcelableArrayList(TimeLineCompileActivity.BUNDLE, mediaColumns);
+            intent.putExtra(TimeLineCompileActivity.EXTRA, bundle);
             startActivity(intent);
           });
     });
