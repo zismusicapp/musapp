@@ -94,11 +94,6 @@
         android:name=".features.choosesong.MainNavigationActivtity"
         android:screenOrientation="portrait"/>
 
-
-    <activity
-        android:name=".features.splash.VideoFeedFragment"
-        android:screenOrientation="portrait"/>
-
     <activity
         android:name=".features.songRecord.CameraCaptureActivity"
         android:screenOrientation="portrait"/>
@@ -108,7 +103,7 @@
         android:screenOrientation="portrait"/>
 
     <activity
-        android:name=".features.previewActivity.PreviewActivity"
+        android:name=".features.previewActivity.PreviewRemoteActivity"
         android:screenOrientation="portrait"/>
 
     <activity android:name="com.afollestad.materialcamera.CaptureActivity"/>

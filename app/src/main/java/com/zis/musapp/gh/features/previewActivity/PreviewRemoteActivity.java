@@ -17,13 +17,13 @@ import tv.danmaku.ijk.media.example.widget.media.IjkVideoView;
 /**
  * Created by mikhail on 11/10/16.
  */
-public class PreviewActivity extends BaseActivity {
+public class PreviewRemoteActivity extends BaseActivity {
 
   private static String fileUri = "FILE_URI";
 
   public static void start(Activity activity, File file) {
 
-    Intent intent = new Intent(activity, PreviewActivity.class);
+    Intent intent = new Intent(activity, PreviewRemoteActivity.class);
     intent.putExtra(fileUri, Uri.fromFile(file));
     activity.startActivity(intent);
   }
@@ -31,10 +31,10 @@ public class PreviewActivity extends BaseActivity {
   @Override protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.preview_video_activity);
+    setContentView(R.layout.preview_remote_video_activity);
     IjkVideoView ijkVideoView = (IjkVideoView) findViewById(R.id.preview_video_view);
 
-    Uri fileUri = getIntent().getParcelableExtra(PreviewActivity.fileUri);
+    Uri fileUri = getIntent().getParcelableExtra(PreviewRemoteActivity.fileUri);
 
     ProgressDialog progressDialog = new ProgressDialog(this);
     progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

@@ -1,5 +1,6 @@
 package com.zis.musapp.gh.model.mediastore;
 
+import android.net.Uri;
 import android.os.Parcelable;
 import auto.cursor.*;
 
@@ -8,7 +9,7 @@ import java.io.Serializable;
 
 import static android.provider.MediaStore.MediaColumns.*;
 
-public interface MediaColumns extends IBaseColumns{
+public interface MediaColumns extends IBaseColumns , Serializable{
   @Nullable
   @AutoCursor.Column(name = DATA)
   public abstract String data();
@@ -44,4 +45,7 @@ public interface MediaColumns extends IBaseColumns{
   @Nullable
   @AutoCursor.Column(name = WIDTH)
   public abstract Integer width();
+
+  @Nullable
+  public abstract Uri getContentUri();
 }

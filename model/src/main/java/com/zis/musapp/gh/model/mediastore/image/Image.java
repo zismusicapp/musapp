@@ -19,6 +19,7 @@ public abstract class Image implements Parcelable, ImageColumns {
     return ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id());
   }
 
+  @Override
   public Uri getContentUri() {
     return getExternalContentUri();
   }

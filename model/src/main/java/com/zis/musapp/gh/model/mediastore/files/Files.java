@@ -22,4 +22,10 @@ public abstract class Files implements Parcelable, FilesColumns {
   public Uri getContentUri(String volumeName) {
     return getExternalContentUri(volumeName);
   }
+
+  @Override
+  public Uri getContentUri() {
+    //implement if needs
+    return null;
+  }
 }

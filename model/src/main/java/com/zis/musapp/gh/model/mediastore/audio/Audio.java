@@ -19,6 +19,7 @@ public abstract class Audio implements Parcelable, AudioColumns {
     // return Images.Media.EXTERNAL_CONTENT_URI.buildUpon().appendPath(String.valueOf(id())).build();
   }
 
+  @Override
   public Uri getContentUri() {
     return getExternalContentUri();
   }
