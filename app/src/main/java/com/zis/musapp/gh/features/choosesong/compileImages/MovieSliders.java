@@ -2,6 +2,7 @@ package com.zis.musapp.gh.features.choosesong.compileImages;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.provider.MediaStore;
@@ -32,6 +33,8 @@ public class MovieSliders extends GeneratedMovie {
   private static final int FRAMES_PER_SECOND = 2;
   private Context context;
   private Clip clip;
+  private SurfaceTexture mSurfaceTexture;
+
   //TextureRenderer textureRenderer;
   public MovieSliders(Context context, Clip clip) {
     this.context = context;
@@ -86,7 +89,11 @@ public class MovieSliders extends GeneratedMovie {
 
         int imageTexture = GlUtil.createImageTexture(buffer, WIDTH, HEIGHT, GLES20.GL_RGBA);
 
+        int textureObject = fullFrameRect.createTextureObject();
+        mSurfaceTexture = new SurfaceTexture(textureObject);
+
        // int textureObject = fullFrameRect.createTextureObject();
+        mSurfaceTexture.getTransformMatrix(mSTMatrix);
         fullFrameRect.drawFrame(imageTexture,mSTMatrix);
         //TextureRenderer textureRenderer = new TextureRenderer();
         //textureRenderer.renderTexture();
@@ -114,6 +121,8 @@ public class MovieSliders extends GeneratedMovie {
       throw new RuntimeException(ioe);
     } finally {
       releaseEncoder();
+      mSurfaceTexture.release();
+      mSurfaceTexture = null;
     }
 
     Log.d(TAG, "MovieEightRects complete: " + outputFile);
