@@ -14,6 +14,7 @@ import com.theartofdev.edmodo.cropper.CropImageOptions;
 import com.zis.musapp.base.android.BaseActivity;
 import com.zis.musapp.base.utils.RxUtil;
 import com.zis.musapp.gh.R;
+import com.zis.musapp.gh.features.choosesong.compileImages.CompileImageToVideo2AutoBundle;
 import com.zis.musapp.gh.features.editVideo.TrimmerActivity;
 import com.zis.musapp.gh.features.editVideo.TrimmerActivityAutoBundle;
 import com.zis.musapp.gh.model.clip.Clip;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.threeten.bp.Duration;
 import rx.Observable;
 import rx_activity_result.RxActivityResult;
 
@@ -60,16 +62,29 @@ public class TimeLineCompileActivity extends BaseActivity {
 
     RxView.clicks(preview).retry().subscribe(aVoid -> {
 
-      Observable.from(mediaColumnses).scan(new Clip(), (clip, mediaColumns) -> {
-        Part part = new Part();
-        part.media = mediaColumns;
-        clip.partLinkedList.add(part);
-        return clip;
-      }).subscribe(clip -> {
-        Intent intent = PreviewLocalActivityAutoBundle.createIntentBuilder(clip)
-            .build(TimeLineCompileActivity.this);
-        startActivity(intent);
-      }, RxUtil.ON_ERROR_LOGGER);
+      Observable.from(mediaColumnses)
+          .map(mediaColumns -> {
+            long ms = 0;
+            if (mediaColumns instanceof Image) {
+              ms = 1000;
+            } else if (mediaColumns instanceof Video) {
+              Video video = (Video) mediaColumns;
+              Long durationMillis = video.duration();
+
+              if (durationMillis != null) {
+                ms = durationMillis;
+              }
+            }
+
+            return Part.builder().media(mediaColumns).duration(Duration.ofMillis(ms)).build();
+          })
+          .toList()
+          .map(parts -> Clip.builder().parts(new ArrayList<>(parts)).build())
+          .subscribe(clip -> {
+            Intent intent = CompileImageToVideo2AutoBundle.createIntentBuilder(clip)
+                .build(TimeLineCompileActivity.this);
+            startActivity(intent);
+          }, RxUtil.ON_ERROR_LOGGER);
     });
 
     mAdapter.setEditListener(new IEditListener() {

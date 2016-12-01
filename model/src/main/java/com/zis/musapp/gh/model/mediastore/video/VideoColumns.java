@@ -32,7 +32,7 @@ public interface VideoColumns extends MediaColumns {
 
   @Nullable @AutoCursor.Column(name = MINI_THUMB_MAGIC) public Long miniThumbMagic();
 
-  @Nullable @AutoCursor.Column(name = DURATION) public Integer duration();
+  @Nullable @AutoCursor.Column(name = DURATION) public Long duration();
 
   @Nullable @AutoCursor.Column(name = RESOLUTION) public String resolution();
 }

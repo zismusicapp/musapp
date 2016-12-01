@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.util.Log;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -119,5 +120,22 @@ public class FileUtils {
     }
 
     return filename;
+  }
+
+
+  public static void moveFile(File file , String destination) throws IOException {
+
+    FileInputStream inputStream = new FileInputStream(file);
+    File destinationFile = new File(destination);
+    OutputStream destinationOut = new BufferedOutputStream(new FileOutputStream(destinationFile));
+
+    int numRead;
+    byte[] buf = new byte[1024];
+    while ((numRead = inputStream.read(buf) ) >= 0) {
+      destinationOut.write(buf, 0, numRead);
+    }
+
+    destinationOut.flush();
+    destinationOut.close();
   }
 }

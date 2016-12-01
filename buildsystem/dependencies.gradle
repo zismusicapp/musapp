@@ -8,7 +8,7 @@ ext {
 
   // Android
   androidBuildToolsVersion = '24.0.2'
-  androidMinSdkVersion = 17
+  androidMinSdkVersion = 18
   // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin,
   // so Dev Debug min sdk described in app.gradle, release min sdk == androidMinSdkVersion
   androidTargetSdkVersion = 24

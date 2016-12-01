@@ -108,8 +108,12 @@
 
     <activity android:name="com.afollestad.materialcamera.CaptureActivity"/>
 
+    <activity android:name=".features.choosesong.compileImages.CompileImageToVideoActivity"/>
+    <activity android:name=".features.choosesong.compileImages.CompileImageToVideo2"/>
+
     <activity android:name=".features.choosesong.CropFilterImageActivity"/>
     <activity android:name=".features.choosesong.TimeLineCompileActivity"/>
+    <activity android:name=".features.choosesong.PreviewLocalActivity"/>
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
